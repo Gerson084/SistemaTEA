@@ -81,48 +81,124 @@ namespace SistemaTEA.Controllers
         }
 
         // GET: Login
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
         // POST: Login
+        [AllowAnonymous]
         [HttpPost]
-        public IActionResult Login(string correo, string clave)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(string correo, string clave)
         {
-            var user = _testContext.Usuarios.FirstOrDefault(u => u.Email == correo);
-
-            if (user != null && SeguridadHelper.VerificarPassword(clave, user.Contraseña))
+            // Validaciones básicas
+            if (string.IsNullOrEmpty(correo) || string.IsNullOrEmpty(clave))
             {
-                if (!user.EsActivo)
-                {
-                    ViewBag.Error = "Tu cuenta aún no ha sido aprobada por un administrador.";
-                    return View();
-                }
-
-                // Establecer variables de sesión
-                HttpContext.Session.SetInt32("id_usuario", user.UsuarioID);
-                HttpContext.Session.SetString("nombre", user.Nombre);
-                HttpContext.Session.SetInt32("rol", user.RolID);
-
-                // Redirección según rol del usuario
-                return user.RolID switch
-                {
-                    1 => RedirectToAction("InicioADMIN", "Inicio"), // Administrador
-                    2 => RedirectToAction("InicioPADRE", "Inicio"), // Padre
-                    3 => RedirectToAction("InicioPSICOLOGO", "Inicio"),// Psicólogo
-                    _ => RedirectToAction("Index", "Home")
-                };
+                ViewBag.Error = "Debe completar todos los campos.";
+                return View();
             }
 
-            ViewBag.Error = "Correo o clave incorrectos.";
-            return View();
+            // Validación de formato de email
+            string emailRegex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            if (!Regex.IsMatch(correo, emailRegex))
+            {
+                ViewBag.Error = "El correo electrónico no es válido.";
+                return View();
+            }
+
+            // Buscar usuario
+            var user = await _testContext.Usuarios.FirstOrDefaultAsync(u => u.Email == correo);
+
+            if (user == null)
+            {
+                ViewBag.Error = "Usuario no encontrado.";
+                return View();
+            }
+
+            // Verificar contraseña
+            if (!SeguridadHelper.VerificarPassword(clave, user.Contraseña))
+            {
+                ViewBag.Error = "Correo o clave incorrectos.";
+                return View();
+            }
+
+            // Verificar si está activo
+            if (!user.EsActivo)
+            {
+                ViewBag.Error = "Tu cuenta aún no ha sido aprobada por un administrador.";
+                return View();
+            }
+
+            // Crear Claims para autenticación
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Nombre),
+                new Claim(ClaimTypes.Role, user.RolID == 1 ? "Administrador" :
+                                         user.RolID == 2 ? "Padre" : "Psicologo"),
+                new Claim(ClaimTypes.NameIdentifier, user.UsuarioID.ToString())
+            };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            // Configurar sesión
+            HttpContext.Session.SetInt32("id_usuario", user.UsuarioID);
+            HttpContext.Session.SetString("nombre", user.Nombre);
+            HttpContext.Session.SetInt32("rol", user.RolID);
+            HttpContext.Session.SetString("telefono", user.Telefono ?? "");
+
+            // Redirección según rol
+            return user.RolID switch
+            {
+                1 => RedirectToAction("InicioADMIN", "Login"),     // Administrador
+                2 => RedirectToAction("InicioPADRE", "login"),     // Padre
+                3 => RedirectToAction("InicioPSICOLOGO", "login"), // Psicólogo
+                _ => RedirectToAction("Login", "Login")
+            };
         }
-        public IActionResult Logout()
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
         {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
-    }
 
+
+        private bool ValidarSesion()
+        {
+            return HttpContext.Session.GetInt32("id_usuario") != null;
+        }
+        [HttpGet]
+        public ActionResult InicioADMIN()
+        {
+            if (!ValidarSesion()) return RedirectToAction("Login", "Login");
+            ViewBag.NombreUsuario = HttpContext.Session.GetString("nombre") ?? "Invitado";
+            ViewData["rol"] = HttpContext.Session.GetInt32("rol") ?? 0;
+
+            return View();
+        }
+        [HttpGet]
+        public ActionResult InicioPADRE()
+        {
+            if (!ValidarSesion()) return RedirectToAction("Login", "Login");
+            ViewBag.NombreUsuario = HttpContext.Session.GetString("nombre") ?? "Invitado";
+            ViewData["rol"] = HttpContext.Session.GetInt32("rol") ?? 0;
+
+            return View();
+        }
+        [HttpGet]
+        public ActionResult InicioPSICOLOGO()
+        {
+            if (!ValidarSesion()) return RedirectToAction("Login", "Login");
+            ViewBag.NombreUsuario = HttpContext.Session.GetString("nombre") ?? "Invitado";
+            ViewData["rol"] = HttpContext.Session.GetInt32("rol") ?? 0;
+
+            return View();
+        }
+    }
 }
