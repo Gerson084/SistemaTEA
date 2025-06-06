@@ -60,13 +60,12 @@ namespace SistemaTEA.Atributos
                         <h2 style='color: #32ab6c;'>Sistema de Diagnosticos para TEA</h2>
                         <p>Hola,</p>
                         <p>¡Tu cuenta ya ha sido activada! Ahora puedes acceder al sistema con tus credenciales.</p>
-                        <p>Te recomendamos cambiar tu contraseña temporal después del primer inicio de sesión por seguridad.</p>
-                        <p style='margin-top: 20px;'>Gracias por ser parte de TicketsTechnology.</p>
+                        <p style='margin-top: 20px;'>Gracias por ser parte de Sistema TEA.</p>
                         <br />
                         <p style='color: #888;'>Atentamente,<br/>Equipo de Sistema TEA</p>
                     </div>
                 </body>
-                </html>
+                </html> 
                 ";
 
             mensaje.Body = new TextPart("html")
