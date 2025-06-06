@@ -1,0 +1,727 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "PANEL PADRE";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Psicólogo - Sistema TEA</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+            .header h1 {
+                color: white;
+                font-size: 1.8rem;
+                font-weight: 300;
+            }
+
+        .user-info {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+            .user-info i {
+                font-size: 1.2rem;
+            }
+
+        .main-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+            .welcome-section h2 {
+                color: #4a5568;
+                margin-bottom: 1rem;
+                font-size: 2rem;
+                font-weight: 300;
+            }
+
+            .welcome-section p {
+                color: #718096;
+                font-size: 1.1rem;
+                line-height: 1.6;
+            }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            }
+
+            .stat-card.patients {
+                border-left-color: #4299e1;
+            }
+
+            .stat-card.evaluations {
+                border-left-color: #ed8936;
+            }
+
+            .stat-card.pending {
+                border-left-color: #f56565;
+            }
+
+            .stat-card.completed {
+                border-left-color: #48bb78;
+            }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-card.patients .stat-icon {
+            background: #4299e1;
+        }
+
+        .stat-card.evaluations .stat-icon {
+            background: #ed8936;
+        }
+
+        .stat-card.pending .stat-icon {
+            background: #f56565;
+        }
+
+        .stat-card.completed .stat-icon {
+            background: #48bb78;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .psicologo-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+            .action-section h3 {
+                color: #4a5568;
+                margin-bottom: 1.5rem;
+                font-size: 1.3rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #805ad5 0%, #6b46c1 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .patients-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .patient-list {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+            .patient-list h3 {
+                color: #4a5568;
+                margin-bottom: 1.5rem;
+                font-size: 1.3rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+        .patient-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+            border-left: 4px solid #4299e1;
+        }
+
+            .patient-item:hover {
+                background: #edf2f7;
+                transform: translateX(5px);
+            }
+
+        .patient-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .patient-info {
+            flex: 1;
+        }
+
+        .patient-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.2rem;
+        }
+
+        .patient-age {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .patient-status {
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .status-progress {
+            background: #feebc8;
+            color: #c05621;
+        }
+
+        .status-completed {
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        .recent-activity {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+            .recent-activity h3 {
+                color: #4a5568;
+                margin-bottom: 1.5rem;
+                font-size: 1.3rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            background: #f7fafc;
+            transition: background 0.3s ease;
+        }
+
+            .activity-item:hover {
+                background: #edf2f7;
+            }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+        }
+
+            .activity-icon.evaluation {
+                background: #4299e1;
+            }
+
+            .activity-icon.completed {
+                background: #48bb78;
+            }
+
+            .activity-icon.report {
+                background: #ed8936;
+            }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.2rem;
+        }
+
+        .activity-time {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+            .logout-btn:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: translateY(-2px);
+            }
+
+        @@media (max-width: 768px) {
+            .main-container
+
+        {
+            padding: 1rem;
+        }
+
+        .header {
+            padding: 1rem;
+        }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .psicologo-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .patients-section {
+            grid-template-columns: 1fr;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-user-md"></i> Sistema TEA - Panel de Psicólogo</h1>
+        <div class="user-info">
+            <i class="fas fa-stethoscope"></i>
+            <span>Dr. Carlos Mendez</span>
+        </div>
+    </div>
+
+    <a href="#" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+    </a>
+
+    <div class="main-container">
+        <div class="welcome-section">
+            <h2>Panel de Psicólogo</h2>
+            <p>Administra tus pacientes, realiza evaluaciones ADOS-2 y ADI-R, y genera reportes especializados</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card patients">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Pacientes Asignados</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-child"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card evaluations">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Evaluaciones en Proceso</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card completed">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number">25</div>
+                        <div class="stat-label">Evaluaciones Completadas</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card pending">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Reportes Pendientes</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-file-medical"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="psicologo-actions">
+            <div class="action-section">
+                <h3><i class="fas fa-brain"></i> Evaluaciones ADOS-2</h3>
+                <div class="action-buttons">
+                    <a href="#" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nueva Evaluación ADOS-2
+                    </a>
+                    <a href="#" class="btn btn-info">
+                        <i class="fas fa-list"></i> Ver Evaluaciones ADOS-2
+                    </a>
+                    <a href="#" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Continuar Evaluación
+                    </a>
+                </div>
+            </div>
+
+            <div class="action-section">
+                <h3><i class="fas fa-comments"></i> Evaluaciones ADI-R</h3>
+                <div class="action-buttons">
+                    <a href="#" class="btn btn-secondary">
+                        <i class="fas fa-plus"></i> Nueva Evaluación ADI-R
+                    </a>
+                    <a href="#" class="btn btn-info">
+                        <i class="fas fa-list"></i> Ver Evaluaciones ADI-R
+                    </a>
+                    <a href="#" class="btn btn-success">
+                        <i class="fas fa-chart-line"></i> Análisis Comparativo
+                    </a>
+                </div>
+            </div>
+
+            <div class="action-section">
+                <h3><i class="fas fa-file-medical-alt"></i> Reportes y Análisis</h3>
+                <div class="action-buttons">
+                    <a href="#" class="btn btn-success">
+                        <i class="fas fa-file-pdf"></i> Generar Reporte
+                    </a>
+                    <a href="#" class="btn btn-info">
+                        <i class="fas fa-chart-bar"></i> Estadísticas de Pacientes
+                    </a>
+                    <a href="#" class="btn btn-warning">
+                        <i class="fas fa-download"></i> Exportar Datos
+                    </a>
+                </div>
+            </div>
+
+            <div class="action-section">
+                <h3><i class="fas fa-user-friends"></i> Gestión de Pacientes</h3>
+                <div class="action-buttons">
+                    <a href="#" class="btn btn-info">
+                        <i class="fas fa-eye"></i> Ver Mis Pacientes
+                    </a>
+                    <a href="#" class="btn btn-primary">
+                        <i class="fas fa-history"></i> Historial Clínico
+                    </a>
+                    <a href="#" class="btn btn-secondary">
+                        <i class="fas fa-calendar-alt"></i> Programar Citas
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="patients-section">
+            <div class="patient-list">
+                <h3><i class="fas fa-users"></i> Pacientes Recientes</h3>
+
+                <div class="patient-item">
+                    <div class="patient-avatar">AR</div>
+                    <div class="patient-info">
+                        <div class="patient-name">Ana Rodríguez</div>
+                        <div class="patient-age">5 años - Evaluación M-CHAT completada</div>
+                    </div>
+                    <div class="patient-status status-pending">Pendiente ADOS-2</div>
+                </div>
+
+                <div class="patient-item">
+                    <div class="patient-avatar">LM</div>
+                    <div class="patient-info">
+                        <div class="patient-name">Luis Morales</div>
+                        <div class="patient-age">7 años - ADOS-2 en progreso</div>
+                    </div>
+                    <div class="patient-status status-progress">En Proceso</div>
+                </div>
+
+                <div class="patient-item">
+                    <div class="patient-avatar">MG</div>
+                    <div class="patient-info">
+                        <div class="patient-name">María García</div>
+                        <div class="patient-age">4 años - ADI-R completado</div>
+                    </div>
+                    <div class="patient-status status-completed">Completado</div>
+                </div>
+
+                <div class="patient-item">
+                    <div class="patient-avatar">JS</div>
+                    <div class="patient-info">
+                        <div class="patient-name">José Silva</div>
+                        <div class="patient-age">6 años - Primera consulta</div>
+                    </div>
+                    <div class="patient-status status-pending">Evaluación Inicial</div>
+                </div>
+            </div>
+
+            <div class="recent-activity">
+                <h3><i class="fas fa-history"></i> Actividad Reciente</h3>
+
+                <div class="activity-item">
+                    <div class="activity-icon evaluation">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-title">Evaluación ADOS-2 iniciada</div>
+                        <div class="activity-time">Paciente: Luis Morales - Hace 2 horas</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon completed">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-title">Evaluación ADI-R completada</div>
+                        <div class="activity-time">Paciente: María García - Hace 1 día</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon report">
+                        <i class="fas fa-file-medical"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-title">Reporte generado</div>
+                        <div class="activity-time">Paciente: Ana Rodríguez - Hace 2 días</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon evaluation">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-title">Nuevo paciente asignado</div>
+                        <div class="activity-time">José Silva - Hace 3 días</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animaciones y efectos interactivos
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animación de entrada para las tarjetas de estadísticas
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+
+            // Animación de contador para los números de estadísticas
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(number => {
+                const target = parseInt(number.textContent);
+                let current = 0;
+                const increment = target / 30;
+
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    number.textContent = Math.floor(current);
+                }, 50);
+            });
+
+            // Efecto hover para las tarjetas de pacientes
+            const patientItems = document.querySelectorAll('.patient-item');
+            patientItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(10px)';
+                });
+
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+
+            // Efecto hover para las tarjetas de actividad
+            const activityItems = document.querySelectorAll('.activity-item');
+            activityItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                });
+
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
