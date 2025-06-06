@@ -21,7 +21,7 @@ namespace SistemaTEA.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateUsuario([Bind("UsuarioID,Nombre,Correo,Contrasena")] Usuario usuario)
+        public async Task<IActionResult> CreateUsuario([Bind("UsuarioID,Nombre,Apellido,Email,Telefono,Contrasena")] Usuario usuario)
         {
             // Verificar si el correo ya existe
             var usuarioExistente = await _context.Usuarios
@@ -33,20 +33,18 @@ namespace SistemaTEA.Controllers
                 return RedirectToAction("Login", "Login");
             }
 
-            // Validar la contraseña manualmente en el backend
+            // Validar la contraseña
             if (!System.Text.RegularExpressions.Regex.IsMatch(usuario.Contraseña, @"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"))
             {
                 TempData["ErrorMessage"] = "La contraseña debe tener al menos 8 caracteres, incluir una letra, un número y un carácter especial.";
                 return RedirectToAction("Login", "Login");
             }
 
-
-
-
             // Asignar el rol predeterminado "Usuario"
             usuario.RolID = 2;
+            usuario.EsActivo = false; // Por defecto, pendiente de aprobación
+            usuario.FechaRegistro = DateTime.Now;
 
-            // Si pasa todas las validaciones, guardar en la BD
             if (ModelState.IsValid)
             {
                 var passwordHasher = new PasswordHasher<Usuario>();
@@ -54,11 +52,12 @@ namespace SistemaTEA.Controllers
 
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
-                TempData["Message"] = "Usuario registrado correctamente. Se le notificará cuando tenga acceso al sistema";
+                TempData["Message"] = "Usuario registrado correctamente. Se le notificará cuando tenga acceso al sistema.";
                 return RedirectToAction("Login", "Login");
             }
 
             return RedirectToAction("Login", "Login");
         }
+
     }
 }

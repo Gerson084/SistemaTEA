@@ -49,10 +49,26 @@
 
                 <div class="mb-3">
                     <label asp-for="Nombre" class="form-label">
-                        <i class="fas fa-user me-1"></i>Nombre Completo:
+                        <i class="fas fa-user me-1"></i>Nombre:
                     </label>
                     <input asp-for="Nombre" class="form-control" placeholder="Ingrese su nombre completo" required />
                     <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Apellido" class="form-label">
+                        <i class="fas fa-user me-1"></i>Apellido:
+                    </label>
+                    <input asp-for="Apellido" class="form-control" placeholder="Ingrese su apellido" required />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Telefono" class="form-label">
+                        <i class="fas fa-phone me-1"></i>Teléfono:
+                    </label>
+                    <input asp-for="Telefono" class="form-control" placeholder="Ingrese su número de teléfono" required />
+                    <span asp-validation-for="Telefono" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
