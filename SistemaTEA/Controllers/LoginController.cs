@@ -111,7 +111,7 @@ namespace SistemaTEA.Controllers
                     1 => RedirectToAction("InicioADMIN", "Inicio"), // Administrador
                     2 => RedirectToAction("InicioPADRE", "Inicio"), // Padre
                     3 => RedirectToAction("InicioPSICOLOGO", "Inicio"),// Psicólogo
-                      => RedirectToAction("Index", "Home")
+                    _ => RedirectToAction("Index", "Home")
                 };
             }
 
