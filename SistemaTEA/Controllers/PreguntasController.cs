@@ -92,18 +92,28 @@ namespace SistemaTEA.Controllers
         // POST: PreguntasController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditMCHAT(int id_pregunta, IFormCollection collection)
+        public ActionResult EditMCHAT(PreguntaMCHAT model)
         {
             try
             {
+                var preguntaExistente = _context.PreguntasMCHAT.FirstOrDefault(p => p.PreguntaID == model.PreguntaID);
 
-                return RedirectToAction(nameof(Index));
+                if (preguntaExistente == null)
+                {
+                    return Json(new { success = false, message = "Pregunta no encontrada." });
+                }
+
+                preguntaExistente.TextoPregunta = model.TextoPregunta;
+                _context.SaveChanges();
+
+                return RedirectToAction("EditMCHAT", "Preguntas");
             }
-            catch
+            catch (Exception)
             {
-                return View();
+                return Json(new { success = false, message = "Error al guardar la pregunta." });
             }
         }
+
 
 
         // GET: PreguntasController/Edit/5

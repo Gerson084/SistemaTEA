@@ -2,6 +2,7 @@
 @{
     Layout = null;
     ViewData["Title"] = "ADMINISTRAR TESTS";
+    Layout = null;
 }
 <!DOCTYPE html>
 
@@ -33,6 +34,7 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
         }
 
             .header h1 {
@@ -40,6 +42,21 @@
                 font-size: 1.8rem;
                 font-weight: 300;
             }
+
+        @@keyframes fadeInDown {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
 
         .user-info {
             color: white;
@@ -56,6 +73,7 @@
             padding: 2rem;
             max-width: 1400px;
             margin: 0 auto;
+
         }
 
         .page-header {
@@ -273,6 +291,7 @@
             align-items: center;
             gap: 0.5rem;
             z-index: 1000;
+            margin-top: 80px;
         }
 
             .back-btn:hover {
@@ -518,19 +537,22 @@
     </style>
 </head>
 <body>
+	
     <div class="header">
-        <h1><i class="fas fa-cogs"></i> Sistema TEA - Administración de Tests</h1>
-        <div class="user-info">
-            <i class="fas fa-user-shield"></i>
-            <span>@ViewBag.NombreUsuario (Administrador)</span>
+        <div>
+            <h1><i class="fas fa-cogs"></i> Sistema TEA - Administración de Tests</h1>
+            <div class="user-info">
+                <i class="fas fa-user-shield"></i>
+                <span>@ViewBag.NombreUsuario (Administrador)</span>
+            </div>
         </div>
+        
+        
     </div>
+    
+    
 
-    <a href="@Url.Action("Index", "Admin")" class="back-btn">
-        <i class="fas fa-arrow-left"></i> Panel Admin
-    </a>
-
-    <div class="main-container">
+    <div class="main-container ">
         <div class="stats-overview">
             <div class="overview-stat">
                 <div class="number">@Model.Count()</div>

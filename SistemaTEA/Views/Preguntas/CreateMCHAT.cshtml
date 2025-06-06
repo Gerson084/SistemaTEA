@@ -1,6 +1,7 @@
 ﻿@model SistemaTEA.Models.PreguntaMCHAT
 @{
     ViewData["Title"] = "Crear Pregunta MCHAT";
+    Layout = null;
 }
 <!DOCTYPE html>
 
@@ -438,6 +439,7 @@
 </head>
 <body>
     <div class="header">
+
         <h1><i class="fas fa-question-circle"></i> Sistema TEA - Crear Pregunta</h1>
         <div class="user-info">
             <i class="fas fa-user-shield"></i>
@@ -445,9 +447,6 @@
         </div>
     </div>
 
-    <a href="@Url.Action("AdministrarTests", "Tests")" class="back-btn">
-        <i class="fas fa-arrow-left"></i> Volver a Tests
-    </a>
 
     <div class="main-container">
         <div class="page-header">

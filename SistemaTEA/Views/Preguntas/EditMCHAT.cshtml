@@ -357,12 +357,11 @@
                 <i class="fas fa-search"></i>
                 <input type="text" id="searchInput" placeholder="Buscar preguntas...">
             </div>
-            <button class="btn btn-primary" onclick="openAddModal()">
+            <a href="/Preguntas/CreateMCHAT" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Nueva Pregunta
-            </button>
-            <button class="btn btn-success" onclick="saveAll()">
-                <i class="fas fa-save"></i> Guardar Cambios
-            </button>
+            </a>
+            
+
         </div>
 
         <div class="questions-grid" id="questionsGrid">
@@ -372,10 +371,9 @@
                   <div class="question-number">@item.PreguntaID</div>
                   <div class="question-text">@item.TextoPregunta</div>
                   <div class="question-actions">
-                        <button class="btn btn-edit btn-small" onclick="editQuestion(@item.PreguntaID, '@Html.Raw(Html.Encode(item.TextoPregunta).Replace("'", "\\'").Replace("\r\n", "\\n").Replace("\n", "\\n"))')">
-                            <i class="fas fa-edit"></i> Editar
+                        <button class="btn btn-edit btn-small" onclick="openModal(@item.PreguntaID)">
+                            Editar
                         </button>
-
                   </div>
                 </div>
             }
@@ -383,63 +381,43 @@
     </div>
 
 
-    <div id="questionModal" class="modal">
+    <div id="questionModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2 id="modalTitle">Editar Pregunta</h2>
-            <form asp-action="EditMCHAT" asp-controller="Preguntas">
+            <form id="editForm" method="post" asp-action="EditMCHAT" asp-controller="Preguntas">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="questionId" name="PreguntaID" />
+
                 <div class="form-group">
                     <label for="questionText">Texto de la Pregunta:</label>
-                    <textarea id="questionText" placeholder="Escribe aquí el texto de la pregunta..."></textarea>
+                    <textarea id="questionText" name="TextoPregunta" rows="5" placeholder="Escribe aquí el texto de la pregunta..."></textarea>
                 </div>
+
                 <div class="modal-actions">
-                    <button type="submit" class="btn btn-primary" onclick="saveQuestion()">
-                        <i class="fas fa-save"></i> Guardar
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Guardar Cambios
                     </button>
                     <button type="button" class="btn" onclick="closeModal()" style="background: #95a5a6; color: white;">
                         <i class="fas fa-times"></i> Cancelar
                     </button>
                 </div>
             </form>
+
         </div>
     </div>
 
     <script>
-        // Cargar preguntas desde el modelo Razor
-        let questions = [
-        @foreach (var item in Model)
-        {
-            <text>{ id: @item.PreguntaID, text: '@Html.Raw(Html.Encode(item.TextoPregunta).Replace("'", "\\'").Replace("\r\n", "\\n").Replace("\n", "\\n"))' },</text>
-        }
-        ];
+        const questions = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
 
-        let originalQuestions = [...questions]; // Copia para comparar cambios
-        let currentEditingId = null;
+        function openModal(id) {
+            const question = questions.find(q => q.PreguntaID === id);
+            if (!question) return;
 
-        function updateStats(filteredCount = null) {
-            const totalCount = questions.length;
-            const displayCount = filteredCount !== null ? filteredCount : totalCount;
-            document.getElementById('totalQuestions').textContent = totalCount;
-            document.getElementById('filteredQuestions').textContent = displayCount;
-        }
+            document.getElementById('questionId').value = question.PreguntaID;
+            document.getElementById('questionText').value = question.TextoPregunta;
 
-        function editQuestion(id, currentText = null) {
-            // Si no se pasa el texto, buscarlo en el array
-            if (currentText === null) {
-                const question = questions.find(q => q.id === id);
-                currentText = question ? question.text : '';
-            }
-
-            currentEditingId = id;
             document.getElementById('modalTitle').textContent = 'Editar Pregunta';
-            document.getElementById('questionText').value = currentText;
-            document.getElementById('questionModal').style.display = 'block';
-        }
-
-        function openAddModal() {
-            currentEditingId = null;
-            document.getElementById('modalTitle').textContent = 'Nueva Pregunta';
-            document.getElementById('questionText').value = '';
             document.getElementById('questionModal').style.display = 'block';
         }
 
@@ -447,134 +425,15 @@
             document.getElementById('questionModal').style.display = 'none';
         }
 
-        function saveQuestion() {
-            const text = document.getElementById('questionText').value.trim();
-            if (!text) {
-                alert('Por favor, ingresa el texto de la pregunta.');
-                return;
-            }
-
-            if (currentEditingId) {
-                // Editar pregunta existente
-                const question = questions.find(q => q.id === currentEditingId);
-                if (question) {
-                    question.text = text;
-                    // Actualizar la tarjeta en el DOM
-                    updateQuestionCard(currentEditingId, text);
-                }
-            } else {
-                // Agregar nueva pregunta
-                const newId = Math.max(...questions.map(q => q.id)) + 1;
-                const newQuestion = { id: newId, text: text };
-                questions.push(newQuestion);
-                addQuestionCard(newQuestion);
-            }
-
-            updateStats();
-            closeModal();
-        }
-
-        function updateQuestionCard(id, newText) {
-            const cards = document.querySelectorAll('.question-card');
-            cards.forEach(card => {
-                const numberDiv = card.querySelector('.question-number');
-                if (numberDiv && parseInt(numberDiv.textContent) === id) {
-                    const textDiv = card.querySelector('.question-text');
-                    if (textDiv) {
-                        textDiv.textContent = newText;
-                    }
-                    // Actualizar el onclick del botón editar
-                    const editBtn = card.querySelector('.btn-edit');
-                    if (editBtn) {
-                        editBtn.setAttribute('onclick', `editQuestion(${id}, '${newText.replace(/'/g, "\\'")}'))`);
-                    }
-                }
-            });
-        }
-
-        function addQuestionCard(question) {
-            const grid = document.getElementById('questionsGrid');
-            const card = document.createElement('div');
-            card.className = 'question-card';
-            card.innerHTML = `
-                <div class="question-number">${question.id}</div>
-                <div class="question-text">${question.text}</div>
-                <div class="question-actions">
-                    <button class="btn btn-edit btn-small" onclick="editQuestion(${question.id}, '${question.text.replace(/'/g, "\\'")}')">
-                        <i class="fas fa-edit"></i> Editar
-                    </button>
-                    <button class="btn btn-delete btn-small" onclick="deleteQuestion(${question.id})">
-                        <i class="fas fa-trash"></i> Eliminar
-                    </button>
-                </div>
-            `;
-            grid.appendChild(card);
-        }
-
-
-        function saveAll() {
-            // Preparar datos para enviar al servidor
-            const questionsData = questions.map(q => ({
-                Id: q.id,
-                Texto: q.text
-            }));
-
-            // Enviar datos al servidor mediante AJAX
-            fetch('/PreguntasMCHAT/ActualizarPreguntas', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
-                },
-                body: JSON.stringify(questionsData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('¡Cambios guardados exitosamente!');
-                    originalQuestions = [...questions]; // Actualizar la copia
-                } else {
-                    alert('Error al guardar: ' + (data.message || 'Error desconocido'));
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error al guardar los cambios. Por favor, intenta de nuevo.');
-            });
-        }
-
-        // Funcionalidad de búsqueda
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const cards = document.querySelectorAll('.question-card');
-            let visibleCount = 0;
-
-            cards.forEach(card => {
-                const textDiv = card.querySelector('.question-text');
-                if (textDiv) {
-                    const text = textDiv.textContent.toLowerCase();
-                    if (text.includes(searchTerm)) {
-                        card.style.display = 'block';
-                        visibleCount++;
-                    } else {
-                        card.style.display = 'none';
-                    }
-                }
-            });
-
-            updateStats(visibleCount);
-        });
-
-        // Cerrar modal al hacer clic fuera de él
-        window.onclick = function(event) {
+        
+        window.onclick = function (event) {
             const modal = document.getElementById('questionModal');
             if (event.target === modal) {
                 closeModal();
             }
         }
-
-        // Inicializar estadísticas
-        updateStats();
     </script>
+
+   
 </body>
 </html>

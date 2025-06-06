@@ -33,6 +33,9 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            top: 0; /* Fijado arriba */
+            left: 0; /* Alineado al borde izquierdo */
+            z-index: 1000;
         }
 
             .header h1 {
@@ -489,9 +492,6 @@
         </div>
     </div>
 
-    <a href="@Url.Action("AdministrarTests", "Tests")" class="back-btn">
-        <i class="fas fa-arrow-left"></i> Volver a Tests
-    </a>
 
     <div class="main-container">
         <div class="page-header">
