@@ -2,152 +2,479 @@
     ViewData["Title"] = "Iniciar Sesión";
     Layout = null;
 }
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <title>@ViewData["Title"]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Sistema TEA</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-image: url('/img/fondo.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
+            position: relative;
+            overflow: hidden;
         }
 
-        .form-container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            width: 350px;
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
-            margin-top: 20px;
-            border: none;
-            width: 100%;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-            button:hover {
-                background-color: #0056b3;
-            }
-
-        .error {
-            color: red;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .link {
-            margin-top: 15px;
-            text-align: center;
-        }
-
-            .link a {
-                color: #007bff;
-                text-decoration: none;
-            }
-
-        .alert {
+        /* Elementos decorativos de fondo */
+        .bg-decoration {
             position: absolute;
-            top: 20px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+            .bg-decoration:nth-child(1) {
+                width: 200px;
+                height: 200px;
+                top: 10%;
+                left: 10%;
+                animation-delay: 0s;
+            }
+
+            .bg-decoration:nth-child(2) {
+                width: 150px;
+                height: 150px;
+                top: 70%;
+                right: 10%;
+                animation-delay: 2s;
+            }
+
+            .bg-decoration:nth-child(3) {
+                width: 100px;
+                height: 100px;
+                bottom: 20%;
+                left: 20%;
+                animation-delay: 4s;
+            }
+
+        @@keyframes float {
+            0%, 100%
+
+        {
+            transform: translateY(0px) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-20px) rotate(180deg);
+        }
+
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
             width: 100%;
+            max-width: 400px;
+            position: relative;
+            z-index: 10;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @@keyframes slideUp {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        .header-section {
             text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+        }
+
+        .header-section h2 {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-section p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+            .form-group label {
+                display: block;
+                color: white;
+                font-weight: 500;
+                margin-bottom: 0.5rem;
+                font-size: 0.95rem;
+            }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
+            z-index: 2;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+            .form-control::placeholder {
+                color: rgba(255, 255, 255, 0.6);
+            }
+
+            .form-control:focus {
+                outline: none;
+                border-color: rgba(255, 255, 255, 0.5);
+                background: rgba(255, 255, 255, 0.15);
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+
+        .btn-login {
+            width: 100%;
             padding: 15px;
-            border-radius: 8px;
-            font-weight: bold;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+            .btn-login::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                transition: left 0.5s;
+            }
+
+            .btn-login:hover::before {
+                left: 100%;
+            }
+
+            .btn-login:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 15px 30px rgba(72, 187, 120, 0.4);
+            }
+
+            .btn-login:active {
+                transform: translateY(0);
+            }
+
+        .register-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+            .register-link a {
+                color: rgba(255, 255, 255, 0.9);
+                text-decoration: none;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                padding: 8px 16px;
+                border-radius: 20px;
+                display: inline-block;
+            }
+
+                .register-link a:hover {
+                    color: white;
+                    background: rgba(255, 255, 255, 0.1);
+                    transform: translateY(-1px);
+                }
+
+        /* Alertas mejoradas */
+        .alert {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            animation: alertSlide 0.5s ease-out;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        @@keyframes alertSlide {
+            from
+
+        {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
         }
 
         .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: rgba(72, 187, 120, 0.9);
+            color: white;
+            border: 1px solid rgba(72, 187, 120, 0.3);
         }
 
         .alert-danger {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: rgba(245, 101, 101, 0.9);
+            color: white;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+        }
+
+        /* Responsive */
+        @@media (max-width: 480px) {
+            .login-container
+
+        {
+            margin: 1rem;
+            padding: 2rem 1.5rem;
+        }
+
+        .header-section h2 {
+            font-size: 1.5rem;
+        }
+
+        .bg-decoration {
+            display: none;
+        }
+
+        }
+
+        /* Loading state */
+        .btn-login.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+            .btn-login.loading::after {
+                content: '';
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                border: 2px solid transparent;
+                border-top: 2px solid white;
+                border-radius: 50%;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                animation: spin 1s linear infinite;
+            }
+
+        @@keyframes spin {
+            0%
+
+        {
+            transform: translateY(-50%) rotate(0deg);
+        }
+
+        100% {
+            transform: translateY(-50%) rotate(360deg);
+        }
+
         }
     </style>
 </head>
 <body>
+    <!-- Elementos decorativos de fondo -->
+    <div class="bg-decoration"></div>
+    <div class="bg-decoration"></div>
+    <div class="bg-decoration"></div>
 
     @if (ViewBag.Error != null)
     {
-        <div class="alert alert-danger">@ViewBag.Error</div>
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle"></i> @ViewBag.Error
+        </div>
     }
 
-    <div class="form-container">
-        <h2>Iniciar Sesión</h2>
+    <div class="login-container">
+        <div class="header-section">
+            <div class="logo-icon">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h2>Sistema TEA</h2>
+            <p>Ingresa tus credenciales para acceder al sistema</p>
+        </div>
 
-        <form asp-action="Login" method="post">
+        <form asp-action="Login" method="post" id="loginForm">
             <div class="form-group">
-                <label>Correo Electrónico</label>
-                <input name="correo" class="form-control" />
+                <label for="correo">Correo Electrónico</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input id="correo"
+                           name="correo"
+                           type="email"
+                           class="form-control"
+                           placeholder="ejemplo@correo.com"
+                           required
+                           autocomplete="email" />
+                </div>
             </div>
 
             <div class="form-group">
-                <label>Contraseña</label>
-                <input name="clave" type="password" class="form-control" />
+                <label for="clave">Contraseña</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input id="clave"
+                           name="clave"
+                           type="password"
+                           class="form-control"
+                           placeholder="••••••••"
+                           required
+                           autocomplete="current-password" />
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-success">Iniciar Sesión</button>
-            <div class="link">
-                <a asp-action="Registro">¿No tienes cuenta? Regístrate</a>
+            <button type="submit" class="btn-login" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+            </button>
+
+            <div class="register-link">
+                <a asp-action="Registro">
+                    <i class="fas fa-user-plus"></i> ¿No tienes cuenta? Regístrate aquí
+                </a>
             </div>
         </form>
     </div>
 
-    <!-- Scripts al final -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-        @if (TempData["RegistroExitoso"] != null)
-        {
-            <text>
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Registro Exitoso',
-                            text: '@TempData["RegistroExitoso"]'
-                        });
-            </text>
-        }
+            // Mensaje de registro exitoso
+            @if (TempData["RegistroExitoso"] != null)
+            {
+                    <text>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Registro Exitoso',
+                        text: '@TempData["RegistroExitoso"]',
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        backdrop: 'rgba(0, 0, 0, 0.4)',
+                        confirmButtonColor: '#48bb78'
+                    });
+                    </text>
+            }
+
+            // Manejo del formulario de login
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+
+            loginForm.addEventListener('submit', function(e) {
+                loginBtn.classList.add('loading');
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Iniciando sesión...';
+            });
+
+            // Animación de entrada para los inputs
+            const inputs = document.querySelectorAll('.form-control');
+            inputs.forEach((input, index) => {
+                input.style.opacity = '0';
+                input.style.transform = 'translateY(20px)';
+
+                setTimeout(() => {
+                    input.style.transition = 'all 0.6s ease';
+                    input.style.opacity = '1';
+                    input.style.transform = 'translateY(0)';
+                }, 200 + (index * 100));
+            });
+
+            // Auto-hide alerts
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.animation = 'alertSlide 0.5s ease-out reverse';
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 500);
+                }, 5000);
+            });
+
+            // Validación en tiempo real
+            const emailInput = document.getElementById('correo');
+            const passwordInput = document.getElementById('clave');
+
+            emailInput.addEventListener('blur', function() {
+                if (this.value && !this.checkValidity()) {
+                    this.style.borderColor = 'rgba(245, 101, 101, 0.8)';
+                } else if (this.value) {
+                    this.style.borderColor = 'rgba(72, 187, 120, 0.8)';
+                }
+            });
+
+            emailInput.addEventListener('input', function() {
+                if (this.style.borderColor === 'rgba(245, 101, 101, 0.8)' && this.checkValidity()) {
+                    this.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                }
+            });
         });
     </script>
-
 </body>
 </html>

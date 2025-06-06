@@ -1,115 +1,720 @@
-﻿ @model SistemaTEA.Models.Usuario
+﻿@model SistemaTEA.Models.Usuario
 @{
     ViewData["Title"] = "Registro";
     Layout = null;
-
 }
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger">@ViewBag.Error</div>
-}
-
+<!DOCTYPE html>
+<html lang="es">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"]</title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.css" />
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Sistema TEA</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+            padding: 20px 0;
+        }
+
+        /* Elementos decorativos de fondo */
+        .bg-decoration {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+            .bg-decoration:nth-child(1) {
+                width: 200px;
+                height: 200px;
+                top: 10%;
+                left: 10%;
+                animation-delay: 0s;
+            }
+
+            .bg-decoration:nth-child(2) {
+                width: 150px;
+                height: 150px;
+                top: 70%;
+                right: 10%;
+                animation-delay: 2s;
+            }
+
+            .bg-decoration:nth-child(3) {
+                width: 100px;
+                height: 100px;
+                bottom: 20%;
+                left: 20%;
+                animation-delay: 4s;
+            }
+
+            .bg-decoration:nth-child(4) {
+                width: 80px;
+                height: 80px;
+                top: 50%;
+                right: 30%;
+                animation-delay: 1s;
+            }
+
+        @@keyframes float {
+            0%, 100%
+
+        {
+            transform: translateY(0px) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-20px) rotate(180deg);
+        }
+
+        }
+
+        .register-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            z-index: 10;
+            animation: slideUp 0.8s ease-out;
+            margin: 20px;
+        }
+
+        @@keyframes slideUp {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+        }
+
+        .header-section h2 {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-section p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+            flex: 1;
+        }
+
+            .form-group label {
+                display: block;
+                color: white;
+                font-weight: 500;
+                margin-bottom: 0.5rem;
+                font-size: 0.95rem;
+            }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
+            z-index: 2;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+            .form-control::placeholder {
+                color: rgba(255, 255, 255, 0.6);
+            }
+
+            .form-control:focus {
+                outline: none;
+                border-color: rgba(255, 255, 255, 0.5);
+                background: rgba(255, 255, 255, 0.15);
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+
+            .form-control.error {
+                border-color: rgba(245, 101, 101, 0.8);
+                background: rgba(245, 101, 101, 0.1);
+            }
+
+            .form-control.success {
+                border-color: rgba(72, 187, 120, 0.8);
+                background: rgba(72, 187, 120, 0.1);
+            }
+
+        .text-danger {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: block;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @@keyframes shake {
+            0%, 100%
+
+        {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(-5px);
+        }
+
+        75% {
+            transform: translateX(5px);
+        }
+
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .strength-weak {
+            background: #ff6b6b;
+            width: 33%;
+        }
+
+        .strength-medium {
+            background: #ffd93d;
+            width: 66%;
+        }
+
+        .strength-strong {
+            background: #48bb78;
+            width: 100%;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+            .btn-register::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                transition: left 0.5s;
+            }
+
+            .btn-register:hover::before {
+                left: 100%;
+            }
+
+            .btn-register:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 15px 30px rgba(72, 187, 120, 0.4);
+            }
+
+            .btn-register:active {
+                transform: translateY(0);
+            }
+
+            .btn-register:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        .login-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+            .login-link a {
+                color: rgba(255, 255, 255, 0.9);
+                text-decoration: none;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                padding: 8px 16px;
+                border-radius: 20px;
+                display: inline-block;
+            }
+
+                .login-link a:hover {
+                    color: white;
+                    background: rgba(255, 255, 255, 0.1);
+                    transform: translateY(-1px);
+                }
+
+        /* Alertas mejoradas */
+        .alert {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            animation: alertSlide 0.5s ease-out;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        @@keyframes alertSlide {
+            from
+
+        {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        }
+
+        .alert-danger {
+            background: rgba(245, 101, 101, 0.9);
+            color: white;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+        }
+
+        .alert-success {
+            background: rgba(72, 187, 120, 0.9);
+            color: white;
+            border: 1px solid rgba(72, 187, 120, 0.3);
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .form-row
+
+        {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .register-container {
+            margin: 1rem;
+            padding: 2rem 1.5rem;
+            max-width: none;
+        }
+
+        .header-section h2 {
+            font-size: 1.5rem;
+        }
+
+        .bg-decoration {
+            display: none;
+        }
+
+        }
+
+        /* Loading state */
+        .btn-register.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+            .btn-register.loading::after {
+                content: '';
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                border: 2px solid transparent;
+                border-top: 2px solid white;
+                border-radius: 50%;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                animation: spin 1s linear infinite;
+            }
+
+        @@keyframes spin {
+            0%
+
+        {
+            transform: translateY(-50%) rotate(0deg);
+        }
+
+        100% {
+            transform: translateY(-50%) rotate(360deg);
+        }
+
+        }
+
+        .password-match {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+            .password-match.success {
+                color: #48bb78;
+            }
+
+            .password-match.error {
+                color: #ff6b6b;
+            }
+    </style>
 </head>
+<body>
+    <!-- Elementos decorativos de fondo -->
+    <div class="bg-decoration"></div>
+    <div class="bg-decoration"></div>
+    <div class="bg-decoration"></div>
+    <div class="bg-decoration"></div>
 
-<section class="vh-100" style="background-color: #eee;">
-    <div class="container h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-lg-12 col-xl-11">
-                <div class="card text-black" style="border-radius: 25px;">
-                    <div class="card-body p-md-5">
-                        <div class="row justify-content-center">
-                            <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle"></i> @ViewBag.Error
+        </div>
+    }
 
-                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
+    <div class="register-container">
+        <div class="header-section">
+            <div class="logo-icon">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h2>Crear Cuenta</h2>
+            <p>Únete al Sistema TEA y comienza tu experiencia</p>
+        </div>
 
-                                <form asp-action="Registro" method="post">
-
-                                    <div class="d-flex flex-row align-items-center mb-4">
-                                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                                        <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                            <input asp-for="Nombre" class="form-control" />
-                                            <label class="form-label" for="form3Example1c">Tu nombre</label>
-                                            <span asp-validation-for="Nombre" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-row align-items-center mb-4">
-                                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                                        <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                            <input asp-for="Apellido" class="form-control" />
-                                            <label class="form-label" for="form3Example1c">Apellido</label>
-                                            <span asp-validation-for="Apellido" class="text-danger"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex flex-row align-items-center mb-4">
-                                        <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                                        <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                            <input asp-for="Telefono" class="form-control" />
-                                            <label class="form-label" for="form3Example4c">Telefono</label>
-                                            <span asp-validation-for="Telefono" class="text-danger"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex flex-row align-items-center mb-4">
-                                        <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                                        <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                            <input asp-for="Email" class="form-control" />
-                                            <label class="form-label" for="form3Example3c">Correo Electronico</label>
-                                            <span asp-validation-for="Apellido" class="text-danger"></span>
-                                        </div>
-                                    </div>
-
-                                    
-                                    
-                                    <div class="d-flex flex-row align-items-center mb-4">
-                                        <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                                        <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                            <input asp-for="Contraseña" class="form-control" type="password" />
-                                            <label class="form-label" for="form3Example4c">Contraseña</label>
-                                            <span asp-validation-for="Contraseña" class="text-danger"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex flex-row align-items-center mb-4">
-                                        <i class="fas fa-key fa-lg me-3 fa-fw"></i>
-                                        <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                            <input name="confirmarContrasena" class="form-control" type="password" />
-                                            <label class="form-label" for="form3Example4cd">Confirmar tu contraseña</label>
-                                        </div>
-                                    </div>
-
-         
-
-                                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                                        <button  type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg">Registrarse</button>
-                                    </div>
-                                    <a asp-action="Login" class="btn btn-link">¿Ya tienes cuenta? Inicia sesión</a>
-
-                                </form>
-
-                            </div>
-                            <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
-
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
-                                     class="img-fluid" alt="Sample image">
-
-                            </div>
-                        </div>
+        <form asp-action="Registro" method="post" id="registerForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="Nombre">Nombre</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user input-icon"></i>
+                        <input asp-for="Nombre"
+                               class="form-control"
+                               placeholder="Tu nombre"
+                               required
+                               autocomplete="given-name" />
                     </div>
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="Apellido">Apellido</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user input-icon"></i>
+                        <input asp-for="Apellido"
+                               class="form-control"
+                               placeholder="Tu apellido"
+                               required
+                               autocomplete="family-name" />
+                    </div>
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
                 </div>
             </div>
-        </div>
+
+            <div class="form-group">
+                <label for="Email">Correo Electrónico</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input asp-for="Email"
+                           type="email"
+                           class="form-control"
+                           placeholder="ejemplo@correo.com"
+                           required
+                           autocomplete="email" />
+                </div>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="Telefono">Teléfono</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-phone input-icon"></i>
+                    <input asp-for="Telefono"
+                           type="tel"
+                           class="form-control"
+                           placeholder="1234-5678"
+                           required
+                           autocomplete="tel" />
+                </div>
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="Contraseña">Contraseña</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input asp-for="Contraseña"
+                           type="password"
+                           class="form-control"
+                           placeholder="••••••••"
+                           required
+                           autocomplete="new-password"
+                           id="password" />
+                </div>
+                <div class="password-strength">
+                    <div class="password-strength-bar" id="strengthBar"></div>
+                </div>
+                <span asp-validation-for="Contraseña" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmarContrasena">Confirmar Contraseña</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-key input-icon"></i>
+                    <input name="confirmarContrasena"
+                           type="password"
+                           class="form-control"
+                           placeholder="••••••••"
+                           required
+                           autocomplete="new-password"
+                           id="confirmPassword" />
+                </div>
+                <div class="password-match" id="passwordMatch"></div>
+            </div>
+
+            <button type="submit" class="btn-register" id="registerBtn">
+                <i class="fas fa-user-plus"></i> Crear Cuenta
+            </button>
+
+            <div class="login-link">
+                <a asp-action="Login">
+                    <i class="fas fa-sign-in-alt"></i> ¿Ya tienes cuenta? Inicia sesión
+                </a>
+            </div>
+        </form>
     </div>
-</section>
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const registerForm = document.getElementById('registerForm');
+            const registerBtn = document.getElementById('registerBtn');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const strengthBar = document.getElementById('strengthBar');
+            const passwordMatch = document.getElementById('passwordMatch');
+
+            // Validación de fuerza de contraseña
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                const strength = calculatePasswordStrength(password);
+
+                strengthBar.className = 'password-strength-bar';
+                if (strength >= 3) {
+                    strengthBar.classList.add('strength-strong');
+                } else if (strength >= 2) {
+                    strengthBar.classList.add('strength-medium');
+                } else if (strength >= 1) {
+                    strengthBar.classList.add('strength-weak');
+                }
+
+                checkPasswordMatch();
+            });
+
+            // Validación de coincidencia de contraseñas
+            confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+
+            function calculatePasswordStrength(password) {
+                let strength = 0;
+                if (password.length >= 8) strength++;
+                if (/[A-Z]/.test(password)) strength++;
+                if (/[0-9]/.test(password)) strength++;
+                if (/[^A-Za-z0-9]/.test(password)) strength++;
+                return strength;
+            }
+
+            function checkPasswordMatch() {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                if (confirmPassword.length > 0) {
+                    if (password === confirmPassword) {
+                        passwordMatch.textContent = '✓ Las contraseñas coinciden';
+                        passwordMatch.className = 'password-match success';
+                        confirmPasswordInput.classList.remove('error');
+                        confirmPasswordInput.classList.add('success');
+                    } else {
+                        passwordMatch.textContent = '✗ Las contraseñas no coinciden';
+                        passwordMatch.className = 'password-match error';
+                        confirmPasswordInput.classList.remove('success');
+                        confirmPasswordInput.classList.add('error');
+                    }
+                } else {
+                    passwordMatch.textContent = '';
+                    confirmPasswordInput.classList.remove('success', 'error');
+                }
+            }
+
+            // Manejo del formulario
+            registerForm.addEventListener('submit', function(e) {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                if (password !== confirmPassword) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Las contraseñas no coinciden',
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        backdrop: 'rgba(0, 0, 0, 0.4)',
+                        confirmButtonColor: '#f56565'
+                    });
+                    return;
+                }
+
+                registerBtn.classList.add('loading');
+                registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando cuenta...';
+            });
+
+            // Validación en tiempo real para email
+            const emailInput = document.querySelector('input[type="email"]');
+            emailInput.addEventListener('blur', function() {
+                if (this.value && !this.checkValidity()) {
+                    this.classList.add('error');
+                } else if (this.value) {
+                    this.classList.remove('error');
+                    this.classList.add('success');
+                }
+            });
+
+            // Animación de entrada para los inputs
+            const inputs = document.querySelectorAll('.form-control');
+            inputs.forEach((input, index) => {
+                input.style.opacity = '0';
+                input.style.transform = 'translateY(20px)';
+
+                setTimeout(() => {
+                    input.style.transition = 'all 0.6s ease';
+                    input.style.opacity = '1';
+                    input.style.transform = 'translateY(0)';
+                }, 200 + (index * 100));
+            });
+
+            // Auto-hide alerts
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.animation = 'alertSlide 0.5s ease-out reverse';
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 500);
+                }, 5000);
+            });
+
+            // Validación del formulario en tiempo real
+            const requiredFields = document.querySelectorAll('input[required]');
+            requiredFields.forEach(field => {
+                field.addEventListener('blur', function() {
+                    if (!this.value.trim()) {
+                        this.classList.add('error');
+                    } else {
+                        this.classList.remove('error');
+                        this.classList.add('success');
+                    }
+                });
+
+                field.addEventListener('input', function() {
+                    if (this.classList.contains('error') && this.value.trim()) {
+                        this.classList.remove('error');
+                        this.classList.add('success');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
