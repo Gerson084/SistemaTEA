@@ -1,33 +1,14 @@
 ﻿@{
     ViewData["Title"] = "Iniciar Sesión";
     Layout = null;
-}  
-
-
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-
-        document.addEventListener("DOMContentLoaded", function () {
-        @if (TempData["RegistroExitoso"] != null)
-        {
-            <text>
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Registro Exitoso',
-                        text: '@TempData["RegistroExitoso"]'
-                    });
-            </text>
-        }
-        });
-    </script>
 }
 
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="utf-8" />
-    <title>Login</title>
+    <title>@ViewData["Title"]</title>
     <style>
-
         body {
             font-family: 'Segoe UI', sans-serif;
             background-image: url('/img/fondo.jpg');
@@ -42,7 +23,7 @@
         }
 
         .form-container {
-            background: rgba(255, 255, 255, 0.9); /* Agrega transparencia para ver el fondo */
+            background: rgba(255, 255, 255, 0.9);
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -116,32 +97,57 @@
             border: 1px solid #c3e6cb;
         }
 
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
+<body>
 
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
 
+    <div class="form-container">
+        <h2>Iniciar Sesión</h2>
 
+        <form asp-action="Login" method="post">
+            <div class="form-group">
+                <label>Correo Electrónico</label>
+                <input name="correo" class="form-control" />
+            </div>
 
-@if (ViewBag.Error != null)  
-{  
-   <div class="alert alert-danger">@ViewBag.Error</div>  
-}  
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input name="clave" type="password" class="form-control" />
+            </div>
 
-<div class="form-container">  
-    <h2>Iniciar Sesión</h2>
+            <button type="submit" class="btn btn-success">Iniciar Sesión</button>
+            <div class="link">
+                <a asp-action="Registro">¿No tienes cuenta? Regístrate</a>
+            </div>
+        </form>
+    </div>
 
-    <form asp-action="Login" method="post">  
-       <div class="form-group">  
-           <label>Correo Electrónico</label>  
-           <input name="correo" class="form-control" />  
-       </div>  
+    <!-- Scripts al final -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        @if (TempData["RegistroExitoso"] != null)
+        {
+            <text>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Registro Exitoso',
+                            text: '@TempData["RegistroExitoso"]'
+                        });
+            </text>
+        }
+        });
+    </script>
 
-       <div class="form-group">  
-           <label>Contraseña</label>  
-           <input name="clave" type="password" class="form-control" />  
-       </div>  
-
-       <button type="submit" class="btn btn-success">Iniciar Sesión</button>  
-       <a asp-action="Registro" class="btn btn-link">¿No tienes cuenta? Regístrate</a>  
-   </form>  
-</div>
+</body>
+</html>
