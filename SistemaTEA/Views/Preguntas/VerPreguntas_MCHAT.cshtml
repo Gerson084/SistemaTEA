@@ -1,0 +1,635 @@
+﻿@model IEnumerable<SistemaTEA.Models.PreguntaMCHAT>
+@{
+    ViewData["Title"] = "Preguntas M-CHAT";
+    Layout = null;
+}
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas M-CHAT - Sistema TEA</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+            .header h1 {
+                color: white;
+                font-size: 1.8rem;
+                font-weight: 300;
+            }
+
+        .user-info {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+            .user-info i {
+                font-size: 1.2rem;
+            }
+
+        .main-container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1000;
+        }
+
+            .back-btn:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: translateY(-2px);
+                color: white;
+                text-decoration: none;
+            }
+
+        .page-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: fadeInDown 0.8s ease;
+        }
+
+            .page-header h2 {
+                color: #4a5568;
+                margin-bottom: 0.5rem;
+                font-size: 2.2rem;
+                font-weight: 300;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .page-header p {
+                color: #718096;
+                font-size: 1.1rem;
+                line-height: 1.6;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.8s ease;
+            transition: transform 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .stat-card .icon {
+                font-size: 2.5rem;
+                color: #667eea;
+                margin-bottom: 1rem;
+            }
+
+            .stat-card .number {
+                font-size: 2rem;
+                font-weight: 700;
+                color: #2d3748;
+                margin-bottom: 0.5rem;
+            }
+
+            .stat-card .label {
+                color: #718096;
+                font-size: 1rem;
+                font-weight: 500;
+            }
+
+        .actions-bar {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+        }
+
+            .search-box input {
+                width: 100%;
+                padding: 0.8rem 1rem 0.8rem 2.5rem;
+                border: 2px solid #e2e8f0;
+                border-radius: 25px;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+            }
+
+                .search-box input:focus {
+                    outline: none;
+                    border-color: #667eea;
+                    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+                }
+
+            .search-box i {
+                position: absolute;
+                left: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #718096;
+            }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            color: white;
+        }
+
+        .questions-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .questions-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .question-card {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 1.5rem;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+            animation: slideInLeft 0.6s ease;
+        }
+
+            .question-card:hover {
+                transform: translateX(5px);
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .question-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .question-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.85rem;
+            border-radius: 8px;
+        }
+
+        .question-text {
+            color: #2d3748;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 1rem 0;
+            padding: 0 1rem;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .response-type {
+            background: #e6f3ff;
+            color: #2b6cb0;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #718096;
+        }
+
+            .empty-state i {
+                font-size: 4rem;
+                color: #cbd5e0;
+                margin-bottom: 1rem;
+            }
+
+            .empty-state h3 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+                color: #4a5568;
+            }
+
+        .floating-add {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(72, 187, 120, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            .floating-add:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 15px 40px rgba(72, 187, 120, 0.4);
+                text-decoration: none;
+                color: white;
+            }
+
+        @@keyframes fadeInDown {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        @@keyframes fadeInUp {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        @@keyframes slideInLeft {
+            from
+
+        {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        }
+
+        @@media (max-width: 768px) {
+            .main-container
+
+        {
+            padding: 1rem;
+        }
+
+        .header {
+            padding: 1rem;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .stats-container {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .actions-bar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .search-container {
+            max-width: none;
+        }
+
+        .question-header {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .question-actions {
+            align-self: flex-end;
+        }
+
+        .question-meta {
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-start;
+        }
+
+        .floating-add {
+            position: relative;
+            bottom: auto;
+            right: auto;
+            margin-top: 2rem;
+            align-self: center;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-list-check"></i> Sistema TEA - Preguntas M-CHAT</h1>
+        <div class="user-info">
+            <i class="fas fa-user-shield"></i>
+            <span>@ViewBag.NombreUsuario (Administrador)</span>
+        </div>
+    </div>
+
+    <a href="@Url.Action("AdministrarTests", "Tests")" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Volver a Tests
+    </a>
+
+    <div class="main-container">
+        <div class="page-header">
+            <h2>
+                <i class="fas fa-question-circle"></i>
+                Banco de Preguntas M-CHAT
+            </h2>
+            <p>Gestiona y visualiza todas las preguntas del test M-CHAT para la detección temprana del autismo.</p>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <div class="number">@Model.Count()</div>
+                <div class="label">Total de Preguntas</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="number">@Model.Count()</div>
+                <div class="label">Preguntas Activas</div>
+            </div>
+           
+        </div>
+
+        <div class="actions-bar">
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar preguntas...">
+                </div>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                
+                <a href="@Url.Action("CreateMCHAT", "Preguntas")" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Nueva Pregunta
+                </a>
+            </div>
+        </div>
+
+        <div class="questions-container">
+            @if (Model.Any())
+            {
+                <div class="questions-grid" id="questionsGrid">
+                    @foreach (var pregunta in Model.OrderBy(p => p.NumeroPregunta))
+                    {
+                        <div class="question-card" data-question="@pregunta.TextoPregunta.ToLower()">
+                            <div class="question-header">
+                                <div class="question-number">
+                                    Pregunta @pregunta.NumeroPregunta
+                                </div>
+                                <div class="question-actions">
+                                    <button class="btn btn-sm btn-primary" onclick="editQuestion(@pregunta.PreguntaID)" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                  
+                                </div>
+                            </div>
+
+                            <div class="question-text">
+                                @pregunta.TextoPregunta
+                            </div>
+
+                            <div class="question-meta">
+                                <span class="response-type">
+                                    <i class="fas fa-check"></i> Sí / No
+                                </span>
+                                <span>
+                                    <i class="fas fa-calendar"></i> Creada: @DateTime.Now.ToString("dd/MM/yyyy")
+                                </span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-question-circle"></i>
+                    <h3>No hay preguntas disponibles</h3>
+                    <p>Comienza creando tu primera pregunta para el test M-CHAT.</p>
+                    <a href="@Url.Action("CreateMCHAT", "Preguntas")" class="btn btn-success" style="margin-top: 1rem;">
+                        <i class="fas fa-plus"></i> Crear Primera Pregunta
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <a href="@Url.Action("CreateMCHAT", "Preguntas")" class="floating-add">
+        <i class="fas fa-plus"></i> Nueva Pregunta
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const questionCards = document.querySelectorAll('.question-card');
+            questionCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.animation = 'none';
+
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.animation = `slideInLeft 0.6s ease ${index * 0.1}s both`;
+                }, 100);
+            });
+
+            const searchInput = document.getElementById('searchInput');
+            const questionsGrid = document.getElementById('questionsGrid');
+
+            if (searchInput && questionsGrid) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const questionCards = questionsGrid.querySelectorAll('.question-card');
+
+                    questionCards.forEach(card => {
+                        const questionText = card.getAttribute('data-question');
+                        if (questionText.includes(searchTerm)) {
+                            card.style.display = 'block';
+                            card.style.animation = 'fadeInUp 0.3s ease';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            }
+        });
+
+        function editQuestion(id) {
+            // Redirigir a la página de edición
+            window.location.href = `@Url.Action("EditMCHAT", "Preguntas")/${id}`;
+        }
+
+  
+
+    </script>
+</body>
+</html>
