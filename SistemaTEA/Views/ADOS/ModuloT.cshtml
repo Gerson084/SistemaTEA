@@ -1,0 +1,411 @@
+﻿@model SistemaTEA.ViewModels.ADOSEvaluacionViewModel
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario ADOS</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-purple: #8B5CF6;
+            --light-purple: #A78BFA;
+            --pale-purple: #F3F4F6;
+            --purple-bg: #FAF5FF;
+            --text-dark: #374151;
+            --border-color: #E5E7EB;
+        }
+
+        body {
+            background: linear-gradient(135deg, #FAF5FF 0%, #F8FAFC 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-purple), var(--light-purple));
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+
+            .header-section h1 {
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+
+            .header-section p {
+                font-size: 1.1rem;
+                opacity: 0.9;
+                margin: 0;
+            }
+
+        .question-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            transition: all 0.3s ease;
+        }
+
+            .question-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
+            }
+
+        .question-header {
+            background: linear-gradient(135deg, var(--purple-bg), #FFFFFF);
+            padding: 1.5rem;
+            border-bottom: 2px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .question-number {
+            background: var(--primary-purple);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        .question-type {
+            background: var(--light-purple);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 1rem;
+        }
+
+        .question-body {
+            padding: 2rem;
+        }
+
+        .form-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-purple);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+            .form-control:focus, .form-select:focus {
+                border-color: var(--primary-purple);
+                box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25);
+            }
+
+        .form-select {
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .textarea-field {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary-purple), var(--light-purple));
+            border: none;
+            color: white;
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+            .btn-submit:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+            }
+
+        .progress-indicator {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(139, 92, 246, 0.1);
+        }
+
+        .progress-bar {
+            background: var(--primary-purple);
+            height: 6px;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .icon {
+            color: var(--primary-purple);
+        }
+
+        /* Estilos específicos para diferentes tipos de pregunta */
+        .input-text {
+            width: 100%;
+        }
+
+        .input-number {
+            width: 200px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .radio-option:hover {
+                border-color: var(--light-purple);
+                background: var(--purple-bg);
+            }
+
+            .radio-option input[type="radio"]:checked + label {
+                color: var(--primary-purple);
+                font-weight: 600;
+            }
+
+        @@media (max-width: 768px) {
+            .main-container
+
+        {
+            padding: 1rem;
+        }
+
+        .header-section h1 {
+            font-size: 2rem;
+        }
+
+        .question-header {
+            padding: 1rem;
+        }
+
+        .question-body {
+            padding: 1.5rem;
+        }
+
+        .radio-group {
+            flex-direction: column;
+        }
+
+        }</style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <h1><i class="fas fa-clipboard-check"></i> Evaluación ADOS Módulo @Model.ModuloID</h1>
+            <p>Evaluación del Trastorno del Espectro Autista</p>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-semibold">Progreso de la evaluación</span>
+                <span class="text-muted" id="progress-text">0% completado</span>
+            </div>
+            <div class="progress" style="height: 6px; border-radius: 3px;">
+                <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <form method="post" asp-action="GuardarEvaluacion" id="adosForm">
+            @for (int i = 0; i < Model.Preguntas.Count(); i++)
+            {
+                var pregunta = Model.Preguntas.ElementAt(i);
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="d-flex align-items-center flex-wrap">
+                            <span class="question-number">@pregunta.NumeroPregunta</span>
+                            <div class="question-text flex-grow-1">
+                                @pregunta.TextoPregunta
+                            </div>
+                            <span class="question-type">@pregunta.TipoPregunta</span>
+                        </div>
+                    </div>
+                    <div class="question-body">
+                        <div class="form-section">
+                            <label class="form-label">
+                                <i class="fas fa-pencil-alt icon"></i>
+                                Respuesta
+                            </label>
+
+                            @if (pregunta.TipoPregunta.ToLower().Contains("escala") || pregunta.TipoPregunta.ToLower().Contains("puntuacion"))
+                            {
+                                <select class="form-select" name="Respuestas[@pregunta.PreguntaID]" onchange="updateProgress()">
+                                    <option value="">Seleccione una opción</option>
+                                    <option value="0">0 - No observado</option>
+                                    <option value="1">1 - Leve</option>
+                                    <option value="2">2 - Moderado</option>
+                                    <option value="3">3 - Severo</option>
+                                </select>
+                            }
+                            else if (pregunta.TipoPregunta.ToLower().Contains("si/no") || pregunta.TipoPregunta.ToLower().Contains("booleana"))
+                            {
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="si_@pregunta.PreguntaID" name="Respuestas[@pregunta.PreguntaID]" value="Si" onchange="updateProgress()">
+                                        <label for="si_@pregunta.PreguntaID">Sí</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="no_@pregunta.PreguntaID" name="Respuestas[@pregunta.PreguntaID]" value="No" onchange="updateProgress()">
+                                        <label for="no_@pregunta.PreguntaID">No</label>
+                                    </div>
+                                </div>
+                            }
+                            else if (pregunta.TipoPregunta.ToLower().Contains("numero") || pregunta.TipoPregunta.ToLower().Contains("numerico"))
+                            {
+                                <input type="number" class="form-control input-number" name="Respuestas[@pregunta.PreguntaID]"
+                                       placeholder="Ingrese un número..." onchange="updateProgress()">
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control input-text" name="Respuestas[@pregunta.PreguntaID]"
+                                       placeholder="Escriba su respuesta..." onchange="updateProgress()">
+                            }
+                        </div>
+
+                        @if (pregunta.TipoPregunta.ToLower().Contains("observacion") || pregunta.TipoPregunta.ToLower().Contains("texto"))
+                        {
+                            <div class="form-section">
+                                <label class="form-label">
+                                    <i class="fas fa-eye icon"></i>
+                                    Observaciones detalladas
+                                </label>
+                                <textarea class="form-control textarea-field" name="Observaciones[@pregunta.PreguntaID]"
+                                          placeholder="Describa las observaciones específicas..."></textarea>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Submit Section -->
+            <div class="submit-section">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i>
+                    Guardar Evaluación
+                </button>
+                <p class="text-muted mt-3 mb-0">
+                    <i class="fas fa-info-circle"></i>
+                    Asegúrese de completar todas las secciones antes de guardar
+                </p>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function updateProgress() {
+            const inputs = document.querySelectorAll('input[name*="Respuestas"], select[name*="Respuestas"]');
+            const totalQuestions = inputs.length;
+            let answeredQuestions = 0;
+
+            inputs.forEach(input => {
+                if (input.type === 'radio') {
+                    // Para radios, verificar si alguno del grupo está seleccionado
+                    const groupName = input.name;
+                    const checkedRadio = document.querySelector(`input[name="${groupName}"]:checked`);
+                    if (checkedRadio && !input.previousElementSibling) {
+                        // Solo contar una vez por grupo
+                        answeredQuestions++;
+                    }
+                } else if (input.value && input.value.trim() !== '') {
+                    answeredQuestions++;
+                }
+            });
+
+            const percentage = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+
+            if (progressBar && progressText) {
+                progressBar.style.width = percentage + '%';
+                progressText.textContent = percentage + '% completado';
+            }
+        }
+
+        // Inicializar el progreso al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+
+            // Añadir smooth scroll para mejor experiencia
+            document.querySelectorAll('.question-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+            });
+        });
+
+        // Actualizar progreso para radios
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', updateProgress);
+        });
+    </script>
+</body>
+</html>

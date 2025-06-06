@@ -18,3 +18,5 @@ namespace SistemaTEA.ViewModels
         public List<RespuestaADOSViewModel> Preguntas { get; set; }
     }
 }
+
+
