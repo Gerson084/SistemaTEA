@@ -1,0 +1,748 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "PANEL PADRE";
+}
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Padre - Sistema TEA</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #32ab6c 0%,#d1bd49 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+            .header h1 {
+                color: white;
+                font-size: 1.8rem;
+                font-weight: 300;
+            }
+
+        .user-info {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+            .user-info i {
+                font-size: 1.2rem;
+            }
+
+        .main-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+            .welcome-section h2 {
+                color: #2d5aa0;
+                margin-bottom: 1rem;
+                font-size: 2rem;
+                font-weight: 300;
+            }
+
+            .welcome-section p {
+                color: #718096;
+                font-size: 1.1rem;
+                line-height: 1.6;
+            }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            }
+
+            .stat-card.children {
+                border-left-color: #4facfe;
+            }
+
+            .stat-card.evaluations {
+                border-left-color: #00f2fe;
+            }
+
+            .stat-card.pending {
+                border-left-color: #ffa726;
+            }
+
+            .stat-card.alerts {
+                border-left-color: #ff7043;
+            }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-card.children .stat-icon {
+            background: #4facfe;
+        }
+
+        .stat-card.evaluations .stat-icon {
+            background: #00f2fe;
+        }
+
+        .stat-card.pending .stat-icon {
+            background: #ffa726;
+        }
+
+        .stat-card.alerts .stat-icon {
+            background: #ff7043;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .main-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+            .action-section h3 {
+                color: #2d5aa0;
+                margin-bottom: 1.5rem;
+                font-size: 1.3rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #29b6f6 0%, #0288d1 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .children-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+            .children-section h3 {
+                color: #2d5aa0;
+                margin-bottom: 1.5rem;
+                font-size: 1.3rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+        .child-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            border-left: 4px solid #4facfe;
+        }
+
+            .child-card:hover {
+                background: #e2f4ff;
+                transform: translateX(5px);
+            }
+
+        .child-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .child-info {
+            flex: 1;
+        }
+
+        .child-name {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .child-details {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .child-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
+
+        .recent-evaluations {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+            .recent-evaluations h3 {
+                color: #2d5aa0;
+                margin-bottom: 1.5rem;
+                font-size: 1.3rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+        .evaluation-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            background: #f7fafc;
+            transition: background 0.3s ease;
+        }
+
+            .evaluation-item:hover {
+                background: #edf2f7;
+            }
+
+        .eval-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+        }
+
+            .eval-icon.mchat {
+                background: #4facfe;
+            }
+
+            .eval-icon.completed {
+                background: #4caf50;
+            }
+
+            .eval-icon.pending {
+                background: #ffa726;
+            }
+
+        .eval-details {
+            flex: 1;
+        }
+
+        .eval-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.2rem;
+        }
+
+        .eval-time {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .eval-status {
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .logout-btn {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+            .logout-btn:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: translateY(-2px);
+            }
+
+        .quick-tips {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            border-left: 4px solid #00f2fe;
+        }
+
+            .quick-tips h3 {
+                color: #2d5aa0;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+        .tip-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            color: #4a5568;
+        }
+
+            .tip-item:last-child {
+                border-bottom: none;
+            }
+
+        @@media (max-width: 768px) {
+            .main-container
+
+        {
+            padding: 1rem;
+        }
+
+        .header {
+            padding: 1rem;
+        }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .main-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+        }
+
+        .child-card {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .child-actions {
+            justify-content: center;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-heart"></i> Sistema TEA - Panel de Padre</h1>
+        <div class="user-info">
+            <i class="fas fa-user"></i>
+            <span>@ViewBag.NombreUsuario</span>
+        </div>
+    </div>
+
+    <a href="@Url.Action("Logout", "Login")" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+    </a>
+
+    <div class="main-container">
+        <div class="welcome-section">
+            <h2>Bienvenido al Panel de Padre</h2>
+            <p>Administra la información de tus hijos y realiza evaluaciones M-CHAT para el seguimiento del desarrollo</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card children">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number">@ViewBag.TotalHijos</div>
+                        <div class="stat-label">Hijos Registrados</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-child"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card evaluations">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number">@ViewBag.EvaluacionesCompletadas</div>
+                        <div class="stat-label">Evaluaciones M-CHAT</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card pending">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number">@ViewBag.EvaluacionesPendientes</div>
+                        <div class="stat-label">Evaluaciones Pendientes</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card alerts">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number">@ViewBag.Alertas</div>
+                        <div class="stat-label">Alertas Importantes</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-actions">
+            <div class="action-section">
+                <h3><i class="fas fa-baby"></i> Gestión de Hijos</h3>
+                <div class="action-buttons">
+                    <a href="@Url.Action("Crear", "Pacientes")" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Registrar Nuevo Hijo
+                    </a>
+                    <a href="@Url.Action("MisHijos", "Pacientes")" class="btn btn-info">
+                        <i class="fas fa-list"></i> Ver Todos mis Hijos
+                    </a>
+                    <a href="@Url.Action("ActualizarInfo", "Pacientes")" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Actualizar Información
+                    </a>
+                </div>
+            </div>
+
+            <div class="action-section">
+                <h3><i class="fas fa-clipboard-list"></i> Evaluaciones M-CHAT</h3>
+                <div class="action-buttons">
+                    <a href="@Url.Action("NuevaEvaluacion", "MCHAT")" class="btn btn-success">
+                        <i class="fas fa-play"></i> Iniciar Nueva Evaluación
+                    </a>
+                    <a href="@Url.Action("MisEvaluaciones", "MCHAT")" class="btn btn-info">
+                        <i class="fas fa-history"></i> Ver Evaluaciones Anteriores
+                    </a>
+                    <a href="@Url.Action("Resultados", "MCHAT")" class="btn btn-primary">
+                        <i class="fas fa-chart-line"></i> Ver Resultados
+                    </a>
+                </div>
+            </div>
+
+            <div class="action-section">
+                <h3><i class="fas fa-user-md"></i> Seguimiento Profesional</h3>
+                <div class="action-buttons">
+                    <a href="@Url.Action("MisPsicologos", "Seguimiento")" class="btn btn-info">
+                        <i class="fas fa-stethoscope"></i> Psicólogos Asignados
+                    </a>
+                    <a href="@Url.Action("Citas", "Seguimiento")" class="btn btn-warning">
+                        <i class="fas fa-calendar-alt"></i> Programar Citas
+                    </a>
+                    <a href="@Url.Action("Reportes", "Seguimiento")" class="btn btn-success">
+                        <i class="fas fa-file-medical"></i> Reportes Médicos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="children-section">
+            <h3><i class="fas fa-children"></i> Mis Hijos</h3>
+
+            <!-- Ejemplo de hijo registrado -->
+            <div class="child-card">
+                <div class="child-avatar">
+                    <i class="fas fa-child"></i>
+                </div>
+                <div class="child-info">
+                    <div class="child-name">Ana María López</div>
+                    <div class="child-details">2 años, 8 meses • Última evaluación: Hace 3 semanas</div>
+                </div>
+                <div class="child-actions">
+                    <a href="@Url.Action("VerPerfil", "Pacientes", new { id = 1 })" class="btn btn-info btn-small">
+                        <i class="fas fa-eye"></i> Ver
+                    </a>
+                    <a href="@Url.Action("NuevaEvaluacion", "MCHAT", new { pacienteId = 1 })" class="btn btn-success btn-small">
+                        <i class="fas fa-clipboard-check"></i> Evaluar
+                    </a>
+                </div>
+            </div>
+
+            <div class="child-card">
+                <div class="child-avatar">
+                    <i class="fas fa-child"></i>
+                </div>
+                <div class="child-info">
+                    <div class="child-name">Carlos Andrés López</div>
+                    <div class="child-details">4 años, 2 meses • Evaluación pendiente</div>
+                </div>
+                <div class="child-actions">
+                    <a href="@Url.Action("VerPerfil", "Pacientes", new { id = 2 })" class="btn btn-info btn-small">
+                        <i class="fas fa-eye"></i> Ver
+                    </a>
+                    <a href="@Url.Action("NuevaEvaluacion", "MCHAT", new { pacienteId = 2 })" class="btn btn-warning btn-small">
+                        <i class="fas fa-clipboard-check"></i> Evaluar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-evaluations">
+            <h3><i class="fas fa-history"></i> Evaluaciones Recientes</h3>
+
+            <div class="evaluation-item">
+                <div class="eval-icon mchat">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <div class="eval-details">
+                    <div class="eval-title">M-CHAT completado - Ana María</div>
+                    <div class="eval-time">Evaluación realizada hace 3 semanas</div>
+                </div>
+                <span class="eval-status status-completed">Completado</span>
+            </div>
+
+            <div class="evaluation-item">
+                <div class="eval-icon pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="eval-details">
+                    <div class="eval-title">M-CHAT pendiente - Carlos Andrés</div>
+                    <div class="eval-time">Recordatorio: Evaluación programada</div>
+                </div>
+                <span class="eval-status status-pending">Pendiente</span>
+            </div>
+
+            <div class="evaluation-item">
+                <div class="eval-icon completed">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="eval-details">
+                    <div class="eval-title">Consulta con Psicóloga - Ana María</div>
+                    <div class="eval-time">Dra. González revisó resultados - Hace 1 semana</div>
+                </div>
+                <span class="eval-status status-completed">Revisado</span>
+            </div>
+        </div>
+
+        <div class="quick-tips">
+            <h3><i class="fas fa-lightbulb"></i> Consejos Importantes</h3>
+            <div class="tip-item">
+                <strong>Evaluación Regular:</strong> Se recomienda realizar evaluaciones M-CHAT cada 6 meses para un seguimiento adecuado del desarrollo.
+            </div>
+            <div class="tip-item">
+                <strong>Observación Diaria:</strong> Mantén un registro de comportamientos y habilidades que observes en casa para compartir con el psicólogo.
+            </div>
+            <div class="tip-item">
+                <strong>Comunicación Abierta:</strong> Mantén comunicación constante con los psicólogos asignados para un mejor seguimiento.
+            </div>
+            <div class="tip-item">
+                <strong>Información Actualizada:</strong> Asegúrate de mantener actualizada la información de contacto y médica de tus hijos.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animaciones y efectos interactivos
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animación de entrada para las tarjetas de estadísticas
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+
+            // Animación de contador para los números de estadísticas
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(number => {
+                const target = parseInt(number.textContent);
+                let current = 0;
+                const increment = target / 30;
+
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    number.textContent = Math.floor(current);
+                }, 50);
+            });
+
+            // Efecto hover para las tarjetas de hijos
+            const childCards = document.querySelectorAll('.child-card');
+            childCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(10px)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+
+            // Efecto para items de evaluación
+            const evalItems = document.querySelectorAll('.evaluation-item');
+            evalItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                });
+
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
