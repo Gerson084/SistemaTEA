@@ -1,0 +1,248 @@
+body {
+    background: url('/img/carretera.jpg') no-repeat center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 15px;
+}
+
+.container-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.15);
+    transition: transform 0.5s ease-in-out;
+    min-height: 500px;
+}
+
+.image {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background-image: url('/img/carretera.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 15px 0 0 15px;
+    z-index: 1;
+    transition: transform 0.5s ease-in-out;
+}
+
+    .image.moved {
+        transform: translateX(100%);
+        border-radius: 0 15px 15px 0;
+    }
+
+    .image.movedL {
+        transform: translateX(0);
+        border-radius: 15px 0 0 15px;
+    }
+
+.form-container {
+    width: 100%;
+    padding: 40px 30px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+    .form-container h3 {
+        margin-bottom: 30px;
+        color: #333;
+        font-weight: 600;
+    }
+
+.form-label {
+    text-align: left;
+    font-weight: 500;
+    color: #555;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 2px solid #e0e0e0;
+    padding: 12px 15px;
+    transition: border-color 0.3s ease;
+}
+
+    .form-control:focus {
+        border-color: #5d9c59;
+        box-shadow: 0 0 0 0.2rem rgba(93, 156, 89, 0.25);
+    }
+
+.btn-primary {
+    background: #5d9c59;
+    border: none;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+    .btn-primary:hover {
+        background: #4a7c45;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(93, 156, 89, 0.3);
+    }
+
+.toggle-link {
+    margin-top: 20px;
+    cursor: pointer;
+    color: #5d9c59;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+    .toggle-link:hover {
+        color: #4a7c45;
+        text-decoration: underline;
+    }
+
+.input-group .btn {
+    border-radius: 0 8px 8px 0;
+}
+
+#alert-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: 90%;
+    max-width: 500px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container-wrapper {
+        flex-direction: column;
+        max-width: 100%;
+        min-height: auto;
+        background: rgba(255, 255, 255, 0.98);
+    }
+
+    .image {
+        position: relative;
+        width: 100%;
+        height: 200px;
+        border-radius: 15px 15px 0 0;
+        transform: none !important;
+        transition: none;
+    }
+
+        .image.moved,
+        .image.movedL {
+            transform: none !important;
+            border-radius: 15px 15px 0 0;
+        }
+
+    .form-container {
+        width: 100%;
+        padding: 30px 25px;
+    }
+
+        .form-container h3 {
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+        }
+
+    .btn-primary {
+        padding: 14px;
+        font-size: 1.1rem;
+    }
+
+    #alert-container {
+        width: 95%;
+        top: 10px;
+    }
+
+    /* Hide inactive forms on mobile */
+    .form-container:not(.active-form) {
+        display: none;
+    }
+
+    .form-container.active-form {
+        display: flex;
+    }
+}
+
+@media (max-width: 480px) {
+    .container-wrapper {
+        margin: 10px;
+        border-radius: 10px;
+    }
+
+    .image {
+        height: 150px;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .form-container {
+        padding: 25px 20px;
+    }
+
+        .form-container h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+
+    .form-control {
+        padding: 10px 12px;
+    }
+
+    .btn-primary {
+        padding: 12px;
+        font-size: 1rem;
+    }
+}
+
+/* Desktop-specific styles */
+@media (min-width: 769px) {
+    .form-container#register-form {
+        display: flex;
+    }
+
+    .form-container#login-form {
+        display: flex;
+    }
+
+    /* Initially show login form */
+    .form-container#register-form {
+        transform: translateX(-100%);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .form-container#login-form {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    /* When showing register form */
+    .showing-register .form-container#register-form {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    .showing-register .form-container#login-form {
+        transform: translateX(100%);
+        opacity: 0;
+        pointer-events: none;
+    }
+}

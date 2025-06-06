@@ -1,250 +1,30 @@
-﻿@model SistemaTEA.Models.Usuario
-
-@{
-    Layout = null;
+﻿@{
     ViewData["Title"] = "Iniciar Sesión";
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<h2>Iniciar Sesión</h2>
 
-    <link rel="stylesheet" href="~/css/login.css" />
+@if (TempData["RegistroExitoso"] != null)
+{
+    <div class="alert alert-success">@TempData["RegistroExitoso"]</div>
+}
 
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
 
-</head>
-<body>
-
-    <div id="alert-container">
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-danger">
-                @TempData["ErrorMessage"]
-            </div>
-        }
-
-        @if (TempData["Message"] != null)
-        {
-            <div class="alert alert-success">
-                @TempData["Message"]
-            </div>
-        }
-
+<form asp-action="Login" method="post">
+    <div class="form-group">
+        <label>Correo Electrónico</label>
+        <input name="correo" class="form-control" />
     </div>
 
-    <div class="container-wrapper" id="container">
-        <div class="image"></div>
-
-        <!-- Register Form -->
-        <div class="form-container" id="register-form">
-            <h3><i class="fas fa-user-plus me-2"></i>Registrarse</h3>
-            <form asp-controller="Usuarios" asp-action="CreateUsuario" method="post">
-                @Html.AntiForgeryToken()
-                @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
-
-                <div class="mb-3">
-                    <label asp-for="Nombre" class="form-label">
-                        <i class="fas fa-user me-1"></i>Nombre:
-                    </label>
-                    <input asp-for="Nombre" class="form-control" placeholder="Ingrese su nombre completo" required />
-                    <span asp-validation-for="Nombre" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Apellido" class="form-label">
-                        <i class="fas fa-user me-1"></i>Apellido:
-                    </label>
-                    <input asp-for="Apellido" class="form-control" placeholder="Ingrese su apellido" required />
-                    <span asp-validation-for="Apellido" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Telefono" class="form-label">
-                        <i class="fas fa-phone me-1"></i>Teléfono:
-                    </label>
-                    <input asp-for="Telefono" class="form-control" placeholder="Ingrese su número de teléfono" required />
-                    <span asp-validation-for="Telefono" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Email" class="form-label">
-                        <i class="fas fa-envelope me-1"></i>Correo Electrónico:
-                    </label>
-                    <input asp-for="Email" class="form-control" type="email" placeholder="ejemplo@correo.com" required />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-
-                <div class="mb-4">
-                    <label asp-for="Contraseña" class="form-label">
-                        <i class="fas fa-lock me-1"></i>Contraseña:
-                    </label>
-                    <div class="input-group">
-                        @Html.Password("Contrasena", "", new { @class = "form-control", id = "passwordFieldRegister", placeholder = "Mínimo 8 caracteres", required = "required" })
-                        <button type="button" class="btn btn-outline-secondary" id="toggleButtonRegister" style="display: none;">
-                            <i class="fa fa-eye" id="toggleIconRegister"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100 mb-3">
-                    <i class="fas fa-user-plus me-2"></i>Crear Cuenta
-                </button>
-            </form>
-
-            <a href="javascript:void(0)" class="toggle-link" onclick="toggleForms('login')">
-                <i class="fas fa-sign-in-alt me-1"></i>¿Ya tienes cuenta? Iniciar sesión
-            </a>
-        </div>
-
-        <!-- Login Form -->
-        <div class="form-container active-form" id="login-form">
-            <h3><i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión</h3>
-            @using (Html.BeginForm("Login", "Login", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
-                @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
-
-                <div class="mb-3">
-                    <label for="correo" class="form-label">
-                        <i class="fas fa-envelope me-1"></i>Correo Electrónico:
-                    </label>
-                    @Html.TextBox("correo", "", new { @class = "form-control", type = "email", placeholder = "ejemplo@correo.com", required = "required" })
-                </div>
-
-                <div class="mb-4">
-                    <label for="Contrasena" class="form-label">
-                        <i class="fas fa-lock me-1"></i>Contraseña:
-                    </label>
-                    <div class="input-group">
-                        @Html.Password("Contrasena", "", new { @class = "form-control", id = "passwordFieldLogin", placeholder = "Ingrese su contraseña", required = "required" })
-                        <button type="button" class="btn btn-outline-secondary" id="toggleButtonLogin" style="display: none;">
-                            <i class="fa fa-eye" id="toggleIconLogin"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100 mb-3">
-                    <i class="fas fa-sign-in-alt me-2"></i>Ingresar
-                </button>
-            }
-
-            <a href="javascript:void(0)" class="toggle-link" onclick="toggleForms('register')">
-                <i class="fas fa-user-plus me-1"></i>¿No tienes cuenta? Regístrate
-            </a>
-        </div>
+    <div class="form-group">
+        <label>Contraseña</label>
+        <input name="clave" type="password" class="form-control" />
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function toggleForms(formType) {
-            const container = document.getElementById('container');
-            const registerForm = document.getElementById('register-form');
-            const loginForm = document.getElementById('login-form');
-            const image = document.querySelector('.image');
-
-            if (window.innerWidth <= 768) {
-                // Mobile behavior - just toggle visibility
-                if (formType === 'register') {
-                    registerForm.classList.add('active-form');
-                    loginForm.classList.remove('active-form');
-                } else {
-                    loginForm.classList.add('active-form');
-                    registerForm.classList.remove('active-form');
-                }
-            } else {
-                // Desktop behavior - slide animation
-                if (formType === 'register') {
-                    container.classList.add('showing-register');
-                    image.classList.add('moved');
-                    image.classList.remove('movedL');
-                } else {
-                    container.classList.remove('showing-register');
-                    image.classList.add('movedL');
-                    image.classList.remove('moved');
-                }
-            }
-        }
-
-        // Legacy functions for backward compatibility
-        function moveImage() {
-            toggleForms('register');
-        }
-
-        function moveImageL() {
-            toggleForms('login');
-        }
-
-        // Password toggle functionality
-        document.addEventListener("DOMContentLoaded", function () {
-            setupPasswordToggle("passwordFieldRegister", "toggleButtonRegister", "toggleIconRegister");
-            setupPasswordToggle("passwordFieldLogin", "toggleButtonLogin", "toggleIconLogin");
-
-            // Handle window resize
-            window.addEventListener('resize', function() {
-                const container = document.getElementById('container');
-                const registerForm = document.getElementById('register-form');
-                const loginForm = document.getElementById('login-form');
-
-                if (window.innerWidth <= 768) {
-                    // Reset desktop classes on mobile
-                    container.classList.remove('showing-register');
-
-                    // Ensure proper mobile visibility
-                    if (!registerForm.classList.contains('active-form') && !loginForm.classList.contains('active-form')) {
-                        loginForm.classList.add('active-form');
-                    }
-                } else {
-                    // Reset mobile classes on desktop
-                    registerForm.classList.remove('active-form');
-                    loginForm.classList.remove('active-form');
-                }
-            });
-        });
-
-        function setupPasswordToggle(passwordFieldId, buttonId, iconId) {
-            let passwordField = document.getElementById(passwordFieldId);
-            let toggleButton = document.getElementById(buttonId);
-            let toggleIcon = document.getElementById(iconId);
-
-            if (!passwordField || !toggleButton || !toggleIcon) return;
-
-            // Show button when user starts typing
-            passwordField.addEventListener("input", function () {
-                toggleButton.style.display = passwordField.value.length > 0 ? "inline-block" : "none";
-            });
-
-            // Toggle password visibility
-            toggleButton.addEventListener("click", function () {
-                if (passwordField.type === "password") {
-                    passwordField.type = "text";
-                    toggleIcon.classList.remove("fa-eye");
-                    toggleIcon.classList.add("fa-eye-slash");
-                } else {
-                    passwordField.type = "password";
-                    toggleIcon.classList.remove("fa-eye-slash");
-                    toggleIcon.classList.add("fa-eye");
-                }
-            });
-        }
-
-        // Auto-dismiss alerts
-        setTimeout(function () {
-            let alerts = document.querySelectorAll("#alert-container .alert");
-            alerts.forEach(alert => {
-                alert.classList.remove("show");
-                setTimeout(() => {
-                    if (alert.parentNode) {
-                        alert.parentNode.removeChild(alert);
-                    }
-                }, 150);
-            });
-        }, 5000);
-    </script>
-
-</body>
-</html>
+    <button type="submit" class="btn btn-success">Iniciar Sesión</button>
+    <a asp-action="Registro" class="btn btn-link">¿No tienes cuenta? Regístrate</a>
+</form>

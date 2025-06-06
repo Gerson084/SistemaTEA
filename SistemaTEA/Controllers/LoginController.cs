@@ -7,16 +7,19 @@ using SistemaTEA.Models;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Tls;
+using SistemaTEA.Atributos;
+using System.Security.Cryptography;
 
 namespace SistemaTEA.Controllers
 {
     public class LoginController : Controller
     {
-        private readonly EvaluacionContext _context;
+        private readonly EvaluacionContext _testContext;
 
         public LoginController(EvaluacionContext context)
         {
-            _context = context;
+            _testContext = context;
         }
 
         public IActionResult Index()
@@ -24,77 +27,95 @@ namespace SistemaTEA.Controllers
             return View();
         }
 
-        // POST: Procesa el inicio de sesión
-        [AllowAnonymous]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string correo, string contrasena)
+        // GET: Registro
+        public IActionResult Registro()
         {
-            if (string.IsNullOrEmpty(correo) || string.IsNullOrEmpty(contrasena))
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Registro(Usuario usuario, string confirmarContrasena)
+        {
+            usuario.RolID = 2;
+            if (ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Debe completar todos los campos.");
-                return View();
+                if (usuario.Contraseña != confirmarContrasena)
+                {
+                    ViewBag.Error = "Las contraseñas no coinciden.";
+                    return View(usuario);
+                }
+
+                var existe = _testContext.Usuarios.FirstOrDefault(u => u.Email == usuario.Email);
+                if (existe != null)
+                {
+                    ViewBag.Error = "El correo ya está registrado.";
+                    return View(usuario);
+                }
+
+                usuario.RolID = 2;
+                usuario.Contraseña = SeguridadHelper.HashPassword(usuario.Contraseña);
+                usuario.EsActivo = false; // pendiente de aprobación
+
+                try
+                {
+                    _testContext.Usuarios.Add(usuario);
+                    _testContext.SaveChanges();
+
+                    HttpContext.Session.SetInt32("id_usuario", usuario.UsuarioID);
+                    HttpContext.Session.SetString("nombre", usuario.Nombre);
+                    HttpContext.Session.SetInt32("rol", usuario.RolID);
+                    HttpContext.Session.SetString("telefono", usuario.Telefono ?? "");
+
+                    TempData["RegistroExitoso"] = "Registro exitoso. En un periodo de 24 horas un agente se comunicará contigo para brindarte detalles del estado de tu cuenta.";
+
+                    return RedirectToAction("Login", "Login");
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Error = "Ocurrió un error al registrar el usuario: " + ex.Message;
+                    return View(usuario);
+                }
             }
 
-            string emailRegex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-            if (!Regex.IsMatch(correo, emailRegex))
+            return View(usuario);
+        }
+
+        // GET: Login
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        // POST: Login
+        [HttpPost]
+        public IActionResult Login(string correo, string clave)
+        {
+            var user = _testContext.Usuarios.FirstOrDefault(u => u.Email == correo);
+
+            if (user != null && SeguridadHelper.VerificarPassword(clave, user.Contraseña))
             {
-                ModelState.AddModelError("", "El correo electrónico no es válido.");
-                return View();
+                if (!user.EsActivo)
+                {
+                    ViewBag.Error = "Tu cuenta aún no ha sido aprobada por un administrador.";
+                    return View();
+                }
+
+                HttpContext.Session.SetInt32("id_usuario", user.UsuarioID);
+                HttpContext.Session.SetString("nombre", user.Nombre);
+                HttpContext.Session.SetInt32("rol", user.RolID);
+
+                return RedirectToAction("Index", "Home");
             }
 
-            // Buscar al usuario
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == correo);
+            ViewBag.Error = "Correo o clave incorrectos.";
+            return View();
+        }
 
-            if (usuario == null)
-            {
-                ModelState.AddModelError("", "Usuario no encontrado.");
-                return View();
-            }
-
-            // Verificar la contraseña
-            var passwordHasher = new PasswordHasher<Usuario>();
-            var resultado = passwordHasher.VerifyHashedPassword(usuario, usuario.Contraseña, contrasena);
-
-            if (resultado == PasswordVerificationResult.Failed)
-            {
-                ModelState.AddModelError("", "Correo o contraseña incorrectos.");
-                return View();
-            }
-
-            if (usuario.RolID == null)
-            {
-                ModelState.AddModelError("", "El usuario no tiene un rol asignado.");
-                return View();
-            }
-
-            // 🔐 Claims para autenticación
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, usuario.Nombre),
-                new Claim(ClaimTypes.Role, usuario.RolID == 1 ? "Administrador" :
-                                   usuario.RolID == 2 ? "Padre" : "Psicologo"),
-                new Claim(ClaimTypes.NameIdentifier, usuario.UsuarioID.ToString())
-            };
-
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-            // También puedes mantener la sesión si deseas usarla en otras vistas
-            HttpContext.Session.SetInt32("usuarioId", usuario.UsuarioID);
-            HttpContext.Session.SetString("nombreUsuario", usuario.Nombre);
-            HttpContext.Session.SetInt32("TipoUsuario", usuario.RolID);
-
-            // Redirección según rol
-            return usuario.RolID switch
-            {
-                1 => RedirectToAction("Index", "Home"),
-                2 => RedirectToAction("Index", "Home"),
-                3 => RedirectToAction("Index", "Home"),
-                _ => RedirectToAction("Index", "Home")
-            };
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login");
         }
     }
+
 }

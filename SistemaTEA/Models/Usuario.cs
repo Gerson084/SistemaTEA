@@ -33,11 +33,6 @@ namespace SistemaTEA.Models
 
         public int? AprobadoPor { get; set; }
 
-        [ForeignKey("RolID")]
-        public virtual Rol Rol { get; set; }
-
-        [ForeignKey("AprobadoPor")]
-        public virtual Usuario Aprobador { get; set; }
     }
 
 }
