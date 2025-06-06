@@ -100,17 +100,24 @@ namespace SistemaTEA.Controllers
                     return View();
                 }
 
+                // Establecer variables de sesión
                 HttpContext.Session.SetInt32("id_usuario", user.UsuarioID);
                 HttpContext.Session.SetString("nombre", user.Nombre);
                 HttpContext.Session.SetInt32("rol", user.RolID);
 
-                return RedirectToAction("Index", "Home");
+                // Redirección según rol del usuario
+                return user.RolID switch
+                {
+                    1 => RedirectToAction("InicioADMIN", "Inicio"), // Administrador
+                    2 => RedirectToAction("InicioPADRE", "Inicio"), // Padre
+                    3 => RedirectToAction("InicioPSICOLOGO", "Inicio"),// Psicólogo
+                      => RedirectToAction("Index", "Home")
+                };
             }
 
             ViewBag.Error = "Correo o clave incorrectos.";
             return View();
         }
-
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
