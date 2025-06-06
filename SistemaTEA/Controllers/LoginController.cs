@@ -52,6 +52,8 @@ namespace SistemaTEA.Controllers
                     return View(usuario);
                 }
 
+                var ContraseñaSinHash = usuario.Contraseña;
+                
                 usuario.RolID = 2;
                 usuario.Contraseña = SeguridadHelper.HashPassword(usuario.Contraseña);
                 usuario.EsActivo = false; // pendiente de aprobación
@@ -67,6 +69,9 @@ namespace SistemaTEA.Controllers
                     HttpContext.Session.SetString("telefono", usuario.Telefono ?? "");
 
                     TempData["RegistroExitoso"] = "Registro exitoso. En un periodo de 24 horas un agente se comunicará contigo para brindarte detalles del estado de tu cuenta.";
+
+                    var emailService = new EmailService();
+                    emailService.EnviarCorreoBienvenida(usuario.Email, ContraseñaSinHash);
 
                     return RedirectToAction("Login", "Login");
                 }
