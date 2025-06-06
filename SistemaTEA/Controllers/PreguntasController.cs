@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Crypto;
 using SistemaTEA.Models;
 
 namespace SistemaTEA.Controllers
@@ -62,17 +63,31 @@ namespace SistemaTEA.Controllers
         // POST: PreguntasController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateMCHAT([Bind("PreguntaID,NumeroPregunta, TextoPregunta, EsActiva")] PreguntaMCHAT pregunta_M, int id_test)
+        public ActionResult CreateMCHAT([Bind("PreguntaID,NumeroPregunta,TextoPregunta,EsActiva")] PreguntaMCHAT pregunta_M, int id_test)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    pregunta_M.NumeroPregunta = _context.PreguntasMCHAT.Count()  ; // Asignar número de pregunta
-                    _context.PreguntasMCHAT.Add(pregunta_M);
-                    _context.SaveChanges();
+                    
+                    var existeNumeroPregunta = _context.PreguntasMCHAT.Any(p => p.NumeroPregunta == pregunta_M.NumeroPregunta);
+                    
+                    var existeTextoPregunta = _context.PreguntasMCHAT.Any(p => p.TextoPregunta == pregunta_M.TextoPregunta);
 
-                    return RedirectToAction("CreateMCHAT", "Preguntas", new { id = id_test });
+                    if (existeNumeroPregunta)
+                    {
+                        TempData["NumeroPregunta"] = "El número de pregunta ya existe. Por favor, elija un número diferente.";
+                    }
+                    else if (existeTextoPregunta)
+                    {
+                        TempData["TextoPregunta"] = "La pregunta ya existe. Por favor, agregue otra pregunta.";
+                    }
+                    else
+                    {
+                        _context.PreguntasMCHAT.Add(pregunta_M);
+                        _context.SaveChanges();
+                        return RedirectToAction("CreateMCHAT", "Preguntas", new { id = id_test });
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -96,15 +111,34 @@ namespace SistemaTEA.Controllers
         {
             try
             {
-                var preguntaExistente = _context.PreguntasMCHAT.FirstOrDefault(p => p.PreguntaID == model.PreguntaID);
 
-                if (preguntaExistente == null)
+                
+                var existeNumeroPregunta = _context.PreguntasMCHAT.Any(p => p.NumeroPregunta == model.NumeroPregunta);
+               
+                var existeTextoPregunta = _context.PreguntasMCHAT.Any(p => p.TextoPregunta == model.TextoPregunta);
+
+                if (existeNumeroPregunta)
                 {
-                    return Json(new { success = false, message = "Pregunta no encontrada." });
+                    TempData["NumeroPregunta"] = "El número de pregunta ya existe. Por favor, elija un número diferente.";
+                }
+                else if (existeTextoPregunta)
+                {
+                    TempData["TextoPregunta"] = "La pregunta ya existe. Por favor, agregue otra pregunta.";
+                }
+                else
+                {
+                    var preguntaExistente = _context.PreguntasMCHAT.FirstOrDefault(p => p.PreguntaID == model.PreguntaID);
+
+                    if (preguntaExistente == null)
+                    {
+                        return Json(new { success = false, message = "Pregunta no encontrada." });
+                    }
+
+                    preguntaExistente.TextoPregunta = model.TextoPregunta;
+                    _context.SaveChanges();
                 }
 
-                preguntaExistente.TextoPregunta = model.TextoPregunta;
-                _context.SaveChanges();
+                
 
                 return RedirectToAction("EditMCHAT", "Preguntas");
             }

@@ -34,7 +34,6 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-
         }
 
             .header h1 {
@@ -73,7 +72,6 @@
             padding: 2rem;
             max-width: 1400px;
             margin: 0 auto;
-
         }
 
         .page-header {
@@ -537,7 +535,7 @@
     </style>
 </head>
 <body>
-	
+
     <div class="header">
         <div>
             <h1><i class="fas fa-cogs"></i> Sistema TEA - Administración de Tests</h1>
@@ -546,11 +544,11 @@
                 <span>@ViewBag.NombreUsuario (Administrador)</span>
             </div>
         </div>
-        
-        
+
+
     </div>
-    
-    
+
+
 
     <div class="main-container ">
         <div class="stats-overview">
@@ -584,7 +582,7 @@
                 <a href="#" class="btn btn-success" onclick="openModal('createTestModal')">
                     <i class="fas fa-plus"></i> Nuevo Test
                 </a>
-                
+
             </div>
         </div>
 
@@ -604,7 +602,7 @@
                                         <i class="fas fa-question-circle"></i>
                                         @GetQuestionCount(item.TipoTestID) Preguntas
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -612,21 +610,21 @@
                         <div class="test-actions">
                             <a href="@Url.Action("EditMCHAT", "Preguntas")"
                                class="btn btn-primary">
-                                <i class="fas fa-edit"></i>Editar Preguntas
+                                <i class="fas fa-pencil-alt"></i>Editar Preguntas
                             </a>
                             <a href="@Url.Action("CreateMCHAT", "Preguntas")"
                                class="btn btn-info">
-                                <i class="fas fa-cog"></i> Agregar Preguntas
+                                <i class="fas fa-plus-circle"></i> Agregar Preguntas
                             </a>
                             <a href="@Url.Action("VerPreguntas_MCHAT", "Preguntas")"
                                class="btn btn-primary">
-                                <i class="fas fa-edit"></i> Ver Preguntas
+                                <i class="fas fa-eye"></i> Ver Preguntas
                             </a>
                             <a href="@Url.Action("VerResultados", "Tests", new { id = item.TipoTestID })"
                                class="btn btn-success">
                                 <i class="fas fa-chart-bar"></i> Resultados
                             </a>
-                            
+
                         </div>
                     </div>
                 }
@@ -703,7 +701,7 @@
 
         function confirmarEliminacion(testId, nombreTest) {
             if (confirm(`¿Estás seguro de que deseas eliminar el test "${nombreTest}"?\n\nEsta acción no se puede deshacer y eliminará todas las preguntas y evaluaciones asociadas.`)) {
-                
+
                 window.location.href = `@Url.Action("EliminarTest", "Tests")?id=${testId}`;
             }
         }
@@ -719,7 +717,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-         
+
             const testCards = document.querySelectorAll('.test-card');
             testCards.forEach((card, index) => {
                 card.style.opacity = '0';
@@ -732,7 +730,7 @@
                 }, index * 100);
             });
 
-            
+
             const statNumbers = document.querySelectorAll('.overview-stat .number');
             statNumbers.forEach(number => {
                 const target = parseInt(number.textContent);
@@ -780,7 +778,7 @@
 
     int GetQuestionCount(int testId)
     {
-		
+
         return (@ViewBag.Preguntas);
     }
 
@@ -788,6 +786,6 @@
     {
         // Aquí deberías obtener el conteo real desde tu base de datos
         // return _context.Evaluaciones.Count(e => e.TipoTestID == testId);
-        return new Random().Next(0, 200); // Simulado para el ejemplo
+        return new Random().Next(0, 3); // Simulado para el ejemplo
     }
 }
