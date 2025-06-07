@@ -218,7 +218,7 @@ namespace SistemaTEA.Controllers
                 FechaEvaluacion = DateTime.Now,
                 TipoTestID = 3, // ADOS
                 UsuarioEvaluadorID = ObtenerUsuarioActual(),
-                ModuloADOS2ID = moduloId,
+                AreaADIRID = moduloId,
                 EstadoEvaluacion = "En Proceso"
             };
 
