@@ -68,9 +68,7 @@ public class ADOSController : Controller
 
     public IActionResult Modulo1(int evaluacionId)
     {
-
-
-        int moduloId = 1; // O el módulo que corresponda para "T".
+         int moduloId = 1; // O el módulo que corresponda para "T".
 
         // Traer las preguntas del módulo 5
         var preguntas = _context.PreguntasADOS2
@@ -85,6 +83,13 @@ public class ADOSController : Controller
 
             Preguntas = preguntas
         };
+
+        var respuestasGuardadas = _context.RespuestasADOS2
+       .Where(r => r.EvaluacionID == evaluacionId)
+       .ToList();
+
+        // Pasar las respuestas al modelo
+        ViewBag.RespuestasGuardadas = respuestasGuardadas;
 
         return View(viewModel);
     }
@@ -114,6 +119,13 @@ public class ADOSController : Controller
             Preguntas = preguntas
         };
 
+        var respuestasGuardadas = _context.RespuestasADOS2
+       .Where(r => r.EvaluacionID == evaluacionId)
+       .ToList();
+
+        // Pasar las respuestas al modelo
+        ViewBag.RespuestasGuardadas = respuestasGuardadas;
+
         return View(viewModel);
     }
 
@@ -137,6 +149,13 @@ public class ADOSController : Controller
             Preguntas = preguntas
         };
 
+        var respuestasGuardadas = _context.RespuestasADOS2
+       .Where(r => r.EvaluacionID == evaluacionId)
+       .ToList();
+
+        // Pasar las respuestas al modelo
+        ViewBag.RespuestasGuardadas = respuestasGuardadas;
+
         return View(viewModel);
     }
 
@@ -159,6 +178,13 @@ public class ADOSController : Controller
 
             Preguntas = preguntas
         };
+
+        var respuestasGuardadas = _context.RespuestasADOS2
+       .Where(r => r.EvaluacionID == evaluacionId)
+       .ToList();
+
+        // Pasar las respuestas al modelo
+        ViewBag.RespuestasGuardadas = respuestasGuardadas;
 
         return View(viewModel);
     }
@@ -336,6 +362,9 @@ public class ADOSController : Controller
 
         return RedirectToAction(moduloAction, new { evaluacionId = evaluacionId });
     }
+
+
+    
 
 
 

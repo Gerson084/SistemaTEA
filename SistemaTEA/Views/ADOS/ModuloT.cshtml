@@ -639,6 +639,12 @@
                         </button>
                     </form>
 
+                            <form asp-action="TerminarEvaluacion" asp-controller="Evaluacion" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="EvaluacionID" value="@Model.EvaluacionID" />
+                                <button type="submit" class="btn btn-danger">Terminar Evaluación</button>
+                            </form>
+
                     <div class="save-status" id="status-@pregunta.PreguntaID">
                         @if (TempData["SuccessPregunta"] != null && TempData["PreguntaID"]?.ToString() == pregunta.PreguntaID.ToString())
                         {
