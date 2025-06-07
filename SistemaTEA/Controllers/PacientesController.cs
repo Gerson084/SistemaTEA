@@ -189,5 +189,67 @@ namespace SistemaTEA.Controllers
 
             return View(pacientes);
         }
+
+
+
+
+        // GET: Pacientes/VerTodos - Para que el administrador pueda ver todos los pacientes
+        public async Task<IActionResult> VerTodos()
+        {
+            // Verificar que el usuario tenga sesión válida
+            var usuarioID = HttpContext.Session.GetInt32("UsuarioID");
+            var rol = HttpContext.Session.GetInt32("rol");
+
+            if (usuarioID == null)
+            {
+                TempData["MensajeError"] = "Sesión expirada. Por favor inicie sesión nuevamente.";
+                return RedirectToAction("Login", "Login");
+            }
+
+            // Verificar que sea administrador (RolID = 1) o psicólogo (RolID = 3)
+            if (rol != 1 && rol != 3)
+            {
+                TempData["MensajeError"] = "No tiene permisos para ver esta información.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Obtener todos los pacientes con información del padre y psicólogo
+            var pacientes = await _context.Pacientes
+                .Include(p => p.Padre)
+                .Include(p => p.PsicologoAsignado)
+                .Select(p => new
+                {
+                    PacienteID = p.PacienteID,
+                    Nombre = p.Nombre,
+                    Apellido = p.Apellido,
+                    FechaNacimiento = p.FechaNacimiento,
+                    Genero = p.Genero,
+                    PadreID = p.PadreID,
+                    NombrePadre = p.Padre.Nombre + " " + p.Padre.Apellido,
+                    EmailPadre = p.Padre.Email,
+                    TelefonoPadre = p.Padre.Telefono,
+                    PsicologoAsignadoID = p.PsicologoAsignadoID,
+                    NombrePsicologo = p.PsicologoAsignado != null ?
+                                    p.PsicologoAsignado.Nombre + " " + p.PsicologoAsignado.Apellido : "No asignado",
+                    EmailPsicologo = p.PsicologoAsignado != null ? p.PsicologoAsignado.Email : "",
+                    FechaRegistro = p.FechaRegistro,
+                    Observaciones = p.Observaciones,
+                    Edad = DateTime.Now.Year - p.FechaNacimiento.Year -
+                           (DateTime.Now.DayOfYear < p.FechaNacimiento.DayOfYear ? 1 : 0)
+                })
+                .OrderBy(p => p.Nombre)
+                .ThenBy(p => p.Apellido)
+                .ToListAsync();
+
+            // Pasar información del usuario actual a la vista
+            ViewBag.NombreUsuario = HttpContext.Session.GetString("nombre") ?? "Usuario";
+            ViewData["rol"] = rol;
+            ViewBag.TotalPacientes = pacientes.Count();
+            ViewBag.PacientesConPsicologo = pacientes.Count(p => p.PsicologoAsignadoID.HasValue);
+            ViewBag.PacientesSinPsicologo = pacientes.Count(p => !p.PsicologoAsignadoID.HasValue);
+
+            return View(pacientes);
+        }
+
     }
 }

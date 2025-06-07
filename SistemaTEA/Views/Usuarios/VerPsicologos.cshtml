@@ -1,6 +1,6 @@
 ﻿@model List<SistemaTEA.Models.Usuario>
 @{
-    ViewData["Title"] = "Usuarios Padres Activos";
+    ViewData["Title"] = "Psicólogos Registrados";
     Layout = null;
 }
 <!DOCTYPE html>
@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usuarios Padres Activos - Sistema TEA</title>
+    <title>Psicólogos Registrados - Sistema TEA</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -93,7 +93,7 @@
             .page-title .icon {
                 width: 60px;
                 height: 60px;
-                background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+                background: linear-gradient(135deg, #3182ce 0%, #2b77cb 100%);
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
@@ -118,7 +118,7 @@
         .stat-number {
             font-size: 1.8rem;
             font-weight: bold;
-            color: #48bb78;
+            color: #3182ce;
         }
 
         .stat-label {
@@ -172,7 +172,7 @@
                 border-color: #667eea;
             }
 
-        .users-table-container {
+        .psicologos-table-container {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
             padding: 0;
@@ -198,7 +198,7 @@
             gap: 0.5rem;
         }
 
-        .export-btn {
+        .add-btn {
             padding: 0.5rem 1rem;
             background: rgba(255, 255, 255, 0.2);
             color: white;
@@ -208,24 +208,27 @@
             font-size: 0.9rem;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-            .export-btn:hover {
+            .add-btn:hover {
                 background: rgba(255, 255, 255, 0.3);
                 color: white;
                 text-decoration: none;
             }
 
-        .users-table {
+        .psicologos-table {
             width: 100%;
             border-collapse: collapse;
         }
 
-            .users-table thead {
+            .psicologos-table thead {
                 background: #f8fafc;
             }
 
-            .users-table th {
+            .psicologos-table th {
                 padding: 1rem 1.5rem;
                 text-align: left;
                 font-weight: 600;
@@ -236,13 +239,13 @@
                 letter-spacing: 0.5px;
             }
 
-            .users-table td {
+            .psicologos-table td {
                 padding: 1.2rem 1.5rem;
                 border-bottom: 1px solid #e2e8f0;
                 transition: background-color 0.3s ease;
             }
 
-            .users-table tbody tr:hover {
+            .psicologos-table tbody tr:hover {
                 background-color: #f7fafc;
             }
 
@@ -255,7 +258,7 @@
         .user-avatar {
             width: 45px;
             height: 45px;
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            background: linear-gradient(135deg, #3182ce 0%, #2b77cb 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -307,6 +310,11 @@
             color: #22543d;
         }
 
+        .status-inactive {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
         .action-buttons {
             display: flex;
             gap: 0.5rem;
@@ -336,14 +344,19 @@
                 transform: translateY(-2px);
             }
 
-        .btn-edit {
-            background: #fed7d7;
-            color: #c53030;
+        .btn-toggle {
+            background: #fbb6ce;
+            color: #97266d;
         }
 
-            .btn-edit:hover {
-                background: #feb2b2;
+            .btn-toggle:hover {
+                background: #f687b3;
                 transform: translateY(-2px);
+            }
+
+            .btn-toggle.inactive {
+                background: #c6f6d5;
+                color: #22543d;
             }
 
         .navigation-section {
@@ -393,40 +406,6 @@
                 text-decoration: none;
             }
 
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 2rem;
-        }
-
-            .pagination button {
-                padding: 0.5rem 1rem;
-                border: 2px solid #e2e8f0;
-                background: white;
-                color: #4a5568;
-                border-radius: 8px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-
-                .pagination button:hover:not(:disabled) {
-                    border-color: #667eea;
-                    color: #667eea;
-                }
-
-                .pagination button.active {
-                    background: #667eea;
-                    border-color: #667eea;
-                    color: white;
-                }
-
-                .pagination button:disabled {
-                    opacity: 0.5;
-                    cursor: not-allowed;
-                }
-
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
@@ -471,11 +450,11 @@
             min-width: 100%;
         }
 
-        .users-table-container {
+        .psicologos-table-container {
             overflow-x: auto;
         }
 
-        .users-table {
+        .psicologos-table {
             min-width: 800px;
         }
 
@@ -484,8 +463,7 @@
             gap: 1rem;
         }
 
-        }
-    </style>
+        }</style>
 </head>
 <body>
     <div class="header">
@@ -501,17 +479,21 @@
         <div class="page-header">
             <div class="page-title">
                 <div class="icon">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-user-md"></i>
                 </div>
                 <div>
-                    <h2>Usuarios Padres Activos</h2>
-                    <p style="margin: 0; color: #718096;">Gestión de padres de familia registrados en el sistema</p>
+                    <h2>Psicólogos Registrados</h2>
+                    <p style="margin: 0; color: #718096;">Gestión de profesionales de la salud mental en el sistema</p>
                 </div>
             </div>
             <div class="stats-summary">
                 <div class="stat-item">
-                    <div class="stat-number" id="totalUsers">@Model.Count</div>
-                    <div class="stat-label">Total Activos</div>
+                    <div class="stat-number" id="totalPsicologos">@Model.Count</div>
+                    <div class="stat-label">Total Registrados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="activePsicologos">@Model.Count(p => p.EsActivo)</div>
+                    <div class="stat-label">Activos</div>
                 </div>
             </div>
         </div>
@@ -522,64 +504,73 @@
             </div>
         </div>
 
-        <div class="users-table-container">
+        <div class="psicologos-table-container">
             <div class="table-header">
                 <div class="table-title">
                     <i class="fas fa-list"></i>
-                    Lista de Usuarios Padres
+                    Lista de Psicólogos
                 </div>
+                <a href="@Url.Action("RegistrarPsicologo", "Usuarios")" class="add-btn">
+                    <i class="fas fa-plus"></i>
+                    Agregar Psicólogo
+                </a>
             </div>
 
             @if (Model != null && Model.Any())
             {
-                <table class="users-table" id="usersTable">
+                <table class="psicologos-table" id="psicologosTable">
                     <thead>
                         <tr>
-                            <th>Usuario</th>
+                            <th>Psicólogo</th>
                             <th>Información de Contacto</th>
                             <th>Fecha de Registro</th>
-                            <th>Estado</th>
+                            <th>Fecha de Aprobación</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var usuario in Model)
+                        @foreach (var psicologo in Model)
                         {
-                            <tr class="user-row">
+                            <tr class="psicologo-row" data-status="@(psicologo.EsActivo ? "active" : "inactive")">
                                 <td>
                                     <div class="user-info">
                                         <div class="user-avatar">
-                                            @(usuario.Nombre.Substring(0, 1).ToUpper())@(usuario.Apellido.Substring(0, 1).ToUpper())
+                                            @(psicologo.Nombre.Substring(0, 1).ToUpper())@(psicologo.Apellido.Substring(0, 1).ToUpper())
                                         </div>
                                         <div class="user-details">
-                                            <h4>@usuario.Nombre @usuario.Apellido</h4>
-                                            <p>ID: @usuario.UsuarioID</p>
+                                            <h4>@psicologo.Nombre @psicologo.Apellido</h4>
+                                            <p>ID: @psicologo.UsuarioID</p>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="contact-info">
                                     <div style="margin-bottom: 0.5rem;">
                                         <i class="fas fa-envelope"></i>
-                                        @usuario.Email
+                                        @psicologo.Email
                                     </div>
-                                    @if (!string.IsNullOrEmpty(usuario.Telefono))
+                                    @if (!string.IsNullOrEmpty(psicologo.Telefono))
                                     {
                                         <div>
                                             <i class="fas fa-phone"></i>
-                                            @usuario.Telefono
+                                            @psicologo.Telefono
                                         </div>
                                     }
                                 </td>
                                 <td class="registration-date">
-                                    @usuario.FechaRegistro.ToString("dd/MM/yyyy")
+                                    @psicologo.FechaRegistro.ToString("dd/MM/yyyy")
                                     <br>
-                                    <small style="color: #718096;">@usuario.FechaRegistro.ToString("HH:mm")</small>
+                                    <small style="color: #718096;">@psicologo.FechaRegistro.ToString("HH:mm")</small>
                                 </td>
-                                <td>
-                                    <span class="status-badge status-active">
-                                        <i class="fas fa-check-circle"></i> Activo
-                                    </span>
-                                </td>
-                                <td>
+                                <td class="registration-date">
+                                    @if (psicologo.FechaAprobacion.HasValue)
+                                    {
+                                        @psicologo.FechaAprobacion.Value.ToString("dd/MM/yyyy")
+                                        <br>
+                                        <small style="color: #718096;">@psicologo.FechaAprobacion.Value.ToString("HH:mm")</small>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: #718096;">Sin aprobar</span>
+                                    }
                                 </td>
                             </tr>
                         }
@@ -589,26 +580,29 @@
             else
             {
                 <div class="empty-state">
-                    <i class="fas fa-user-friends"></i>
-                    <h3>No hay usuarios padres activos</h3>
-                    <p>Actualmente no existen usuarios con rol de padre activos en el sistema.</p>
+                    <i class="fas fa-user-md"></i>
+                    <h3>No hay psicólogos registrados</h3>
+                    <p>Actualmente no existen psicólogos registrados en el sistema.</p>
+                    <div style="margin-top: 1.5rem;">
+                        <a href="@Url.Action("RegistrarPsicologo", "Usuarios")" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Registrar Primer Psicólogo
+                        </a>
+                    </div>
                 </div>
             }
         </div>
-
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar funcionalidades
             initializeSearch();
-            initializeSort();
+            initializeFilters();
             animateCards();
         });
 
         function initializeSearch() {
             const searchInput = document.getElementById('searchInput');
-            const rows = document.querySelectorAll('.user-row');
+            const rows = document.querySelectorAll('.psicologo-row');
 
             searchInput.addEventListener('input', function() {
                 const searchTerm = this.value.toLowerCase();
@@ -626,44 +620,29 @@
             });
         }
 
-        function initializeSort() {
-            const sortSelect = document.getElementById('sortSelect');
-            const tbody = document.querySelector('.users-table tbody');
-            const rows = Array.from(document.querySelectorAll('.user-row'));
+        function initializeFilters() {
+            const statusFilter = document.getElementById('statusFilter');
+            const rows = document.querySelectorAll('.psicologo-row');
 
-            sortSelect.addEventListener('change', function() {
-                let sortedRows;
+            statusFilter.addEventListener('change', function() {
+                const filterValue = this.value;
 
-                switch(this.value) {
-                    case 'name':
-                        sortedRows = rows.sort((a, b) => {
-                            const nameA = a.querySelector('.user-details h4').textContent;
-                            const nameB = b.querySelector('.user-details h4').textContent;
-                            return nameA.localeCompare(nameB);
-                        });
-                        break;
-                    case 'date':
-                        sortedRows = rows.sort((a, b) => {
-                            const dateA = a.querySelector('.registration-date').textContent.split('\n')[0];
-                            const dateB = b.querySelector('.registration-date').textContent.split('\n')[0];
-                            return new Date(dateB.split('/').reverse().join('-')) - new Date(dateA.split('/').reverse().join('-'));
-                        });
-                        break;
-                    case 'email':
-                        sortedRows = rows.sort((a, b) => {
-                            const emailA = a.querySelector('.contact-info').textContent.trim().split('\n')[0];
-                            const emailB = b.querySelector('.contact-info').textContent.trim().split('\n')[0];
-                            return emailA.localeCompare(emailB);
-                        });
-                        break;
-                }
+                rows.forEach(row => {
+                    const status = row.getAttribute('data-status');
 
-                sortedRows.forEach(row => tbody.appendChild(row));
+                    if (filterValue === '' || filterValue === status) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                updateVisibleCount();
             });
         }
 
         function animateCards() {
-            const rows = document.querySelectorAll('.user-row');
+            const rows = document.querySelectorAll('.psicologo-row');
             rows.forEach((row, index) => {
                 row.style.opacity = '0';
                 row.style.transform = 'translateY(20px)';
@@ -677,59 +656,72 @@
         }
 
         function updateVisibleCount() {
-            const visibleRows = document.querySelectorAll('.user-row[style*="display: none"]').length;
-            const totalRows = document.querySelectorAll('.user-row').length;
-            const visibleCount = totalRows - visibleRows;
+            const hiddenRows = document.querySelectorAll('.psicologo-row[style*="display: none"]').length;
+            const totalRows = document.querySelectorAll('.psicologo-row').length;
+            const visibleCount = totalRows - hiddenRows;
 
-            // Actualizar contador si existe
-            const counter = document.getElementById('totalUsers');
+            const counter = document.getElementById('totalPsicologos');
             if (counter) {
                 counter.textContent = visibleCount;
             }
         }
 
-        function viewUser(userId) {
-            // Implementar vista de detalles del usuario
-            alert(`Ver detalles del usuario ID: ${userId}`);
-            // Aquí puedes redirigir a una página de detalles o abrir un modal
+        function viewPsicologo(psicologoId) {
+            fetch(`/Usuarios/ObtenerDetallesPsicologo?usuarioId=${psicologoId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const psicologo = data.psicologo;
+                        const modal = `
+                            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;" onclick="this.remove()">
+                                <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 500px; width: 90%;" onclick="event.stopPropagation()">
+                                    <h3 style="margin-bottom: 1rem; color: #2d3748;">Detalles del Psicólogo</h3>
+                                    <p><strong>Nombre:</strong> ${psicologo.nombre} ${psicologo.apellido}</p>
+                                    <p><strong>Email:</strong> ${psicologo.email}</p>
+                                    <p><strong>Teléfono:</strong> ${psicologo.telefono || 'No especificado'}</p>
+                                    <p><strong>Fecha de Registro:</strong> ${new Date(psicologo.fechaRegistro).toLocaleDateString()}</p>
+                                    <p><strong>Fecha de Aprobación:</strong> ${psicologo.fechaAprobacion ? new Date(psicologo.fechaAprobacion).toLocaleDateString() : 'Sin aprobar'}</p>
+                                    <p><strong>Estado:</strong> ${psicologo.esActivo ? 'Activo' : 'Inactivo'}</p>
+                                    <button onclick="this.closest('div[style*=\"position: fixed\"]').remove()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">Cerrar</button>
+                                </div>
+                            </div>
+                        `;
+                        document.body.insertAdjacentHTML('beforeend', modal);
+                    } else {
+                        alert('Error al cargar los detalles: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al cargar los detalles del psicólogo');
+                });
         }
 
-        function viewPatients(userId) {
-            // Implementar vista de pacientes del usuario
-            alert(`Ver pacientes del usuario ID: ${userId}`);
-            // Aquí puedes redirigir a la lista de pacientes de este padre
-        }
+        function togglePsicologoStatus(psicologoId, currentStatus) {
+            const newStatus = !currentStatus;
+            const action = newStatus ? 'activar' : 'desactivar';
 
-        function exportToCSV() {
-            const table = document.getElementById('usersTable');
-            let csv = [];
-
-            // Headers
-            const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
-            csv.push(headers.slice(0, -1).join(','));
-
-            // Rows
-            const rows = Array.from(table.querySelectorAll('tbody tr')).filter(row => row.style.display !== 'none');
-            rows.forEach(row => {
-                const cells = Array.from(row.querySelectorAll('td'));
-                const rowData = [
-                    cells[0].querySelector('.user-details h4').textContent.trim(),
-                    cells[1].textContent.replace(/\s+/g, ' ').trim(),
-                    cells[2].textContent.split('\n')[0].trim(),
-                    'Activo'
-                ];
-                csv.push(rowData.join(','));
-            });
-
-            // Download
-            const csvContent = csv.join('\n');
-            const blob = new Blob([csvContent], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'usuarios_padres_activos.csv';
-            a.click();
-            window.URL.revokeObjectURL(url);
+            if (confirm(`¿Está seguro de que desea ${action} este psicólogo?`)) {
+                fetch('/Usuarios/CambiarEstadoPsicologo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `usuarioId=${psicologoId}&activar=${newStatus}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al cambiar el estado del psicólogo');
+                });
+            }
         }
     </script>
 </body>
