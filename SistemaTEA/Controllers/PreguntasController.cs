@@ -22,6 +22,8 @@ namespace SistemaTEA.Controllers
             ViewBag.PreguntasMCHAT = _context.PreguntasMCHAT.Count();
             ViewBag.PreguntasADIR = _context.PreguntasADIR.Count();
             ViewBag.AreasADIR = _context.AreasADIR.Where(a => a.EsActivo).Count();
+            ViewBag.PreguntasADOS2 = _context.PreguntasADOS2.Count();
+            ViewBag.ModulosADOS2 = _context.ModulosADOS2.Where(m => m.EsActivo).Count();
 
             ViewBag.Preguntas = _context.PreguntasMCHAT.Count();
             return View(tipoTest);
@@ -320,6 +322,131 @@ namespace SistemaTEA.Controllers
         {
             var preguntas = _context.PreguntasADIR
                 .Where(p => p.AreaID == areaId && p.EsActiva)
+                .OrderBy(p => p.NumeroPregunta)
+                .ToList();
+
+            return Json(preguntas);
+        }
+
+        public ActionResult VerPreguntas_ADOS2()
+        {
+            var preguntasConModulos = _context.PreguntasADOS2
+                .Join(_context.ModulosADOS2,
+                      pregunta => pregunta.ModuloID,
+                      modulo => modulo.ModuloID,
+                      (pregunta, modulo) => new
+                      {
+                          PreguntaID = pregunta.PreguntaID,
+                          ModuloID = pregunta.ModuloID,
+                          NombreModulo = modulo.NombreModulo,
+                          NumeroPregunta = pregunta.NumeroPregunta,
+                          TextoPregunta = pregunta.TextoPregunta,
+                          TipoPregunta = pregunta.TipoPregunta,
+                          EsActiva = pregunta.EsActiva
+                      })
+                .ToList();
+
+            return View(preguntasConModulos);
+        }
+
+        // GET: Crear pregunta ADOS-2
+        public ActionResult CreateADOS2()
+        {
+            var modulos = _context.ModulosADOS2.Where(m => m.EsActivo == true).ToList();
+            ViewBag.Modulos = modulos;
+            return View();
+        }
+
+        // POST: Crear pregunta ADOS-2
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateADOS2([Bind("PreguntaID,ModuloID,NumeroPregunta,TextoPregunta,TipoPregunta,EsActiva")] PreguntaADOS2 pregunta_ADOS2, int id_test)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    // Obtener el siguiente número de pregunta para el módulo específico
+                    var ultimaPreguntaEnModulo = _context.PreguntasADOS2
+                        .Where(p => p.ModuloID == pregunta_ADOS2.ModuloID)
+                        .OrderByDescending(p => p.NumeroPregunta)
+                        .FirstOrDefault();
+
+                    pregunta_ADOS2.NumeroPregunta = ultimaPreguntaEnModulo != null ? ultimaPreguntaEnModulo.NumeroPregunta + 1 : 1;
+
+                    _context.PreguntasADOS2.Add(pregunta_ADOS2);
+                    _context.SaveChanges();
+
+                    return RedirectToAction("CreateADOS2", "Preguntas", new { id = id_test });
+                }
+
+                ViewBag.Modulos = _context.ModulosADOS2.Where(m => m.EsActivo).ToList();
+                return View(pregunta_ADOS2);
+            }
+            catch
+            {
+                ViewBag.Modulos = _context.ModulosADOS2.Where(m => m.EsActivo).ToList();
+                return View();
+            }
+        }
+
+        // GET: Editar preguntas ADOS-2
+        public ActionResult EditADOS2()
+        {
+            var preguntasConModulos = _context.PreguntasADOS2
+                .Join(_context.ModulosADOS2,
+                      pregunta => pregunta.ModuloID,
+                      modulo => modulo.ModuloID,
+                      (pregunta, modulo) => new
+                      {
+                          PreguntaID = pregunta.PreguntaID,
+                          ModuloID = pregunta.ModuloID,
+                          NombreModulo = modulo.NombreModulo,
+                          NumeroPregunta = pregunta.NumeroPregunta,
+                          TextoPregunta = pregunta.TextoPregunta,
+                          TipoPregunta = pregunta.TipoPregunta,
+                          EsActiva = pregunta.EsActiva
+                      })
+                .ToList();
+
+            ViewBag.Modulos = _context.ModulosADOS2.Where(m => m.EsActivo == true).ToList();
+
+            return View(preguntasConModulos);
+        }
+
+        // POST: Editar pregunta ADOS-2
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditADOS2(PreguntaADOS2 model)
+        {
+            try
+            {
+                var preguntaExistente = _context.PreguntasADOS2.FirstOrDefault(p => p.PreguntaID == model.PreguntaID);
+
+                if (preguntaExistente == null)
+                {
+                    return Json(new { success = false, message = "Pregunta no encontrada." });
+                }
+
+                preguntaExistente.TextoPregunta = model.TextoPregunta;
+                preguntaExistente.TipoPregunta = model.TipoPregunta;
+                preguntaExistente.ModuloID = model.ModuloID;
+
+                _context.SaveChanges();
+
+                return RedirectToAction("EditADOS2", "Preguntas");
+            }
+            catch (Exception)
+            {
+                return Json(new { success = false, message = "Error al guardar la pregunta." });
+            }
+        }
+
+        // Método auxiliar para obtener preguntas por módulo
+        public ActionResult GetPreguntasPorModulo(int moduloId)
+        {
+            var preguntas = _context.PreguntasADOS2
+                .Where(p => p.ModuloID == moduloId && p.EsActiva)
                 .OrderBy(p => p.NumeroPregunta)
                 .ToList();
 

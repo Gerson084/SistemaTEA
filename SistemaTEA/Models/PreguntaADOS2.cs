@@ -19,8 +19,6 @@ namespace SistemaTEA.Models
 
         public bool EsActiva { get; set; } = true;
 
-        [ForeignKey("ModuloID")]
-        public virtual ModuloADOS2 Modulo { get; set; }
     }
 
 }
