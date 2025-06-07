@@ -106,6 +106,45 @@ namespace SistemaTEA.Controllers
         }
 
 
+        [HttpGet]
+        public IActionResult VerPacientes_Padre()
+        {
+            try
+            {
+                int? usuarioId = HttpContext.Session.GetInt32("UsuarioID");
+
+                if (!usuarioId.HasValue || usuarioId.Value <= 0)
+                {
+                    TempData["Error"] = "Debes iniciar sesión para acceder a esta sección.";
+
+                    return RedirectToAction("Login", "Login");
+                }
+
+           
+                var usuario = _context.Usuarios
+                    .FirstOrDefault(u => u.UsuarioID == usuarioId && u.RolID == 2);
+                if (usuario == null)
+                {
+              
+                    TempData["Error"] = "No tienes permisos para acceder a esta sección.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+    
+                var pacientes = _context.Pacientes
+                    .Where(p => p.PadreID == usuarioId)
+                    .ToList();
+
+                return View(pacientes);
+            }
+            catch (Exception ex)
+            {
+ 
+                TempData["Error"] = $"Ocurrió un error al cargar los pacientes: {ex.Message}";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
         public ActionResult EditMCHAT()
         {
             var preguntas = _context.PreguntasMCHAT.ToList();
@@ -164,6 +203,8 @@ namespace SistemaTEA.Controllers
                 
                 int id_usuario = HttpContext.Session.GetInt32("UsuarioID") ?? 0;
 
+
+
                 if (id_usuario == 0)
                 {
                     return RedirectToAction("Login", "Account"); 
@@ -205,8 +246,67 @@ namespace SistemaTEA.Controllers
 
 
         [HttpGet]
+        public ActionResult IniciarEvaluacionMCHARTPorPaciente(int pacienteId)
+        {
+            try
+            {
+                
+                int id_usuario = HttpContext.Session.GetInt32("UsuarioID") ?? 0;
+                if (id_usuario == 0)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
+               
+                var paciente = _context.Pacientes.FirstOrDefault(p => p.PacienteID == pacienteId);
+                if (paciente == null)
+                {
+                    TempData["Error"] = "No se encontró el paciente especificado.";
+                    return RedirectToAction("Index", "Pacientes");
+                }
+
+               
+                if (paciente.PadreID != id_usuario)
+                {
+                    TempData["Error"] = "No tienes permisos para evaluar este paciente.";
+                    return RedirectToAction("Index", "Pacientes");
+                }
+
+               
+                var nuevaEvaluacion = new Evaluacion
+                {
+                    PacienteID = paciente.PacienteID,
+                    TipoTestID = 1, 
+                    UsuarioEvaluadorID = 11, 
+                    FechaEvaluacion = DateTime.Now,
+                    EstadoEvaluacion = "En Progreso"
+                };
+
+                _context.Evaluaciones.Add(nuevaEvaluacion);
+                _context.SaveChanges();
+
+        
+                HttpContext.Session.SetInt32("IDEvaluacion", nuevaEvaluacion.EvaluacionID);
+
+                TempData["Success"] = $"Evaluación M-CHAT iniciada para {paciente.Nombre} {paciente.Apellido}";
+
+
+                return RedirectToAction("IniciarTestMCHART", "Preguntas", new { pacienteId = paciente.PacienteID });
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al iniciar la evaluación: " + ex.Message;
+                return RedirectToAction("Index", "Pacientes");
+            }
+        }
+
+        [HttpGet]
         public ActionResult IniciarTestMCHART()
         {
+
+            int? usuarioId = HttpContext.Session.GetInt32("UsuarioID");
+
+
             var preguntas = _context.PreguntasMCHAT.ToList();
             ViewBag.Preguntas = preguntas;
 
