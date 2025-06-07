@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SistemaTEA.Models;
-using SistemaTEA.ViewModels; // Add this using directive
+using SistemaTEA.ViewModels; 
 
 public class ADIRController : Controller
 {
@@ -40,9 +40,8 @@ public class ADIRController : Controller
     {
 
 
-        int moduloId = 1; // O el módulo que corresponda para "T".
+        int moduloId = 1; 
 
-        // Traer las preguntas del módulo 5
         var preguntas = _context.PreguntasADIR
             .Where(p => p.AreaID == moduloId)
             .OrderBy(p => p.NumeroPregunta)
@@ -60,7 +59,6 @@ public class ADIRController : Controller
        .Where(r => r.EvaluacionID == evaluacionId)
        .ToList();
 
-        // Pasar las respuestas al modelo
         ViewBag.RespuestasGuardadas = respuestasGuardadas;
 
         return View(viewModel);
@@ -70,9 +68,8 @@ public class ADIRController : Controller
     {
 
 
-        int moduloId = 2; // O el módulo que corresponda para "T".
+        int moduloId = 2;
 
-        // Traer las preguntas del módulo 5
         var preguntas = _context.PreguntasADIR
             .Where(p => p.AreaID == moduloId)
             .OrderBy(p => p.NumeroPregunta)
@@ -90,7 +87,6 @@ public class ADIRController : Controller
        .Where(r => r.EvaluacionID == evaluacionId)
        .ToList();
 
-        // Pasar las respuestas al modelo
         ViewBag.RespuestasGuardadas = respuestasGuardadas;
 
         return View(viewModel);
@@ -100,12 +96,11 @@ public class ADIRController : Controller
 
 
 
-    // Módulo 1
     public IActionResult Area3(int evaluacionId)
     {
 
 
-        int moduloId = 3; // O el módulo que corresponda para "T".
+        int moduloId = 3; 
 
         // Traer las preguntas del módulo 5
         var preguntas = _context.PreguntasADIR
@@ -227,9 +222,8 @@ public class ADIRController : Controller
     {
 
 
-        int moduloId = 7; // O el módulo que corresponda para "T".
+        int moduloId = 7; 
 
-        // Traer las preguntas del módulo 5
         var preguntas = _context.PreguntasADIR
             .Where(p => p.AreaID == moduloId)
             .OrderBy(p => p.NumeroPregunta)
@@ -247,7 +241,7 @@ public class ADIRController : Controller
        .Where(r => r.EvaluacionID == evaluacionId)
        .ToList();
 
-        // Pasar las respuestas al modelo
+
         ViewBag.RespuestasGuardadas = respuestasGuardadas;
 
         return View(viewModel);
@@ -275,26 +269,6 @@ public class ADIRController : Controller
         return View(vm);
     }
 
-    /* [HttpPost]
-     public IActionResult GuardarEvaluacion(EvaluacionADOSViewModel modelo)
-     {
-         foreach (var r in modelo.Preguntas)
-         {
-             _context.RespuestasADOS2.Add(new RespuestaADOS2
-             {
-                 EvaluacionID = modelo.EvaluacionID,
-                 PreguntaID = r.PreguntaID,
-                 Puntuacion = r.Puntuacion,
-                 Observaciones = r.Observaciones,
-                 Comentarios = r.Comentarios,
-                 FechaRespuesta = DateTime.Now
-             });
-         }
-         _context.SaveChanges();
-         return RedirectToAction("DetalleEvaluacion", new { id = modelo.EvaluacionID });
-     }*/
-
-
 
 
 
@@ -315,7 +289,6 @@ public class ADIRController : Controller
 
     private IEnumerable<PreguntaADIR> GetPreguntasByModulo(int moduloId)
     {
-        // Consulta a la base de datos
         return _context.PreguntasADIR
             .Where(p => p.AreaID == moduloId)
             .OrderBy(p => p.NumeroPregunta)
@@ -342,7 +315,6 @@ public class ADIRController : Controller
     {
         try
         {
-            // Validar que los datos requeridos estén presentes
             if (EvaluacionID <= 0 || PreguntaID <= 0)
             {
                 TempData["ErrorPregunta"] = "EvaluacionID y PreguntaID son requeridos.";
@@ -350,13 +322,11 @@ public class ADIRController : Controller
                 return RedirectToAction("FormularioEvaluacion", new { id = EvaluacionID });
             }
 
-            // Verificar si ya existe una respuesta para esta pregunta en esta evaluación
             var respuestaExistente = _context.RespuestasADIR
                 .FirstOrDefault(r => r.EvaluacionID == EvaluacionID && r.PreguntaID == PreguntaID);
 
             if (respuestaExistente != null)
             {
-                // Actualizar respuesta existente
                 respuestaExistente.Puntuacion = Puntuacion;
                 respuestaExistente.Comentarios = Comentarios;
                 respuestaExistente.Observaciones = Observaciones;
@@ -364,7 +334,6 @@ public class ADIRController : Controller
             }
             else
             {
-                // Crear nueva respuesta
                 var nuevaRespuesta = new RespuestaADIR
                 {
                     EvaluacionID = EvaluacionID,
@@ -381,14 +350,12 @@ public class ADIRController : Controller
 
             TempData["SuccessPregunta"] = "Pregunta guardada correctamente.";
             TempData["PreguntaID"] = PreguntaID;
-            //  return RedirectToAction("FormularioEvaluacion", new { id = EvaluacionID });
             return RedirectToModuloCorrespondiente(EvaluacionID);
         }
         catch (Exception ex)
         {
             TempData["ErrorPregunta"] = $"Ocurrió un error: {ex.Message}";
             TempData["PreguntaID"] = PreguntaID;
-            // return RedirectToAction("FormularioEvaluacion", new { id = EvaluacionID });
             return RedirectToModuloCorrespondiente(EvaluacionID);
         }
     }
@@ -405,7 +372,6 @@ public class ADIRController : Controller
             return RedirectToAction("BuscarPacienteADIR");
         }
 
-        // Determinar el módulo según ModuloADOS2ID
         string moduloAction = evaluacion.AreaADIRID switch
         {
             1 => "Area1",

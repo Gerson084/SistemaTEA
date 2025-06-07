@@ -14,7 +14,6 @@ namespace SistemaTEA.Controllers
             _context = context;
         }
 
-        // GET: Pacientes/Index - Para que el padre pueda ver sus pacientes
         public async Task<IActionResult> Index()
         {
             var padreID = HttpContext.Session.GetInt32("UsuarioID");
@@ -24,7 +23,6 @@ namespace SistemaTEA.Controllers
                 return RedirectToAction("Login", "Cuenta");
             }
 
-            // Verificar que el usuario es un padre (RolID = 2)
             var padre = await _context.Usuarios
                 .FirstOrDefaultAsync(u => u.UsuarioID == padreID && u.RolID == 2 && u.EsActivo == true);
 
@@ -45,10 +43,8 @@ namespace SistemaTEA.Controllers
             return View(pacientes);
         }
 
-        // GET: Pacientes/Consentimiento
         public IActionResult Consentimiento()
         {
-            // Verificar que el usuario esté logueado y sea padre
             var usuarioID = HttpContext.Session.GetInt32("UsuarioID");
             if (usuarioID == null)
             {
@@ -65,18 +61,18 @@ namespace SistemaTEA.Controllers
             return View();
         }
 
-        // POST: Pacientes/Consentimiento
+
         [HttpPost]
         public IActionResult Consentimiento(string consentimiento)
         {
             if (consentimiento == "true")
             {
-                // Guardar en sesión que el usuario dio consentimiento
+
                 HttpContext.Session.SetString("ConsentimientoOtorgado", "true");
                 HttpContext.Session.SetString("FechaConsentimiento", DateTime.Now.ToString());
                 HttpContext.Session.SetString("IPConsentimiento", GetClientIP());
 
-                // Redirigir a la vista de crear paciente
+
                 return RedirectToAction("Crear");
             }
             else
@@ -86,7 +82,7 @@ namespace SistemaTEA.Controllers
             }
         }
 
-        // Método auxiliar para obtener IP del cliente
+
         private string GetClientIP()
         {
             var xForwarded = Request.Headers["X-Forwarded-For"].FirstOrDefault();
@@ -104,7 +100,7 @@ namespace SistemaTEA.Controllers
             return Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
         }
 
-        // GET: Pacientes/Crear - MODIFICADO
+
         public IActionResult Crear()
         {
             // Verificar consentimiento
