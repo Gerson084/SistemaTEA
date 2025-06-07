@@ -14,7 +14,6 @@ namespace SistemaTEA.Controllers
             _context = context;
         }
 
-        // GET: Usuarios (Solo para administradores - muestra padres pendientes de activación)
         public async Task<IActionResult> Index()
         {
             if (!SesionValida(out int? rol)) return RedirectToAction("Login", "Login");
@@ -31,7 +30,7 @@ namespace SistemaTEA.Controllers
             return View(padresPendientes);
         }
 
-        // POST: Activar cuenta de padre
+
         [HttpPost]
         public async Task<IActionResult> ActivarCuenta(int usuarioId)
         {
@@ -53,7 +52,6 @@ namespace SistemaTEA.Controllers
 
             try
             {
-                // Activar cuenta
                 usuario.EsActivo = true;
                 usuario.FechaAprobacion = DateTime.Now;
                 usuario.AprobadoPor = idAdmin.Value;
@@ -62,14 +60,14 @@ namespace SistemaTEA.Controllers
 
                 try
                 {
-                    // Enviar correo de confirmación
+
                     var emailService = new EmailService();
                     emailService.EnviarCorreoConfirmacionAcceso(usuario.Email);
                 }
                 catch (Exception emailError)
                 {
                     Console.WriteLine("Error al enviar correo: " + emailError.Message);
-                    // Continúa aunque falle el envío de correo
+
                 }
 
                 return Json(new { success = true, message = "Cuenta activada y notificación enviada al correo del padre." });
@@ -80,7 +78,7 @@ namespace SistemaTEA.Controllers
             }
         }
 
-        // GET: Obtener detalles de un padre (solo para administradores)
+
         [HttpGet]
         public async Task<IActionResult> ObtenerDetallesUsuario(int usuarioId)
         {
@@ -110,11 +108,6 @@ namespace SistemaTEA.Controllers
             return Json(new { success = true, usuario });
         }
 
-        // --------------------
-        // MÉTODOS PARA PSICÓLOGOS
-        // --------------------
-
-        // GET: Mostrar formulario de registro de psicólogo
         [HttpGet]
         public IActionResult RegistrarPsicologo()
         {
@@ -184,12 +177,12 @@ namespace SistemaTEA.Controllers
                 }
             }
 
-            // Si ModelState no es válido
+
             return Json(new { success = false, message = "Datos inválidos. Verifique el formulario." });
         }
 
 
-        // GET: Ver lista de psicólogos
+
         public async Task<IActionResult> VerPsicologos()
         {
             if (!SesionValida(out int? rol)) return RedirectToAction("Login", "Login");
@@ -206,7 +199,7 @@ namespace SistemaTEA.Controllers
             return View(psicologos);
         }
 
-        // GET: Obtener detalles de un psicólogo
+
         [HttpGet]
         public async Task<IActionResult> ObtenerDetallesPsicologo(int usuarioId)
         {
@@ -237,7 +230,7 @@ namespace SistemaTEA.Controllers
             return Json(new { success = true, psicologo });
         }
 
-        // POST: Activar/Desactivar psicólogo (SOLO PARA CASOS ESPECIALES)
+
         [HttpPost]
         public async Task<IActionResult> CambiarEstadoPsicologo(int usuarioId, bool activar)
         {
@@ -258,7 +251,6 @@ namespace SistemaTEA.Controllers
             {
                 psicologo.EsActivo = activar;
 
-                // Solo actualizar fecha de aprobación si se está activando y no tenía fecha previa
                 if (activar && psicologo.FechaAprobacion == null)
                 {
                     psicologo.FechaAprobacion = DateTime.Now;
@@ -276,9 +268,6 @@ namespace SistemaTEA.Controllers
             }
         }
 
-        // --------------------
-        // Métodos de validación
-        // --------------------
 
         private bool SesionValida(out int? rol)
         {
@@ -293,7 +282,7 @@ namespace SistemaTEA.Controllers
             return idUsuario != null;
         }
 
-        // VER USUARIOS (PADRES ACTIVOS)
+
         public async Task<IActionResult> VerUsuarios()
         {
             if (!SesionValida(out int? rol)) return RedirectToAction("Login", "Login");

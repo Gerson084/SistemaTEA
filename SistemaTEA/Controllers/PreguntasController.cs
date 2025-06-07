@@ -14,7 +14,7 @@ namespace SistemaTEA.Controllers
         {
             _context = context;
         }
-        // GET: PreguntasController
+
         public ActionResult Index()
         {
             var tipoTest = _context.TiposTest.ToList();
@@ -29,19 +29,19 @@ namespace SistemaTEA.Controllers
             return View(tipoTest);
         }
 
-        // GET: PreguntasController/Details/5
+
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: PreguntasController/Create
+
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: PreguntasController/Create
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -62,13 +62,13 @@ namespace SistemaTEA.Controllers
             return View(preguntas);
         }
 
-        //Crear controlador de MCHAT
+
         public ActionResult CreateMCHAT()
         {
             return View();
         }
 
-        // POST: PreguntasController/Create
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateMCHAT([Bind("PreguntaID,NumeroPregunta,TextoPregunta,EsActiva")] PreguntaMCHAT pregunta_M, int id_test)
@@ -151,7 +151,7 @@ namespace SistemaTEA.Controllers
             return View(preguntas);
         }
 
-        // POST: PreguntasController/Edit/5
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditMCHAT(PreguntaMCHAT model)
@@ -422,7 +422,7 @@ namespace SistemaTEA.Controllers
                         _context.SaveChanges();
                     }
 
-                    // Limpiar sesión
+
                     HttpContext.Session.Remove("IDEvaluacion");
                 }
 
@@ -436,13 +436,13 @@ namespace SistemaTEA.Controllers
 
 
 
-        // GET: PreguntasController/Edit/5
+
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: PreguntasController/Edit/5
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -457,13 +457,13 @@ namespace SistemaTEA.Controllers
             }
         }
 
-        // GET: PreguntasController/Delete/5
+
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: PreguntasController/Delete/5
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
@@ -478,7 +478,7 @@ namespace SistemaTEA.Controllers
             }
         }
 
-        // Métodos adicionales para el controlador PreguntasController para manejar ADI-R
+
 
         public ActionResult VerPreguntas_ADIR()
         {
@@ -501,7 +501,7 @@ namespace SistemaTEA.Controllers
             return View(preguntasConAreas);
         }
 
-        // GET: Crear pregunta ADI-R
+
         public ActionResult CreateADIR()
         {
             var areas = _context.AreasADIR.Where(a => a.EsActivo == true).ToList();
@@ -509,7 +509,7 @@ namespace SistemaTEA.Controllers
             return View();
         }
 
-        // POST: Crear pregunta ADI-R
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateADIR([Bind("PreguntaID,AreaID,NumeroPregunta,TextoPregunta,TipoPregunta,EsActiva")] PreguntaADIR pregunta_ADIR, int id_test)
@@ -518,7 +518,7 @@ namespace SistemaTEA.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    // Obtener el siguiente número de pregunta para el área específica
+
                     var ultimaPreguntaEnArea = _context.PreguntasADIR
                         .Where(p => p.AreaID == pregunta_ADIR.AreaID)
                         .OrderByDescending(p => p.NumeroPregunta)
@@ -542,7 +542,7 @@ namespace SistemaTEA.Controllers
             }
         }
 
-        // GET: Editar preguntas ADI-R
+
         public ActionResult EditADIR()
         {
             var preguntasConAreas = _context.PreguntasADIR
@@ -566,7 +566,7 @@ namespace SistemaTEA.Controllers
             return View(preguntasConAreas);
         }
 
-        // POST: Editar pregunta ADI-R
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditADIR(PreguntaADIR model)
@@ -595,7 +595,7 @@ namespace SistemaTEA.Controllers
         }
 
 
-        // Método auxiliar para obtener preguntas por área
+
         public ActionResult GetPreguntasPorArea(int areaId)
         {
             var preguntas = _context.PreguntasADIR
@@ -627,7 +627,7 @@ namespace SistemaTEA.Controllers
             return View(preguntasConModulos);
         }
 
-        // GET: Crear pregunta ADOS-2
+
         public ActionResult CreateADOS2()
         {
             var modulos = _context.ModulosADOS2.Where(m => m.EsActivo == true).ToList();
@@ -635,7 +635,7 @@ namespace SistemaTEA.Controllers
             return View();
         }
 
-        // POST: Crear pregunta ADOS-2
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateADOS2([Bind("PreguntaID,ModuloID,NumeroPregunta,TextoPregunta,TipoPregunta,EsActiva")] PreguntaADOS2 pregunta_ADOS2, int id_test)
@@ -644,7 +644,7 @@ namespace SistemaTEA.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    // Obtener el siguiente número de pregunta para el módulo específico
+
                     var ultimaPreguntaEnModulo = _context.PreguntasADOS2
                         .Where(p => p.ModuloID == pregunta_ADOS2.ModuloID)
                         .OrderByDescending(p => p.NumeroPregunta)
@@ -668,7 +668,7 @@ namespace SistemaTEA.Controllers
             }
         }
 
-        // GET: Editar preguntas ADOS-2
+
         public ActionResult EditADOS2()
         {
             var preguntasConModulos = _context.PreguntasADOS2
@@ -692,7 +692,7 @@ namespace SistemaTEA.Controllers
             return View(preguntasConModulos);
         }
 
-        // POST: Editar pregunta ADOS-2
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditADOS2(PreguntaADOS2 model)
@@ -720,7 +720,7 @@ namespace SistemaTEA.Controllers
             }
         }
 
-        // Método auxiliar para obtener preguntas por módulo
+
         public ActionResult GetPreguntasPorModulo(int moduloId)
         {
             var preguntas = _context.PreguntasADOS2

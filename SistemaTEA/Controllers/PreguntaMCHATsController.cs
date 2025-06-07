@@ -18,13 +18,12 @@ namespace SistemaTEA.Controllers
             _context = context;
         }
 
-        // GET: PreguntaMCHATs
         public async Task<IActionResult> Index()
         {
             return View(await _context.PreguntasMCHAT.ToListAsync());
         }
 
-        // GET: PreguntaMCHATs/Details/5
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -42,15 +41,13 @@ namespace SistemaTEA.Controllers
             return View(preguntaMCHAT);
         }
 
-        // GET: PreguntaMCHATs/Create
+
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: PreguntaMCHATs/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PreguntaID,NumeroPregunta,TextoPregunta,EsActiva")] PreguntaMCHAT preguntaMCHAT)
@@ -64,7 +61,7 @@ namespace SistemaTEA.Controllers
             return View(preguntaMCHAT);
         }
 
-        // GET: PreguntaMCHATs/Edit/5
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,9 +77,7 @@ namespace SistemaTEA.Controllers
             return View(preguntaMCHAT);
         }
 
-        // POST: PreguntaMCHATs/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("PreguntaID,NumeroPregunta,TextoPregunta,EsActiva")] PreguntaMCHAT preguntaMCHAT)
@@ -115,7 +110,7 @@ namespace SistemaTEA.Controllers
             return View(preguntaMCHAT);
         }
 
-        // GET: PreguntaMCHATs/Delete/5
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,7 +128,7 @@ namespace SistemaTEA.Controllers
             return View(preguntaMCHAT);
         }
 
-        // POST: PreguntaMCHATs/Delete/5
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
