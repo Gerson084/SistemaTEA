@@ -27,20 +27,7 @@ namespace SistemaTEA.Models
 
         public decimal? PuntajeTotal { get; set; }
 
-        [ForeignKey("PacienteID")]
-        public virtual Paciente Paciente { get; set; }
-
-        [ForeignKey("TipoTestID")]
-        public virtual TipoTest TipoTest { get; set; }
-
-        [ForeignKey("UsuarioEvaluadorID")]
-        public virtual Usuario Evaluador { get; set; }
-
-        [ForeignKey("ModuloADOS2ID")]
-        public virtual ModuloADOS2 ModuloADOS2 { get; set; }
-
-        [ForeignKey("AreaADIRID")]
-        public virtual AreaADIR AreaADIR { get; set; }
+       
     }
 
 }

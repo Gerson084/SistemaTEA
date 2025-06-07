@@ -156,6 +156,184 @@ namespace SistemaTEA.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult IniciarEvaluacionMCHART()
+        {
+            try
+            {
+                
+                int id_usuario = HttpContext.Session.GetInt32("UsuarioID") ?? 0;
+
+                if (id_usuario == 0)
+                {
+                    return RedirectToAction("Login", "Account"); 
+                }
+
+                var paciente = _context.Pacientes.FirstOrDefault(p => p.PadreID == id_usuario);
+
+                if (paciente == null)
+                {
+                    TempData["Error"] = "No se encontró un paciente asociado a su cuenta.";
+                    return RedirectToAction("Index", "Home"); 
+                }
+
+              
+                var nuevaEvaluacion = new Evaluacion
+                {
+                    PacienteID = paciente.PacienteID,
+                    TipoTestID = 1, 
+                    UsuarioEvaluadorID = 11, 
+                    FechaEvaluacion = DateTime.Now,
+                    EstadoEvaluacion = "En Progreso" 
+                };
+
+                _context.Evaluaciones.Add(nuevaEvaluacion);
+                _context.SaveChanges();
+
+                
+                HttpContext.Session.SetInt32("IDEvaluacion", nuevaEvaluacion.EvaluacionID);
+
+              
+                return RedirectToAction("IniciarTestMCHART", "Preguntas");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al iniciar la evaluación: " + ex.Message;
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+
+        [HttpGet]
+        public ActionResult IniciarTestMCHART()
+        {
+            var preguntas = _context.PreguntasMCHAT.ToList();
+            ViewBag.Preguntas = preguntas;
+
+            
+            int? evaluacionId = HttpContext.Session.GetInt32("IDEvaluacion");
+
+            if (evaluacionId.HasValue && evaluacionId.Value > 0)
+            {
+               
+                var evaluacionExiste = _context.Evaluaciones.Any(e => e.EvaluacionID == evaluacionId.Value);
+
+                if (evaluacionExiste)
+                {
+                   
+                    var respuestasExistentes = _context.RespuestasMCHAT
+                        .Where(r => r.EvaluacionID == evaluacionId.Value)
+                        .ToDictionary(r => r.PreguntaID, r => r.Respuesta);
+
+                    ViewBag.EvaluacionID = evaluacionId.Value;
+                    ViewBag.RespuestasExistentes = respuestasExistentes;
+                }
+                else
+                {
+                    
+                    HttpContext.Session.Remove("IDEvaluacion");
+                    ViewBag.EvaluacionID = 0;
+                    ViewBag.RespuestasExistentes = new Dictionary<int, bool>();
+                }
+            }
+            else
+            {
+                ViewBag.EvaluacionID = 0;
+                ViewBag.RespuestasExistentes = new Dictionary<int, bool>();
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CrearNuevaEvaluacion()
+        {
+            try
+            {
+                
+                var nuevaEvaluacion = new Evaluacion
+                {
+                    FechaEvaluacion = DateTime.Now,
+                    
+                };
+
+                _context.Evaluaciones.Add(nuevaEvaluacion);
+                _context.SaveChanges();
+
+                
+                HttpContext.Session.SetInt32("IDEvaluacion", nuevaEvaluacion.EvaluacionID);
+
+                return Json(new { success = true, evaluacionId = nuevaEvaluacion.EvaluacionID });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult IniciarTestMCHART([Bind("EvaluacionID, PreguntaID,Respuesta,FechaRespuesta")] RespuestaMCHAT respuesta_M, int pregunta_id)
+        {
+            try
+            {
+                
+                var respuestaExistente = _context.RespuestasMCHAT
+                    .FirstOrDefault(r => r.EvaluacionID == respuesta_M.EvaluacionID && r.PreguntaID == pregunta_id);
+
+                if (respuestaExistente != null)
+                {
+                    
+                    respuestaExistente.Respuesta = respuesta_M.Respuesta;
+                    respuestaExistente.FechaRespuesta = DateTime.Now;
+                    _context.Update(respuestaExistente);
+                }
+                else
+                {
+                    
+                    respuesta_M.PreguntaID = pregunta_id;
+                    respuesta_M.FechaRespuesta = DateTime.Now;
+                    _context.RespuestasMCHAT.Add(respuesta_M);
+                }
+
+                _context.SaveChanges();
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+     
+        [HttpPost]
+        public ActionResult FinalizarEvaluacion()
+        {
+            try
+            {
+                int evaluacionId = HttpContext.Session.GetInt32("IDEvaluacion") ?? 0;
+
+                if (evaluacionId > 0)
+                {
+                    
+                    var evaluacion = _context.Evaluaciones.Find(evaluacionId);
+                    if (evaluacion != null)
+                    {
+                        
+                        _context.SaveChanges();
+                    }
+
+                    // Limpiar sesión
+                    HttpContext.Session.Remove("IDEvaluacion");
+                }
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
 
 
         // GET: PreguntasController/Edit/5

@@ -1,0 +1,643 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "PANEL PADRE";
+}
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Padre - Sistema TEA</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #00d4aa 100%);
+            min-height: 100vh;
+            color: #333;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(0, 212, 170, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+                pointer-events: none;
+                z-index: -1;
+            }
+
+        .floating-shapes {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(167, 112, 239, 0.1), rgba(0, 212, 170, 0.1));
+            animation: float 6s ease-in-out infinite;
+        }
+
+            .shape:nth-child(1) {
+                width: 80px;
+                height: 80px;
+                top: 10%;
+                left: 10%;
+                animation-delay: 0s;
+            }
+
+            .shape:nth-child(2) {
+                width: 120px;
+                height: 120px;
+                top: 70%;
+                right: 10%;
+                animation-delay: 2s;
+            }
+
+            .shape:nth-child(3) {
+                width: 60px;
+                height: 60px;
+                top: 50%;
+                left: 5%;
+                animation-delay: 4s;
+            }
+
+        @@keyframes float {
+            0%, 100%
+
+        {
+            transform: translateY(0px) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-20px) rotate(180deg);
+        }
+
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(167, 112, 239, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+            .header h1 {
+                color: white;
+                font-size: 2rem;
+                font-weight: 600;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+                background: linear-gradient(45deg, #ffffff, #00d4aa);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+        .user-info {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+            .user-info i {
+                font-size: 1.2rem;
+                color: #00d4aa;
+            }
+
+        .main-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 60px rgba(167, 112, 239, 0.2);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .welcome-section::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #667eea, #764ba2, #00d4aa);
+            }
+
+            .welcome-section h2 {
+                color: #6b46c1;
+                margin-bottom: 1rem;
+                font-size: 2.5rem;
+                font-weight: 700;
+                background: linear-gradient(45deg, #6b46c1, #a855f7, #00d4aa);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+            .welcome-section p {
+                color: #6b7280;
+                font-size: 1.2rem;
+                line-height: 1.8;
+            }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 15px 40px rgba(167, 112, 239, 0.15);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(167, 112, 239, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, var(--card-color), var(--card-color-light));
+            }
+
+            .stat-card:hover {
+                transform: translateY(-10px) scale(1.02);
+                box-shadow: 0 25px 60px rgba(167, 112, 239, 0.25);
+            }
+
+            .stat-card.evaluations {
+                --card-color: #8b5cf6;
+                --card-color-light: #a78bfa;
+            }
+
+            .stat-card.pending {
+                --card-color: #00d4aa;
+                --card-color-light: #26d0ce;
+            }
+
+            .stat-card.alerts {
+                --card-color: #f59e0b;
+                --card-color-light: #fbbf24;
+            }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            background: linear-gradient(135deg, var(--card-color), var(--card-color-light));
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #1f2937;
+            background: linear-gradient(45deg, var(--card-color), var(--card-color-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .main-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .action-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 40px rgba(167, 112, 239, 0.15);
+            border: 1px solid rgba(167, 112, 239, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .action-section::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #8b5cf6, #00d4aa);
+            }
+
+            .action-section h3 {
+                color: #6b46c1;
+                margin-bottom: 2rem;
+                font-size: 1.5rem;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+            }
+
+                .action-section h3 i {
+                    color: #a855f7;
+                }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .btn {
+            padding: 1.2rem 2rem;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .btn::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                transition: left 0.5s;
+            }
+
+            .btn:hover::before {
+                left: 100%;
+            }
+
+        .btn-success {
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+            color: white;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #00d4aa 0%, #26d0ce 100%);
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 212, 170, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-info:hover {
+            box-shadow: 0 15px 40px rgba(0, 212, 170, 0.4);
+        }
+
+        .logout-btn {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(15px);
+            font-weight: 500;
+            z-index: 1000;
+        }
+
+            .logout-btn:hover {
+                background: rgba(255, 255, 255, 0.25);
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @@keyframes pulse {
+            0%
+
+        {
+            box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7);
+        }
+
+        70% {
+            box-shadow: 0 0 0 10px rgba(139, 92, 246, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
+        }
+
+        }
+
+        @@media (max-width: 768px) {
+            .main-container
+
+        {
+            padding: 1rem;
+        }
+
+        .header {
+            padding: 1rem;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .main-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+        }
+
+        .welcome-section {
+            padding: 2rem 1.5rem;
+        }
+
+            .welcome-section h2 {
+                font-size: 2rem;
+            }
+
+        .logout-btn {
+            position: relative;
+            top: auto;
+            right: auto;
+            margin-top: 1rem;
+        }
+
+        }
+
+        .glow {
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .sparkle {
+            position: relative;
+        }
+
+            .sparkle::after {
+                content: '✨';
+                position: absolute;
+                top: -10px;
+                right: -10px;
+                font-size: 1.2rem;
+                animation: sparkle 1.5s ease-in-out infinite;
+            }
+
+        @@keyframes sparkle {
+            0%, 100%
+
+        {
+            opacity: 0;
+            transform: scale(0.5) rotate(0deg);
+        }
+
+        50% {
+            opacity: 1;
+            transform: scale(1) rotate(180deg);
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="header">
+        <h1><i class="fas fa-heart"></i> Sistema TEA - Panel de Padre</h1>
+        <div class="user-info">
+            <i class="fas fa-user-circle"></i>
+            <span>@ViewBag.NombreUsuario</span>
+        </div>
+    </div>
+
+    <a href="@Url.Action("Login", "Login")" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+    </a>
+
+    <div class="main-container">
+        <div class="welcome-section sparkle">
+            <h2>✨ Bienvenido al Panel de Paciente ✨</h2>
+            <p>Tu espacio personal para el seguimiento y desarrollo de evaluaciones M-CHAT. Aquí encontrarás todas las herramientas necesarias para el cuidado y monitoreo especializado.</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card evaluations glow">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number">@ViewBag.EvaluacionesCompletadas</div>
+                        <div class="stat-label">Evaluaciones M-CHAT Completadas</div>
+                    </div>
+                    <div class="stat-icon pulse-animation">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card pending">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number">@ViewBag.EvaluacionesPendientes</div>
+                        <div class="stat-label">Evaluaciones Pendientes</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card alerts">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number">@ViewBag.Alertas</div>
+                        <div class="stat-label">Alertas Importantes</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-actions">
+            <div class="action-section">
+                <h3><i class="fas fa-brain"></i> Evaluaciones M-CHAT</h3>
+                <div class="action-buttons">
+                    <a href="@Url.Action("IniciarEvaluacionMCHART", "Preguntas")" class="btn btn-success">
+                        <i class="fas fa-play-circle"></i> Iniciar Nueva Evaluación
+                    </a>
+                    <a href="@Url.Action("MisEvaluaciones", "MCHAT")" class="btn btn-info">
+                        <i class="fas fa-history"></i> Ver Evaluaciones Anteriores
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animación de entrada escalonada para las tarjetas
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px) scale(0.9)';
+
+                setTimeout(() => {
+                    card.style.transition = 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0) scale(1)';
+                }, index * 150);
+            });
+
+            // Contador animado para números de estadísticas
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(number => {
+                const target = parseInt(number.textContent);
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    number.textContent = Math.floor(current);
+                }, 40);
+            });
+
+            // Efectos hover mejorados para botones
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.05)';
+                });
+
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Animación de ondas para el fondo
+            function createRipple(e) {
+                const ripple = document.createElement('div');
+                ripple.style.position = 'fixed';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(139, 92, 246, 0.3)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple 0.6s linear';
+                ripple.style.left = (e.clientX - 50) + 'px';
+                ripple.style.top = (e.clientY - 50) + 'px';
+                ripple.style.width = '100px';
+                ripple.style.height = '100px';
+                ripple.style.pointerEvents = 'none';
+                ripple.style.zIndex = '9999';
+
+                document.body.appendChild(ripple);
+
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            }
+
+            // Agregar keyframe para la animación de ripple
+            const style = document.createElement('style');
+            style.textContent = `
+        @@keyframes ripple {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.addEventListener('click', createRipple);
+        });
+    </script>
+</body>
+</html>

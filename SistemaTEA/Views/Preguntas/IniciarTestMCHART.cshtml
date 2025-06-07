@@ -1,0 +1,794 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Test M-CHAT";
+    var preguntas = ViewBag.Preguntas as List<PreguntaMCHAT>;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test M-CHAT - Sistema TEA</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #00d4aa 100%);
+            min-height: 100vh;
+            color: #333;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(0, 212, 170, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+                pointer-events: none;
+                z-index: -1;
+            }
+
+        .header {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(167, 112, 239, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+            .header h1 {
+                color: white;
+                font-size: 2rem;
+                font-weight: 600;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+                background: linear-gradient(45deg, #ffffff, #00d4aa);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4aa, #26d0ce);
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        .main-container {
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            min-height: calc(100vh - 120px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 20px 60px rgba(167, 112, 239, 0.2);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+            .question-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #8b5cf6, #00d4aa);
+            }
+
+        .question-number {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            color: #374151;
+            margin-bottom: 3rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .answers-container {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .answer-option {
+            flex: 1;
+            min-width: 200px;
+            max-width: 250px;
+        }
+
+        .answer-btn {
+            width: 100%;
+            padding: 1.5rem 2rem;
+            border: 2px solid transparent;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .answer-btn::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+                transition: left 0.5s;
+            }
+
+            .answer-btn:hover::before {
+                left: 100%;
+            }
+
+            .answer-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            }
+
+            .answer-btn.selected {
+                background: linear-gradient(135deg, #8b5cf6, #a855f7);
+                color: white;
+                border-color: #8b5cf6;
+                transform: translateY(-3px);
+                box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+            }
+
+            .answer-btn.no-selected {
+                background: linear-gradient(135deg, #00d4aa, #26d0ce);
+                color: white;
+                border-color: #00d4aa;
+                transform: translateY(-3px);
+                box-shadow: 0 10px 30px rgba(0, 212, 170, 0.4);
+            }
+
+        .navigation-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+            .nav-btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+                transform: none !important;
+            }
+
+        .btn-previous {
+            background: linear-gradient(135deg, #6b7280, #9ca3af);
+            color: white;
+        }
+
+        .btn-next, .btn-finish {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #8b5cf6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @@keyframes spin {
+            0%
+
+        {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 3rem 2rem;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 15px;
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            color: #166534;
+        }
+
+            .success-message i {
+                font-size: 4rem;
+                color: #22c55e;
+                margin-bottom: 1rem;
+            }
+
+        .error-message {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 15px;
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            color: #dc2626;
+            margin: 1rem 0;
+        }
+
+            .error-message i {
+                font-size: 2rem;
+                color: #ef4444;
+                margin-bottom: 0.5rem;
+            }
+
+        @@media (max-width: 768px) {
+            .main-container
+
+        {
+            padding: 1rem;
+        }
+
+        .question-card {
+            padding: 2rem 1.5rem;
+            min-height: 350px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .answers-container {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .answer-option {
+            min-width: auto;
+            max-width: none;
+        }
+
+        .navigation-container {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            width: 100%;
+        }
+
+        .progress-container {
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 150px;
+        }
+
+        }
+
+        .question-hidden {
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @@keyframes fadeIn {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-brain"></i> Test M-CHAT</h1>
+        <div class="progress-container">
+            <span>Progreso: <span id="current-question">1</span> de <span id="total-questions">@(preguntas?.Count ?? 0)</span></span>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Mensaje de error -->
+        <div class="error-message" id="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Error al guardar respuesta</h3>
+            <p id="error-text">Ha ocurrido un error. Por favor, intenta nuevamente.</p>
+        </div>
+
+        <!-- Contenedor de preguntas -->
+        <div id="questions-container">
+            @if (preguntas != null)
+            {
+                for (int i = 0; i < preguntas.Count; i++)
+                {
+                    <div class="question-card @(i > 0 ? "question-hidden" : "fade-in")" data-question="@i" data-question-id="@preguntas[i].PreguntaID">
+                        <div class="question-number">Pregunta @(i + 1)</div>
+                        <div class="question-text">@preguntas[i].TextoPregunta</div>
+                        <div class="answers-container">
+                            <div class="answer-option">
+                                <button class="answer-btn" data-answer="true" type="button">
+                                    <i class="fas fa-check-circle"></i> Sí
+                                </button>
+                            </div>
+                            <div class="answer-option">
+                                <button class="answer-btn" data-answer="false" type="button">
+                                    <i class="fas fa-times-circle"></i> No
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <!-- Navegación -->
+        <div class="navigation-container">
+            <button class="nav-btn btn-previous" id="btn-previous" onclick="previousQuestion()" disabled>
+                <i class="fas fa-chevron-left"></i> Anterior
+            </button>
+
+            <div style="flex: 1; text-align: center;">
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Guardando respuesta...</p>
+                </div>
+            </div>
+
+            <button class="nav-btn btn-next" id="btn-next" onclick="nextQuestion()" disabled>
+                Siguiente <i class="fas fa-chevron-right"></i>
+            </button>
+
+            <button class="nav-btn btn-finish" id="btn-finish" onclick="finishTest()" style="display: none;">
+                <i class="fas fa-flag-checkered"></i> Finalizar Test
+            </button>
+        </div>
+
+        <!-- Mensaje de éxito -->
+        <div class="success-message" id="success-message">
+            <i class="fas fa-check-circle"></i>
+            <h2>¡Test Completado!</h2>
+            <p>Todas las respuestas han sido guardadas correctamente.</p>
+            <button class="nav-btn btn-next" onclick="goToDashboard()" style="margin-top: 1rem;">
+                <i class="fas fa-home"></i> Volver al Panel
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        const totalQuestions = @(preguntas?.Count ?? 0);
+        let answers = {};
+        let evaluacionId = @(ViewBag.EvaluacionID ?? 0);
+        let respuestasExistentes = @Html.Raw(Json.Serialize(ViewBag.RespuestasExistentes ?? new Dictionary<int, bool>()));
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar si hay una evaluación en curso
+            if (evaluacionId <= 0) {
+                // Si no hay evaluación, crear una nueva
+                createNewEvaluation();
+            } else {
+                // Si hay evaluación, cargar respuestas existentes y continuar desde donde se quedó
+                loadExistingAnswers();
+                findCurrentQuestion();
+            }
+
+            updateProgress();
+            updateNavigationButtons();
+        });
+
+        // Manejar clics en respuestas
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('answer-btn')) {
+                const questionCard = e.target.closest('.question-card');
+                const questionId = parseInt(questionCard.dataset.questionId);
+                const answer = e.target.dataset.answer === 'true';
+
+                // Remover selección anterior
+                questionCard.querySelectorAll('.answer-btn').forEach(btn => {
+                    btn.classList.remove('selected', 'no-selected');
+                });
+
+                // Agregar selección actual
+                if (answer) {
+                    e.target.classList.add('selected');
+                } else {
+                    e.target.classList.add('no-selected');
+                }
+
+                // Guardar respuesta localmente
+                answers[currentQuestion] = {
+                    questionId: questionId,
+                    answer: answer
+                };
+
+                // Habilitar navegación
+                updateNavigationButtons();
+
+                // Guardar en base de datos
+                saveAnswer(questionId, answer);
+            }
+        });
+
+        function saveAnswer(preguntaId, respuesta) {
+            showLoading(true);
+            hideError();
+
+            // Crear FormData para enviar al controlador
+            const formData = new FormData();
+            formData.append('EvaluacionID', evaluacionId.toString());
+            formData.append('PreguntaID', preguntaId.toString());
+            formData.append('Respuesta', respuesta.toString());
+            formData.append('FechaRespuesta', new Date().toISOString());
+            formData.append('pregunta_id', preguntaId.toString());
+
+            // Añadir token CSRF si existe
+            const token = document.querySelector('input[name="__RequestVerificationToken"]');
+            if (token) {
+                formData.append('__RequestVerificationToken', token.value);
+            }
+
+            fetch('@Url.Action("IniciarTestMCHART", "Preguntas")', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text(); // El controlador retorna una vista
+            })
+            .then(result => {
+                console.log('Respuesta guardada exitosamente');
+                // Si llegamos aquí, la respuesta se guardó correctamente
+            })
+            .catch(error => {
+                console.error('Error al guardar respuesta:', error);
+                showError(`Error al guardar la respuesta: ${error.message}`);
+
+                // Remover la selección visual si hubo error
+                const questionCard = document.querySelector(`[data-question-id="${preguntaId}"]`);
+                if (questionCard) {
+                    questionCard.querySelectorAll('.answer-btn').forEach(btn => {
+                        btn.classList.remove('selected', 'no-selected');
+                    });
+                }
+
+                // Remover de respuestas locales
+                delete answers[currentQuestion];
+                updateNavigationButtons();
+            })
+            .finally(() => {
+                showLoading(false);
+            });
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < totalQuestions - 1) {
+                // Ocultar pregunta actual
+                const currentCard = document.querySelector(`[data-question="${currentQuestion}"]`);
+                currentCard.classList.add('question-hidden');
+                currentCard.classList.remove('fade-in');
+
+                // Mostrar siguiente pregunta
+                currentQuestion++;
+                const nextCard = document.querySelector(`[data-question="${currentQuestion}"]`);
+                nextCard.classList.remove('question-hidden');
+                nextCard.classList.add('fade-in');
+
+                updateProgress();
+                updateNavigationButtons();
+                hideError();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                // Ocultar pregunta actual
+                const currentCard = document.querySelector(`[data-question="${currentQuestion}"]`);
+                currentCard.classList.add('question-hidden');
+                currentCard.classList.remove('fade-in');
+
+                // Mostrar pregunta anterior
+                currentQuestion--;
+                const prevCard = document.querySelector(`[data-question="${currentQuestion}"]`);
+                prevCard.classList.remove('question-hidden');
+                prevCard.classList.add('fade-in');
+
+                updateProgress();
+                updateNavigationButtons();
+                hideError();
+            }
+        }
+
+        function updateProgress() {
+            const progressPercentage = ((currentQuestion + 1) / totalQuestions) * 100;
+            document.getElementById('progress-fill').style.width = progressPercentage + '%';
+            document.getElementById('current-question').textContent = currentQuestion + 1;
+        }
+
+        function updateNavigationButtons() {
+            const btnPrevious = document.getElementById('btn-previous');
+            const btnNext = document.getElementById('btn-next');
+            const btnFinish = document.getElementById('btn-finish');
+
+            // Botón anterior
+            btnPrevious.disabled = currentQuestion === 0;
+
+            // Verificar si la pregunta actual tiene respuesta
+            const hasAnswer = answers[currentQuestion] !== undefined;
+
+            if (currentQuestion === totalQuestions - 1) {
+                // Última pregunta
+                btnNext.style.display = 'none';
+                btnFinish.style.display = hasAnswer ? 'flex' : 'none';
+            } else {
+                // No es la última pregunta
+                btnNext.style.display = 'flex';
+                btnNext.disabled = !hasAnswer;
+                btnFinish.style.display = 'none';
+            }
+        }
+
+        function finishTest() {
+            // Verificar que todas las preguntas estén respondidas
+            const allAnswered = Object.keys(answers).length === totalQuestions;
+
+            if (!allAnswered) {
+                showError('Por favor, responde todas las preguntas antes de finalizar el test.');
+                return;
+            }
+
+            // Mostrar mensaje de éxito
+            document.getElementById('questions-container').style.display = 'none';
+            document.querySelector('.navigation-container').style.display = 'none';
+            document.getElementById('success-message').style.display = 'block';
+        }
+
+        function goToDashboard() {
+            // Redirigir al panel principal (ajusta la ruta según tu aplicación)
+            window.location.href = '@Url.Action("Index", "Home")';
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            errorText.textContent = message;
+            errorDiv.style.display = 'block';
+            errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function hideError() {
+            document.getElementById('error-message').style.display = 'none';
+        }
+
+        // Función para crear una nueva evaluación
+        function createNewEvaluation() {
+            showLoading(true);
+
+            fetch('@Url.Action("CrearNuevaEvaluacion", "Preguntas")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                }
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    evaluacionId = result.evaluacionId;
+                    console.log('Nueva evaluación creada con ID:', evaluacionId);
+                } else {
+                    throw new Error(result.message || 'Error al crear nueva evaluación');
+                }
+            })
+            .catch(error => {
+                console.error('Error al crear evaluación:', error);
+                showError(`Error al crear la evaluación: ${error.message}`);
+            })
+            .finally(() => {
+                showLoading(false);
+            });
+        }
+
+        // Función para cargar respuestas existentes
+        function loadExistingAnswers() {
+            if (respuestasExistentes && Object.keys(respuestasExistentes).length > 0) {
+                // Cargar respuestas en el objeto answers y marcar visualmente
+                Object.keys(respuestasExistentes).forEach(preguntaId => {
+                    const respuesta = respuestasExistentes[preguntaId];
+
+                    // Encontrar la pregunta en el DOM
+                    const questionCard = document.querySelector(`[data-question-id="${preguntaId}"]`);
+                    if (questionCard) {
+                        const questionIndex = parseInt(questionCard.dataset.question);
+
+                        // Guardar en answers
+                        answers[questionIndex] = {
+                            questionId: parseInt(preguntaId),
+                            answer: respuesta
+                        };
+
+                        // Marcar visualmente la respuesta
+                        const buttons = questionCard.querySelectorAll('.answer-btn');
+                        buttons.forEach(btn => {
+                            const btnAnswer = btn.dataset.answer === 'true';
+                            if (btnAnswer === respuesta) {
+                                if (respuesta) {
+                                    btn.classList.add('selected');
+                                } else {
+                                    btn.classList.add('no-selected');
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        // Función para encontrar la pregunta actual (primera sin responder)
+        function findCurrentQuestion() {
+            currentQuestion = 0;
+
+            // Buscar la primera pregunta sin respuesta
+            for (let i = 0; i < totalQuestions; i++) {
+                if (answers[i] === undefined) {
+                    currentQuestion = i;
+                    break;
+                }
+
+                // Si todas están respondidas, ir a la última
+                if (i === totalQuestions - 1) {
+                    currentQuestion = totalQuestions - 1;
+                }
+            }
+
+            // Mostrar la pregunta actual y ocultar las demás
+            document.querySelectorAll('.question-card').forEach((card, index) => {
+                if (index === currentQuestion) {
+                    card.classList.remove('question-hidden');
+                    card.classList.add('fade-in');
+                } else {
+                    card.classList.add('question-hidden');
+                    card.classList.remove('fade-in');
+                }
+            });
+        }
+
+        // Prevenir envío accidental del formulario
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
+        });
+
+        // Manejar errores de red
+        window.addEventListener('online', function() {
+            hideError();
+        });
+
+        window.addEventListener('offline', function() {
+            showError('Sin conexión a internet. Las respuestas no se pueden guardar.');
+        });
+    </script>
+
+    <!-- Token CSRF -->
+    @Html.AntiForgeryToken()
+</body>
+</html>
