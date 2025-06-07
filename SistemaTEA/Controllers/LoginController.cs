@@ -36,8 +36,12 @@ namespace SistemaTEA.Controllers
             usuario.RolID = 2;
             if (ModelState.IsValid)
             {
-                if (usuario.Contraseña != confirmarContrasena)
+
+                var regex = new Regex(@"^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$");
+
+                if (usuario.Contraseña != confirmarContrasena && !regex.IsMatch(usuario.Contraseña))
                 {
+                    TempData["Error_Contrasena"] = "La contraseña debe tener al menos una letra mayúscula, un número y un carácter especial.";
                     ViewBag.Error = "Las contraseñas no coinciden.";
                     return View(usuario);
                 }
@@ -53,14 +57,14 @@ namespace SistemaTEA.Controllers
 
                 usuario.RolID = 2;
                 usuario.Contraseña = SeguridadHelper.HashPassword(usuario.Contraseña);
-                usuario.EsActivo = false; // pendiente de aprobación
+                usuario.EsActivo = false; 
 
                 try
                 {
                     _testContext.Usuarios.Add(usuario);
                     _testContext.SaveChanges();
 
-                    HttpContext.Session.SetInt32("UsuarioID", usuario.UsuarioID); // CAMBIO AQUI
+                    HttpContext.Session.SetInt32("UsuarioID", usuario.UsuarioID); 
                     HttpContext.Session.SetString("nombre", usuario.Nombre);
                     HttpContext.Session.SetInt32("rol", usuario.RolID);
                     HttpContext.Session.SetString("telefono", usuario.Telefono ?? "");
@@ -137,7 +141,7 @@ namespace SistemaTEA.Controllers
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            HttpContext.Session.SetInt32("UsuarioID", user.UsuarioID); // CAMBIO AQUI
+            HttpContext.Session.SetInt32("UsuarioID", user.UsuarioID); 
             HttpContext.Session.SetString("nombre", user.Nombre);
             HttpContext.Session.SetInt32("rol", user.RolID);
             HttpContext.Session.SetString("telefono", user.Telefono ?? "");
