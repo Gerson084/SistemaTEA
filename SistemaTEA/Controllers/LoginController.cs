@@ -32,7 +32,7 @@ namespace SistemaTEA.Controllers
 
         
         [HttpPost]
-        public IActionResult Registro(Usuario usuario, string confirmarContrasena, DateTime? fechaNacimiento, string genero, bool esPadre = false)
+        public IActionResult Registro(Usuario usuario, string confirmarContrasena, DateTime? fechaNacimiento, string? genero, bool esPadre = false)
         {
 
             usuario.RolID = esPadre ? 2 : 4;
