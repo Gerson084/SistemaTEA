@@ -521,47 +521,26 @@
                 <h3><i class="fas fa-brain"></i> Evaluaciones ADOS-2</h3>
                 <div class="action-buttons">
                     <a href="@Url.Action("BuscarPaciente", "Evaluacion")" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Nueva Evaluación ADOS-2
+                        <i class="fas fa-plus"></i> Ir a Evaluación ADOS-2
                     </a>
 
-                    <a href="#" class="btn btn-info">
-                        <i class="fas fa-list"></i> Ver Evaluaciones ADOS-2
-                    </a>
-                    <a href="#" class="btn btn-warning">
-                        <i class="fas fa-edit"></i> Continuar Evaluación
-                    </a>
+                    
                 </div>
             </div>
 
             <div class="action-section">
                 <h3><i class="fas fa-comments"></i> Evaluaciones ADI-R</h3>
                 <div class="action-buttons">
-                    <a href="#" class="btn btn-secondary">
-                        <i class="fas fa-plus"></i> Nueva Evaluación ADI-R
+                    
+                    <a href="@Url.Action("BuscarPacienteADIR", "EvaluacionADIR")" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Ir a  Evaluación ADI-R
                     </a>
-                    <a href="#" class="btn btn-info">
-                        <i class="fas fa-list"></i> Ver Evaluaciones ADI-R
-                    </a>
-                    <a href="#" class="btn btn-success">
-                        <i class="fas fa-chart-line"></i> Análisis Comparativo
-                    </a>
+
+                   
                 </div>
             </div>
 
-            <div class="action-section">
-                <h3><i class="fas fa-file-medical-alt"></i> Reportes y Análisis</h3>
-                <div class="action-buttons">
-                    <a href="#" class="btn btn-success">
-                        <i class="fas fa-file-pdf"></i> Generar Reporte
-                    </a>
-                    <a href="#" class="btn btn-info">
-                        <i class="fas fa-chart-bar"></i> Estadísticas de Pacientes
-                    </a>
-                    <a href="#" class="btn btn-warning">
-                        <i class="fas fa-download"></i> Exportar Datos
-                    </a>
-                </div>
-            </div>
+            
 
             <div class="action-section">
                 <h3><i class="fas fa-user-friends"></i> Gestión de Pacientes</h3>
@@ -569,100 +548,14 @@
                     <a href="#" class="btn btn-info">
                         <i class="fas fa-eye"></i> Ver Mis Pacientes
                     </a>
-                    <a href="#" class="btn btn-primary">
-                        <i class="fas fa-history"></i> Historial Clínico
-                    </a>
-                    <a href="#" class="btn btn-secondary">
-                        <i class="fas fa-calendar-alt"></i> Programar Citas
-                    </a>
+                   
                 </div>
             </div>
         </div>
 
-        <div class="patients-section">
-            <div class="patient-list">
-                <h3><i class="fas fa-users"></i> Pacientes Recientes</h3>
+       
 
-                <div class="patient-item">
-                    <div class="patient-avatar">AR</div>
-                    <div class="patient-info">
-                        <div class="patient-name">Ana Rodríguez</div>
-                        <div class="patient-age">5 años - Evaluación M-CHAT completada</div>
-                    </div>
-                    <div class="patient-status status-pending">Pendiente ADOS-2</div>
-                </div>
-
-                <div class="patient-item">
-                    <div class="patient-avatar">LM</div>
-                    <div class="patient-info">
-                        <div class="patient-name">Luis Morales</div>
-                        <div class="patient-age">7 años - ADOS-2 en progreso</div>
-                    </div>
-                    <div class="patient-status status-progress">En Proceso</div>
-                </div>
-
-                <div class="patient-item">
-                    <div class="patient-avatar">MG</div>
-                    <div class="patient-info">
-                        <div class="patient-name">María García</div>
-                        <div class="patient-age">4 años - ADI-R completado</div>
-                    </div>
-                    <div class="patient-status status-completed">Completado</div>
-                </div>
-
-                <div class="patient-item">
-                    <div class="patient-avatar">JS</div>
-                    <div class="patient-info">
-                        <div class="patient-name">José Silva</div>
-                        <div class="patient-age">6 años - Primera consulta</div>
-                    </div>
-                    <div class="patient-status status-pending">Evaluación Inicial</div>
-                </div>
-            </div>
-
-            <div class="recent-activity">
-                <h3><i class="fas fa-history"></i> Actividad Reciente</h3>
-
-                <div class="activity-item">
-                    <div class="activity-icon evaluation">
-                        <i class="fas fa-brain"></i>
-                    </div>
-                    <div class="activity-details">
-                        <div class="activity-title">Evaluación ADOS-2 iniciada</div>
-                        <div class="activity-time">Paciente: Luis Morales - Hace 2 horas</div>
-                    </div>
-                </div>
-
-                <div class="activity-item">
-                    <div class="activity-icon completed">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="activity-details">
-                        <div class="activity-title">Evaluación ADI-R completada</div>
-                        <div class="activity-time">Paciente: María García - Hace 1 día</div>
-                    </div>
-                </div>
-
-                <div class="activity-item">
-                    <div class="activity-icon report">
-                        <i class="fas fa-file-medical"></i>
-                    </div>
-                    <div class="activity-details">
-                        <div class="activity-title">Reporte generado</div>
-                        <div class="activity-time">Paciente: Ana Rodríguez - Hace 2 días</div>
-                    </div>
-                </div>
-
-                <div class="activity-item">
-                    <div class="activity-icon evaluation">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <div class="activity-details">
-                        <div class="activity-title">Nuevo paciente asignado</div>
-                        <div class="activity-time">José Silva - Hace 3 días</div>
-                    </div>
-                </div>
-            </div>
+           
         </div>
     </div>
 
