@@ -10,6 +10,24 @@
     <title>@ViewData["Title"] - Sistema TEA</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-dark: #0a0a0a;
+            --secondary-dark: #1a1a1a;
+            --accent-dark: #2a2a2a;
+            --neon-purple: #8b5cf6;
+            --neon-violet: #a855f7;
+            --neon-pink: #d946ef;
+            --deep-purple: #6b46c1;
+            --light-purple: #c084fc;
+            --text-light: #ffffff;
+            --text-muted: #a0a0a0;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-neon: 0 0 20px rgba(139, 92, 246, 0.3);
+            --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -17,337 +35,455 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(45deg, var(--primary-dark) 0%, var(--secondary-dark) 50%, var(--accent-dark) 100%);
             min-height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             position: relative;
             overflow: hidden;
         }
-
-        /* Elementos decorativos de fondo */
-        .bg-decoration {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            animation: float 6s ease-in-out infinite;
-        }
-
-            .bg-decoration:nth-child(1) {
-                width: 200px;
-                height: 200px;
-                top: 10%;
-                left: 10%;
-                animation-delay: 0s;
+ 
+            body::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image: radial-gradient(circle at 25% 25%, var(--neon-purple) 0%, transparent 50%), radial-gradient(circle at 75% 75%, var(--neon-pink) 0%, transparent 50%);
+                opacity: 0.1;
+                z-index: 1;
             }
 
-            .bg-decoration:nth-child(2) {
-                width: 150px;
-                height: 150px;
-                top: 70%;
-                right: 10%;
-                animation-delay: 2s;
-            }
-
-            .bg-decoration:nth-child(3) {
-                width: 100px;
-                height: 100px;
-                bottom: 20%;
-                left: 20%;
-                animation-delay: 4s;
-            }
-
-        @@keyframes float {
-            0%, 100%
-
-        {
-            transform: translateY(0px) rotate(0deg);
-        }
-
-        50% {
-            transform: translateY(-20px) rotate(180deg);
-        }
-
-        }
 
         .login-container {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(26, 26, 26, 0.8);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 3rem 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 0;
+            width: 90%;
+            max-width: 900px;
+            height: 600px;
+            display: flex;
             position: relative;
             z-index: 10;
-            animation: slideUp 0.8s ease-out;
+            box-shadow: var(--shadow-heavy);
+            overflow: hidden;
         }
 
-        @@keyframes slideUp {
-            from
+ 
+        .left-side {
+            flex: 1;
+            background: linear-gradient(135deg, var(--deep-purple) 0%, var(--neon-purple) 50%, var(--neon-pink) 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+            .left-side::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%), repeating-linear-gradient( 90deg, transparent, transparent 2px, rgba(255, 255, 255, 0.05) 2px, rgba(255, 255, 255, 0.05) 4px );
+                animation: slide-pattern 8s linear infinite;
+            }
+
+        @@keyframes slide-pattern {
+            0%
 
         {
-            opacity: 0;
-            transform: translateY(30px);
+            transform: translateX(-100px);
         }
 
-        to {
-            opacity: 1;
-            transform: translateY(0);
+        100% {
+            transform: translateX(100px);
         }
 
         }
 
-        .header-section {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .logo-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #48bb78, #38a169);
-            border-radius: 50%;
+        .brand-logo {
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1rem;
-            font-size: 2rem;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
             color: white;
-            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: glow-pulse 2s ease-in-out infinite alternate;
         }
 
-        .header-section h2 {
+        @@keyframes glow-pulse {
+            from
+
+        {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        to {
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.6);
+        }
+
+        }
+
+        .brand-title {
+            font-size: 3rem;
+            font-weight: 800;
             color: white;
-            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: -1px;
+        }
+
+        .brand-subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
             font-weight: 300;
-            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            max-width: 300px;
         }
 
-        .header-section p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
+       
+        .right-side {
+            flex: 1;
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--secondary-dark);
             position: relative;
         }
 
-            .form-group label {
-                display: block;
-                color: white;
-                font-weight: 500;
-                margin-bottom: 0.5rem;
-                font-size: 0.95rem;
+        .form-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .form-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+       
+        .form-field {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .field-label {
+            display: block;
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .field-wrapper {
+            position: relative;
+        }
+
+        .field-input {
+            width: 100%;
+            padding: 1.2rem 1rem 1.2rem 3.5rem;
+            background: var(--accent-dark);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: var(--text-light);
+            font-size: 1rem;
+            font-weight: 400;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+
+            .field-input::placeholder {
+                color: var(--text-muted);
+                font-weight: 300;
             }
 
-        .input-wrapper {
-            position: relative;
-        }
+            .field-input:focus {
+                border-color: var(--neon-purple);
+                background: rgba(42, 42, 42, 0.8);
+                box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+                transform: translateY(-2px);
+            }
 
-        .input-icon {
+        .field-icon {
             position: absolute;
-            left: 15px;
+            left: 1.2rem;
             top: 50%;
             transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--text-muted);
             font-size: 1.1rem;
-            z-index: 2;
+            transition: color 0.3s ease;
         }
 
-        .form-control {
-            width: 100%;
-            padding: 15px 15px 15px 45px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 1rem;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+        .field-wrapper:focus-within .field-icon {
+            color: var(--neon-purple);
         }
 
-            .form-control::placeholder {
-                color: rgba(255, 255, 255, 0.6);
-            }
-
-            .form-control:focus {
-                outline: none;
-                border-color: rgba(255, 255, 255, 0.5);
-                background: rgba(255, 255, 255, 0.15);
-                transform: translateY(-2px);
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            }
-
-        .btn-login {
+      
+        .neon-button {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-            border: none;
+            padding: 1.2rem;
+            background: transparent;
+            border: 2px solid var(--neon-purple);
             border-radius: 12px;
+            color: var(--neon-purple);
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             margin-top: 1rem;
         }
 
-            .btn-login::before {
+            .neon-button::before {
                 content: '';
                 position: absolute;
                 top: 0;
                 left: -100%;
                 width: 100%;
                 height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-                transition: left 0.5s;
+                background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+                transition: left 0.3s ease;
+                z-index: -1;
             }
 
-            .btn-login:hover::before {
-                left: 100%;
-            }
-
-            .btn-login:hover {
+            .neon-button:hover {
+                color: white;
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), inset 0 0 20px rgba(139, 92, 246, 0.1);
                 transform: translateY(-2px);
-                box-shadow: 0 15px 30px rgba(72, 187, 120, 0.4);
             }
 
-            .btn-login:active {
+                .neon-button:hover::before {
+                    left: 0;
+                }
+
+            .neon-button:active {
                 transform: translateY(0);
             }
 
-        .register-link {
+   
+        .register-section {
             text-align: center;
             margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-            .register-link a {
-                color: rgba(255, 255, 255, 0.9);
-                text-decoration: none;
-                font-weight: 500;
-                transition: all 0.3s ease;
-                padding: 8px 16px;
-                border-radius: 20px;
-                display: inline-block;
+        .register-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .register-link {
+            color: var(--neon-violet);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+            .register-link::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background: var(--neon-violet);
+                transition: width 0.3s ease;
             }
 
-                .register-link a:hover {
-                    color: white;
-                    background: rgba(255, 255, 255, 0.1);
-                    transform: translateY(-1px);
+            .register-link:hover {
+                color: var(--neon-pink);
+                text-shadow: 0 0 10px rgba(217, 70, 239, 0.5);
+            }
+
+                .register-link:hover::after {
+                    width: 100%;
+                    background: var(--neon-pink);
                 }
 
-        /* Alertas mejoradas */
+      
         .alert {
             position: fixed;
             top: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 2rem;
             padding: 1rem 1.5rem;
-            border-radius: 12px;
+            border-radius: 8px;
             font-weight: 500;
             z-index: 1000;
-            backdrop-filter: blur(10px);
-            animation: alertSlide 0.5s ease-out;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(20px);
+            animation: cyber-slide 0.5s ease-out;
+            box-shadow: var(--shadow-heavy);
+            max-width: 400px;
+            border-left: 4px solid;
         }
 
-        @@keyframes alertSlide {
+        @@keyframes cyber-slide {
             from
 
         {
             opacity: 0;
-            transform: translateX(-50%) translateY(-20px);
+            transform: translateX(100px) rotateY(90deg);
         }
 
         to {
             opacity: 1;
-            transform: translateX(-50%) translateY(0);
+            transform: translateX(0) rotateY(0deg);
         }
 
         }
 
         .alert-success {
-            background: rgba(72, 187, 120, 0.9);
-            color: white;
-            border: 1px solid rgba(72, 187, 120, 0.3);
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--neon-purple);
+            border-color: var(--neon-purple);
+            border-left-color: var(--neon-purple);
         }
 
         .alert-danger {
-            background: rgba(245, 101, 101, 0.9);
-            color: white;
-            border: 1px solid rgba(245, 101, 101, 0.3);
-        }
-
-        /* Responsive */
-        @@media (max-width: 480px) {
-            .login-container
-
-        {
-            margin: 1rem;
-            padding: 2rem 1.5rem;
-        }
-
-        .header-section h2 {
-            font-size: 1.5rem;
-        }
-
-        .bg-decoration {
-            display: none;
-        }
-
+            background: rgba(217, 70, 239, 0.1);
+            color: var(--neon-pink);
+            border-color: var(--neon-pink);
+            border-left-color: var(--neon-pink);
         }
 
         /* Loading state */
-        .btn-login.loading {
+        .neon-button.loading {
             pointer-events: none;
-            opacity: 0.8;
+            animation: cyber-loading 1.5s ease-in-out infinite;
         }
 
-            .btn-login.loading::after {
+            .neon-button.loading::after {
                 content: '';
                 position: absolute;
+                top: 50%;
+                right: 1rem;
                 width: 20px;
                 height: 20px;
                 border: 2px solid transparent;
-                border-top: 2px solid white;
+                border-top: 2px solid currentColor;
                 border-radius: 50%;
-                right: 15px;
-                top: 50%;
                 transform: translateY(-50%);
                 animation: spin 1s linear infinite;
             }
 
+        @@keyframes cyber-loading {
+            0%, 100%
+
+        {
+            border-color: var(--neon-purple);
+        }
+
+        50% {
+            border-color: var(--neon-pink);
+        }
+
+        }
+
         @@keyframes spin {
-            0%
+            from
 
         {
             transform: translateY(-50%) rotate(0deg);
         }
 
-        100% {
+        to {
             transform: translateY(-50%) rotate(360deg);
+        }
+
+        }
+
+  
+        @@media (max-width: 768px) {
+            .login-container
+
+        {
+            flex-direction: column;
+            height: auto;
+            max-width: 400px;
+        }
+
+        .left-side {
+            padding: 2rem 1.5rem 1rem;
+            min-height: 200px;
+        }
+
+        .brand-title {
+            font-size: 2rem;
+        }
+
+        .brand-logo {
+            width: 70px;
+            height: 70px;
+            font-size: 2rem;
+        }
+
+        .right-side {
+            padding: 2rem 1.5rem;
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+        }
+
+        .alert {
+            top: 1rem;
+            right: 1rem;
+            left: 1rem;
+        }
+
+        }
+
+        @@media (max-width: 480px) {
+            .login-container
+
+        {
+            width: 95%;
+            margin: 1rem;
+        }
+
+        .left-side,
+        .right-side {
+            padding: 1.5rem 1rem;
         }
 
         }
     </style>
 </head>
 <body>
-    <!-- Elementos decorativos de fondo -->
-    <div class="bg-decoration"></div>
-    <div class="bg-decoration"></div>
-    <div class="bg-decoration"></div>
-
     @if (ViewBag.Error != null)
     {
         <div class="alert alert-danger">
@@ -356,124 +492,160 @@
     }
 
     <div class="login-container">
-        <div class="header-section">
-            <div class="logo-icon">
-                <i class="fas fa-brain"></i>
+
+        <div class="left-side">
+            <div class="brand-logo">
+                <img src="/img/psicologo.png"/>
             </div>
-            <h2>Sistema TEA</h2>
-            <p>Ingresa tus credenciales para acceder al sistema</p>
+            <h1 class="brand-title">TEA</h1>
+            <p class="brand-subtitle">
+                Sistema de Diagnostico TEA.
+            </p>
         </div>
 
-        <form asp-action="Login" method="post" id="loginForm">
-            <div class="form-group">
-                <label for="correo">Correo Electrónico</label>
-                <div class="input-wrapper">
-                    <i class="fas fa-envelope input-icon"></i>
-                    <input id="correo"
-                           name="correo"
-                           type="email"
-                           class="form-control"
-                           placeholder="ejemplo@correo.com"
-                           required
-                           autocomplete="email" />
+        <div class="right-side">
+            <div class="form-header">
+                <h2 class="form-title">Acceso</h2>
+                <p class="form-subtitle">Ingresa al sistema con tus credenciales</p>
+            </div>
+
+            <form asp-action="Login" method="post" id="loginForm">
+                <div class="form-field">
+                    <label for="correo" class="field-label">Email</label>
+                    <div class="field-wrapper">
+                        <i class="fas fa-at field-icon"></i>
+                        <input id="correo"
+                               name="correo"
+                               type="email"
+                               class="field-input"
+                               placeholder="usuario@sistema.com"
+                               required
+                               autocomplete="email" />
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="clave">Contraseña</label>
-                <div class="input-wrapper">
-                    <i class="fas fa-lock input-icon"></i>
-                    <input id="clave"
-                           name="clave"
-                           type="password"
-                           class="form-control"
-                           placeholder="••••••••"
-                           required
-                           autocomplete="current-password" />
+                <div class="form-field">
+                    <label for="clave" class="field-label">Contraseña</label>
+                    <div class="field-wrapper">
+                        <i class="fas fa-key field-icon"></i>
+                        <input id="clave"
+                               name="clave"
+                               type="password"
+                               class="field-input"
+                               placeholder="••••••••••"
+                               required
+                               autocomplete="current-password" />
+                    </div>
                 </div>
-            </div>
 
-            <button type="submit" class="btn-login" id="loginBtn">
-                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
-            </button>
+                <button type="submit" class="neon-button" id="loginBtn">
+                    <i class="fas fa-rocket"></i> Iniciar Sesión
+                </button>
 
-            <div class="register-link">
-                <a asp-action="Registro">
-                    <i class="fas fa-user-plus"></i> ¿No tienes cuenta? Regístrate aquí
-                </a>
-            </div>
-        </form>
+                <div class="register-section">
+                    <p class="register-text">¿Primera vez aquí?</p>
+                    <a asp-action="Registro" class="register-link">
+                        Crear cuenta nueva
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <!-- Scripts -->
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Mensaje de registro exitoso
-            @if (TempData["RegistroExitoso"] != null)
-            {
-                    <text>
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Registro Exitoso',
-                        text: '@TempData["RegistroExitoso"]',
-                        background: 'rgba(255, 255, 255, 0.95)',
-                        backdrop: 'rgba(0, 0, 0, 0.4)',
-                        confirmButtonColor: '#48bb78'
-                    });
-                    </text>
-            }
 
-            // Manejo del formulario de login
+        @if (TempData["RegistroExitoso"] != null)
+        {
+            <text>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Acceso Autorizado',
+                                    text: '@System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(TempData["RegistroExitoso"]?.ToString())',
+                            background: '#1a1a1a',
+                            color: '#ffffff',
+                            confirmButtonColor: '#8b5cf6',
+                            iconColor: '#8b5cf6',
+                            showClass: {
+                                popup: 'animate__animated animate__zoomIn'
+                            }
+                        });
+            </text>
+        }
+
+
             const loginForm = document.getElementById('loginForm');
             const loginBtn = document.getElementById('loginBtn');
 
             loginForm.addEventListener('submit', function(e) {
                 loginBtn.classList.add('loading');
-                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Iniciando sesión...';
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
             });
 
-            // Animación de entrada para los inputs
-            const inputs = document.querySelectorAll('.form-control');
-            inputs.forEach((input, index) => {
-                input.style.opacity = '0';
-                input.style.transform = 'translateY(20px)';
+            
+            const formFields = document.querySelectorAll('.form-field');
+            formFields.forEach((field, index) => {
+                field.style.opacity = '0';
+                field.style.transform = 'translateX(30px)';
 
                 setTimeout(() => {
-                    input.style.transition = 'all 0.6s ease';
-                    input.style.opacity = '1';
-                    input.style.transform = 'translateY(0)';
-                }, 200 + (index * 100));
+                    field.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    field.style.opacity = '1';
+                    field.style.transform = 'translateX(0)';
+                }, 300 + (index * 150));
             });
 
-            // Auto-hide alerts
+       
             const alerts = document.querySelectorAll('.alert');
             alerts.forEach(alert => {
                 setTimeout(() => {
-                    alert.style.animation = 'alertSlide 0.5s ease-out reverse';
-                    setTimeout(() => {
-                        alert.remove();
-                    }, 500);
-                }, 5000);
+                    alert.style.animation = 'cyber-slide 0.5s ease-out reverse';
+                    setTimeout(() => alert.remove(), 500);
+                }, 4000);
             });
 
-            // Validación en tiempo real
-            const emailInput = document.getElementById('correo');
-            const passwordInput = document.getElementById('clave');
+            const inputs = document.querySelectorAll('.field-input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'scale(1.02)';
+                });
 
-            emailInput.addEventListener('blur', function() {
-                if (this.value && !this.checkValidity()) {
-                    this.style.borderColor = 'rgba(245, 101, 101, 0.8)';
-                } else if (this.value) {
-                    this.style.borderColor = 'rgba(72, 187, 120, 0.8)';
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'scale(1)';
+
+                    if (this.type === 'email' && this.value && !this.checkValidity()) {
+                        this.style.borderColor = 'var(--neon-pink)';
+                        this.style.boxShadow = '0 0 10px rgba(217, 70, 239, 0.3)';
+                    } else if (this.value && this.checkValidity()) {
+                        this.style.borderColor = 'var(--neon-purple)';
+                        this.style.boxShadow = '0 0 10px rgba(139, 92, 246, 0.3)';
+                    }
+                });
+
+                input.addEventListener('input', function() {
+                    if (this.value === '') {
+                        this.style.borderColor = 'transparent';
+                        this.style.boxShadow = 'none';
+                    }
+                });
+            });
+
+            const title = document.querySelector('.form-title');
+            const text = title.textContent;
+            title.textContent = '';
+
+            let i = 0;
+            const typeWriter = () => {
+                if (i < text.length) {
+                    title.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 150);
                 }
-            });
+            };
 
-            emailInput.addEventListener('input', function() {
-                if (this.style.borderColor === 'rgba(245, 101, 101, 0.8)' && this.checkValidity()) {
-                    this.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                }
-            });
+            setTimeout(typeWriter, 500);
         });
     </script>
 </body>
