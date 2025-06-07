@@ -433,6 +433,55 @@ namespace SistemaTEA.Controllers
             return RedirectToAction("Modulo" + moduloSeleccionado, "ADOS", new { evaluacionId = evaluacion.EvaluacionID });
         }
 
+        public IActionResult ResultadoFinal(int evaluacionId)
+        {
+            // Consultar la nota segura desde la BD
+            var notaTotal = _context.RespuestasADOS2
+                .Where(r => r.EvaluacionID == evaluacionId)
+                .Sum(r => (int?)r.Puntuacion) ?? 0;
+
+            ViewBag.EvaluacionID = evaluacionId;
+            ViewBag.NotaTotal = notaTotal;
+
+            return View("~/Views/ADOS/ResultadoFinal.cshtml");
+        }
+
+
+
+
+        [HttpPost]
+        public IActionResult TerminarEvaluacion(int EvaluacionID)
+        {
+            try
+            {
+                // Calcular la nota total de esta evaluación
+                var notaTotal = _context.RespuestasADOS2
+                    .Where(r => r.EvaluacionID == EvaluacionID)
+                    .Sum(r => (int?)r.Puntuacion) ?? 0;
+
+                // Buscar la evaluación en la base de datos
+                var evaluacion = _context.Evaluaciones.FirstOrDefault(e => e.EvaluacionID == EvaluacionID);
+                if (evaluacion == null)
+                {
+                    return NotFound("Evaluación no encontrada.");
+                }
+
+                // Actualizar los campos: EstadoEvaluacion y PuntajeTotal
+                evaluacion.EstadoEvaluacion = "Completado";
+                evaluacion.PuntajeTotal = notaTotal;
+
+                _context.SaveChanges();
+
+                // Redirigir a una vista con el resultado
+                return RedirectToAction("ResultadoFinal", new { evaluacionId = EvaluacionID, nota = notaTotal });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Error al finalizar la evaluación: {ex.Message}" });
+            }
+        }
+
+
 
 
 

@@ -1,15 +1,9 @@
-﻿@model SistemaTEA.Models.PreguntaADIR
-@{
-    ViewData["Title"] = "Crear Pregunta ADI-R";
-    Layout = null;
-}
-<!DOCTYPE html>
-
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Pregunta ADI-R - Sistema TEA</title>
+    <title>Crear Pregunta ADOS-2 - Sistema TEA</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -354,7 +348,7 @@
             line-height: 1.6;
         }
 
-        .area-badge {
+        .module-badge {
             display: inline-block;
             padding: 0.3rem 0.8rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -475,24 +469,25 @@
 </head>
 <body>
     <div class="header">
-        <h1><i class="fas fa-brain"></i> Sistema TEA - Crear Pregunta ADI-R</h1>
+        <h1><i class="fas fa-brain"></i> Sistema TEA - Crear Pregunta ADOS-2</h1>
         <div class="header-right">
             <a href="@Url.Action("InicioADMIN", "Login")" class="btn-back">
                 <i class="fas fa-arrow-left"></i> Volver
             </a>
         </div>
     </div>
+
     <div class="main-container">
         <div class="page-header">
             <h2>
                 <i class="fas fa-plus-circle"></i>
-                Crear Nueva Pregunta ADI-R
+                Crear Nueva Pregunta ADOS-2
             </h2>
-            <p>Diseña una pregunta para la entrevista diagnóstica ADI-R. Asegúrate de asignarla al área correcta y que sea apropiada para la evaluación del autismo.</p>
+            <p>Diseña una pregunta para la observación clínica ADOS-2. Asegúrate de asignarla al módulo correcto según la edad y nivel de lenguaje del paciente.</p>
         </div>
 
-        <form asp-action="CreateADIR" asp-controller="Preguntas" method="post" class="form-container" id="createQuestionForm">
-            @Html.AntiForgeryToken()
+        <form action="CreateADOS2" method="post" class="form-container" id="createQuestionForm">
+            <input name="__RequestVerificationToken" type="hidden" value="" />
 
             <div class="form-section">
                 <h3 class="section-title">
@@ -501,39 +496,39 @@
                 </h3>
 
                 <div class="form-group">
-                    <label asp-for="AreaID">Área de Evaluación</label>
+                    <label for="ModuloID">Módulo ADOS-2</label>
                     <div class="input-group">
-                        <i class="fas fa-tags"></i>
-                        <select asp-for="AreaID" required>
-                            <option value="">Selecciona un área...</option>
-                            @if (ViewBag.Areas != null)
-                            {
-                                @foreach (var area in ViewBag.Areas)
-                                {
-                                    <option value="@area.AreaID">@area.NombreArea</option>
-                                }
-                            }
+                        <i class="fas fa-cube"></i>
+                        <select name="ModuloID" id="ModuloID" required>
+                            <option value="">Selecciona un módulo...</option>
+                            <!-- Aquí se cargarían los módulos desde ViewBag.Modulos -->
+                            <option value="1">Módulo 1 - Sin lenguaje/Palabras sueltas</option>
+                            <option value="2">Módulo 2 - Frases sin fluidez</option>
+                            <option value="3">Módulo 3 - Lenguaje fluido (niños)</option>
+                            <option value="4">Módulo 4 - Lenguaje fluido (adolescentes/adultos)</option>
                         </select>
                     </div>
-                    <div class="help-text">Selecciona el área específica de evaluación a la que pertenece esta pregunta</div>
+                    <div class="help-text">Selecciona el módulo específico según el nivel de desarrollo del lenguaje</div>
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="TipoPregunta">Tipo de Pregunta</label>
+                    <label for="TipoPregunta">Tipo de Actividad</label>
                     <div class="input-group">
                         <i class="fas fa-list-alt"></i>
-                        <select asp-for="TipoPregunta" required>
+                        <select name="TipoPregunta" id="TipoPregunta" required>
                             <option value="">Selecciona el tipo...</option>
-                            <option value="Comportamiento Actual">Comportamiento Actual</option>
-                            <option value="Historia Temprana">Historia Temprana</option>
-                            <option value="Comunicación">Comunicación</option>
+                            <option value="Juego Libre">Juego Libre</option>
                             <option value="Interacción Social">Interacción Social</option>
-                            <option value="Juego">Juego</option>
-                            <option value="Comportamiento Repetitivo">Comportamiento Repetitivo</option>
-                            <option value="Desarrollo General">Desarrollo General</option>
+                            <option value="Comunicación">Comunicación</option>
+                            <option value="Juego Imaginativo">Juego Imaginativo</option>
+                            <option value="Tarea Estructurada">Tarea Estructurada</option>
+                            <option value="Conversación">Conversación</option>
+                            <option value="Narración">Narración</option>
+                            <option value="Demostración de Tareas">Demostración de Tareas</option>
+                            <option value="Observación Directa">Observación Directa</option>
                         </select>
                     </div>
-                    <div class="help-text">Especifica el tipo de evaluación que representa esta pregunta</div>
+                    <div class="help-text">Especifica el tipo de actividad o evaluación que representa esta pregunta</div>
                 </div>
             </div>
 
@@ -544,12 +539,12 @@
                 </h3>
 
                 <div class="form-group">
-                    <label asp-for="TextoPregunta">Texto de la Pregunta</label>
+                    <label for="TextoPregunta">Instrucciones de la Actividad</label>
                     <div class="input-group">
                         <i class="fas fa-question"></i>
-                        <textarea asp-for="TextoPregunta" placeholder="Escribe aquí la pregunta completa para la entrevista ADI-R..." required></textarea>
+                        <textarea name="TextoPregunta" id="TextoPregunta" placeholder="Describe las instrucciones específicas para esta actividad del ADOS-2..." required></textarea>
                     </div>
-                    <div class="help-text">Redacta la pregunta de forma clara y específica para la entrevista clínica</div>
+                    <div class="help-text">Detalla las instrucciones claras y específicas para realizar la actividad de observación</div>
                 </div>
             </div>
 
@@ -578,28 +573,28 @@
             <div class="preview-section">
                 <h3 class="preview-title">
                     <i class="fas fa-eye"></i>
-                    Vista Previa de la Pregunta
+                    Vista Previa de la Actividad
                 </h3>
                 <div class="preview-content">
                     <div>
-                        <span class="area-badge" id="areaPreview">Área no seleccionada</span>
+                        <span class="module-badge" id="modulePreview">Módulo no seleccionado</span>
                         <span class="question-type-badge" id="typePreview">Tipo no seleccionado</span>
                     </div>
                     <div class="question-preview" id="questionPreview">
-                        Tu pregunta aparecerá aquí...
+                        Las instrucciones de la actividad aparecerán aquí...
                     </div>
                 </div>
             </div>
 
             <div class="form-actions">
-                <a href="@Url.Action("InicioADMIN", "Login")" class="btn btn-secondary">
+                <a href="#" class="btn btn-secondary">
                     <i class="fas fa-times"></i> Cancelar
                 </a>
                 <button type="button" class="btn btn-primary" onclick="previewQuestion()">
                     <i class="fas fa-eye"></i> Vista Previa
                 </button>
                 <button type="submit" class="btn btn-success">
-                    <i class="fas fa-save"></i> Guardar Pregunta
+                    <i class="fas fa-save"></i> Guardar Actividad
                 </button>
             </div>
         </form>
@@ -612,41 +607,26 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Mostrar mensajes de error si existen
-        @if (TempData["Error"] != null)
-        {
-            <text>
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: '@System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(TempData["Error"]?.ToString())',
-                            background: 'rgba(255, 255, 255, 0.95)',
-                            backdrop: 'rgba(0, 0, 0, 0.4)',
-                            confirmButtonColor: '#667eea'
-                        });
-            </text>
-        }
-
             // Elementos del formulario
             const textoPregunta = document.querySelector('textarea[name="TextoPregunta"]');
-            const areaSelect = document.querySelector('select[name="AreaID"]');
+            const moduloSelect = document.querySelector('select[name="ModuloID"]');
             const tipoSelect = document.querySelector('select[name="TipoPregunta"]');
 
             // Elementos de vista previa
             const questionPreview = document.getElementById('questionPreview');
-            const areaPreview = document.getElementById('areaPreview');
+            const modulePreview = document.getElementById('modulePreview');
             const typePreview = document.getElementById('typePreview');
 
             // Funciones de actualización de vista previa
             function updateQuestionPreview() {
-                const texto = textoPregunta.value || 'Tu pregunta aparecerá aquí...';
+                const texto = textoPregunta.value || 'Las instrucciones de la actividad aparecerán aquí...';
                 questionPreview.textContent = texto;
             }
 
-            function updateAreaPreview() {
-                const selectedOption = areaSelect.options[areaSelect.selectedIndex];
-                const areaText = selectedOption.text !== 'Selecciona un área...' ? selectedOption.text : 'Área no seleccionada';
-                areaPreview.textContent = areaText;
+            function updateModulePreview() {
+                const selectedOption = moduloSelect.options[moduloSelect.selectedIndex];
+                const moduloText = selectedOption.text !== 'Selecciona un módulo...' ? selectedOption.text : 'Módulo no seleccionado';
+                modulePreview.textContent = moduloText;
             }
 
             function updateTypePreview() {
@@ -660,8 +640,8 @@
                 textoPregunta.addEventListener('input', updateQuestionPreview);
             }
 
-            if (areaSelect) {
-                areaSelect.addEventListener('change', updateAreaPreview);
+            if (moduloSelect) {
+                moduloSelect.addEventListener('change', updateModulePreview);
             }
 
             if (tipoSelect) {
@@ -670,7 +650,7 @@
 
             // Inicializar vista previa
             updateQuestionPreview();
-            updateAreaPreview();
+            updateModulePreview();
             updateTypePreview();
 
             // Manejo de radio buttons
@@ -720,23 +700,23 @@
         // Función para mostrar vista previa
         function previewQuestion() {
             const textoPregunta = document.querySelector('textarea[name="TextoPregunta"]');
-            const areaSelect = document.querySelector('select[name="AreaID"]');
+            const moduloSelect = document.querySelector('select[name="ModuloID"]');
 
             if (!textoPregunta || !textoPregunta.value.trim()) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Atención',
-                    text: 'Por favor, escribe el texto de la pregunta para ver la vista previa.',
+                    text: 'Por favor, escribe las instrucciones de la actividad para ver la vista previa.',
                     confirmButtonColor: '#667eea'
                 });
                 return;
             }
 
-            if (!areaSelect || !areaSelect.value) {
+            if (!moduloSelect || !moduloSelect.value) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Atención',
-                    text: 'Por favor, selecciona un área para ver la vista previa completa.',
+                    text: 'Por favor, selecciona un módulo para ver la vista previa completa.',
                     confirmButtonColor: '#667eea'
                 });
                 return;

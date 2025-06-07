@@ -1,6 +1,6 @@
-﻿@model IEnumerable<SistemaTEA.Models.PreguntaMCHAT>
+﻿@model IEnumerable<dynamic>
 @{
-    ViewData["Title"] = "Preguntas M-CHAT";
+    ViewData["Title"] = "Preguntas ADOS-2";
     Layout = null;
 }
 <!DOCTYPE html>
@@ -9,7 +9,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preguntas M-CHAT - Sistema TEA</title>
+    <title>Preguntas ADOS-2 - Sistema TEA</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -201,7 +201,7 @@
             align-items: center;
             gap: 1rem;
             flex: 1;
-            max-width: 400px;
+            max-width: 600px;
         }
 
         .search-box {
@@ -230,6 +230,23 @@
                 top: 50%;
                 transform: translateY(-50%);
                 color: #718096;
+            }
+
+        .filter-select {
+            padding: 0.8rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+            .filter-select:focus {
+                outline: none;
+                border-color: #667eea;
+                box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
             }
 
         .btn {
@@ -291,7 +308,7 @@
             background: #f7fafc;
             border-radius: 15px;
             padding: 1.5rem;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #e67e22;
             transition: all 0.3s ease;
             animation: slideInLeft 0.6s ease;
         }
@@ -308,8 +325,15 @@
             margin-bottom: 1rem;
         }
 
+        .question-info {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
         .question-number {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 25px;
@@ -317,6 +341,15 @@
             font-size: 0.9rem;
             min-width: 80px;
             text-align: center;
+        }
+
+        .module-badge {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
 
         .question-actions {
@@ -347,15 +380,34 @@
             border-top: 1px solid #e2e8f0;
             font-size: 0.9rem;
             color: #718096;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .response-type {
+        .question-type {
             background: #e6f3ff;
             color: #2b6cb0;
             padding: 0.3rem 0.8rem;
             border-radius: 15px;
             font-size: 0.8rem;
             font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #e6ffed;
+            color: #25663b;
+        }
+
+        .status-inactive {
+            background: #fed7d7;
+            color: #c53030;
         }
 
         .empty-state {
@@ -496,7 +548,6 @@
 
         .question-meta {
             flex-direction: column;
-            gap: 0.5rem;
             align-items: flex-start;
         }
 
@@ -513,27 +564,26 @@
 </head>
 <body>
     <div class="header">
-        <h1><i class="fas fa-brain"></i> Sistema TEA - Preguntas M-CHAT</h1>
+        <h1><i class="fas fa-brain"></i> Sistema TEA - Preguntas ADOS-2</h1>
         <div class="header-right">
             <a href="@Url.Action("InicioADMIN", "Login")" class="btn-back">
                 <i class="fas fa-arrow-left"></i> Volver
             </a>
         </div>
     </div>
-
     <div class="main-container">
         <div class="page-header">
             <h2>
-                <i class="fas fa-question-circle"></i>
-                Banco de Preguntas M-CHAT
+                <i class="fas fa-microscope"></i>
+                Banco de Preguntas ADOS-2
             </h2>
-            <p>Gestiona y visualiza todas las preguntas del test M-CHAT para la detección temprana del autismo.</p>
+            <p>Gestiona y visualiza todas las preguntas del test ADOS-2 organizadas por módulos para la evaluación del espectro autista.</p>
         </div>
 
         <div class="stats-container">
             <div class="stat-card">
                 <div class="icon">
-                    <i class="fas fa-question-circle"></i>
+                    <i class="fas fa-clipboard-question"></i>
                 </div>
                 <div class="number">@Model.Count()</div>
                 <div class="label">Total de Preguntas</div>
@@ -542,10 +592,16 @@
                 <div class="icon">
                     <i class="fas fa-check-circle"></i>
                 </div>
-                <div class="number">@Model.Count()</div>
+                <div class="number">@Model.Count(p => p.EsActiva)</div>
                 <div class="label">Preguntas Activas</div>
             </div>
-           
+            <div class="stat-card">
+                <div class="icon">
+                    <i class="fas fa-cubes"></i>
+                </div>
+                <div class="number">@Model.GroupBy(p => p.ModuloID).Count()</div>
+                <div class="label">Módulos Diferentes</div>
+            </div>
         </div>
 
         <div class="actions-bar">
@@ -554,13 +610,19 @@
                     <i class="fas fa-search"></i>
                     <input type="text" id="searchInput" placeholder="Buscar preguntas...">
                 </div>
+                <select id="moduleFilter" class="filter-select">
+                    <option value="">Todos los módulos</option>
+                    @foreach (var modulo in Model.GroupBy(p => new { p.ModuloID, p.NombreModulo }).Select(g => g.Key).OrderBy(m => m.NombreModulo))
+                    {
+                        <option value="@modulo.ModuloID">@modulo.NombreModulo</option>
+                    }
+                </select>
             </div>
             <div style="display: flex; gap: 1rem;">
-                
-                <a href="@Url.Action("CreateMCHAT", "Preguntas")" class="btn btn-success">
+                <a href="@Url.Action("CreateADOS2", "Preguntas")" class="btn btn-success">
                     <i class="fas fa-plus"></i> Nueva Pregunta
                 </a>
-                <a href="@Url.Action("EditMCHAT", "Preguntas")" class="btn btn-warning">
+                <a href="@Url.Action("EditADOS2", "Preguntas")" class="btn btn-warning">
                     <i class="fas fa-edit"></i> Editar Preguntas
                 </a>
             </div>
@@ -570,18 +632,23 @@
             @if (Model.Any())
             {
                 <div class="questions-grid" id="questionsGrid">
-                    @foreach (var pregunta in Model.OrderBy(p => p.NumeroPregunta))
+                    @foreach (var pregunta in Model.OrderBy(p => p.NombreModulo).ThenBy(p => p.NumeroPregunta))
                     {
-                        <div class="question-card" data-question="@pregunta.TextoPregunta.ToLower()">
+                        <div class="question-card" data-question="@pregunta.TextoPregunta.ToLower()" data-module="@pregunta.ModuloID">
                             <div class="question-header">
-                                <div class="question-number">
-                                    Pregunta @pregunta.NumeroPregunta
+                                <div class="question-info">
+                                    <div class="question-number">
+                                        @pregunta.NumeroPregunta
+                                    </div>
+                                    <div class="module-badge">
+                                        <i class="fas fa-cubes"></i> @pregunta.NombreModulo
+                                    </div>
                                 </div>
                                 <div class="question-actions">
                                     <button class="btn btn-sm btn-primary" onclick="editQuestion(@pregunta.PreguntaID)" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                  
+                                    
                                 </div>
                             </div>
 
@@ -590,11 +657,20 @@
                             </div>
 
                             <div class="question-meta">
-                                <span class="response-type">
-                                    <i class="fas fa-check"></i> Sí / No
-                                </span>
+                                <div style="display: flex; gap: 1rem; align-items: center;">
+                                    @if (!string.IsNullOrEmpty(pregunta.TipoPregunta))
+                                    {
+                                        <span class="question-type">
+                                            <i class="fas fa-tag"></i> @pregunta.TipoPregunta
+                                        </span>
+                                    }
+                                    <span class="status-badge @(pregunta.EsActiva ? "status-active" : "status-inactive")">
+                                        <i class="fas @(pregunta.EsActiva ? "fa-check-circle" : "fa-times-circle")"></i>
+                                        @(pregunta.EsActiva ? "Activa" : "Inactiva")
+                                    </span>
+                                </div>
                                 <span>
-                                    <i class="fas fa-calendar"></i> Creada: @DateTime.Now.ToString("dd/MM/yyyy")
+                                    <i class="fas fa-calendar"></i> Pregunta #@pregunta.PreguntaID
                                 </span>
                             </div>
                         </div>
@@ -604,10 +680,10 @@
             else
             {
                 <div class="empty-state">
-                    <i class="fas fa-question-circle"></i>
+                    <i class="fas fa-microscope"></i>
                     <h3>No hay preguntas disponibles</h3>
-                    <p>Comienza creando tu primera pregunta para el test M-CHAT.</p>
-                    <a href="@Url.Action("CreateMCHAT", "Preguntas")" class="btn btn-success" style="margin-top: 1rem;">
+                    <p>Comienza creando tu primera pregunta para el test ADOS-2.</p>
+                    <a href="@Url.Action("CreateADOS2", "Preguntas")" class="btn btn-success" style="margin-top: 1rem;">
                         <i class="fas fa-plus"></i> Crear Primera Pregunta
                     </a>
                 </div>
@@ -615,13 +691,13 @@
         </div>
     </div>
 
-    <a href="@Url.Action("CreateMCHAT", "Preguntas")" class="floating-add">
+    <a href="@Url.Action("CreateADOS2", "Preguntas")" class="floating-add">
         <i class="fas fa-plus"></i> Nueva Pregunta
     </a>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-
+            // Animación de las tarjetas
             const questionCards = document.querySelectorAll('.question-card');
             questionCards.forEach((card, index) => {
                 card.style.opacity = '0';
@@ -633,34 +709,51 @@
                 }, 100);
             });
 
+            // Funcionalidad de búsqueda y filtrado
             const searchInput = document.getElementById('searchInput');
+            const moduleFilter = document.getElementById('moduleFilter');
             const questionsGrid = document.getElementById('questionsGrid');
 
-            if (searchInput && questionsGrid) {
-                searchInput.addEventListener('input', function() {
-                    const searchTerm = this.value.toLowerCase();
-                    const questionCards = questionsGrid.querySelectorAll('.question-card');
+            function filterQuestions() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedModule = moduleFilter.value;
+                const questionCards = questionsGrid.querySelectorAll('.question-card');
 
-                    questionCards.forEach(card => {
-                        const questionText = card.getAttribute('data-question');
-                        if (questionText.includes(searchTerm)) {
-                            card.style.display = 'block';
-                            card.style.animation = 'fadeInUp 0.3s ease';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
+                questionCards.forEach(card => {
+                    const questionText = card.getAttribute('data-question');
+                    const cardModule = card.getAttribute('data-module');
+
+                    const matchesSearch = questionText.includes(searchTerm);
+                    const matchesModule = selectedModule === '' || cardModule === selectedModule;
+
+                    if (matchesSearch && matchesModule) {
+                        card.style.display = 'block';
+                        card.style.animation = 'fadeInUp 0.3s ease';
+                    } else {
+                        card.style.display = 'none';
+                    }
                 });
+            }
+
+            if (searchInput && questionsGrid) {
+                searchInput.addEventListener('input', filterQuestions);
+            }
+
+            if (moduleFilter && questionsGrid) {
+                moduleFilter.addEventListener('change', filterQuestions);
             }
         });
 
         function editQuestion(id) {
-            // Redirigir a la página de edición
-            window.location.href = `@Url.Action("EditMCHAT", "Preguntas")/${id}`;
+            // Redirigir a la página de edición individual
+            window.location.href = `@Url.Action("EditADOS2", "Preguntas")?id=${id}`;
         }
 
-  
-
+        function deleteQuestion(id) {
+            if (confirm('¿Estás seguro de que deseas eliminar esta pregunta? Esta acción no se puede deshacer.')) {
+                window.location.href = `@Url.Action("DeleteADOS2", "Preguntas")/${id}`;
+            }
+        }
     </script>
 </body>
 </html>
