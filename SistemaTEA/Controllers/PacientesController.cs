@@ -45,9 +45,76 @@ namespace SistemaTEA.Controllers
             return View(pacientes);
         }
 
-        // GET: Pacientes/Crear
+        // GET: Pacientes/Consentimiento
+        public IActionResult Consentimiento()
+        {
+            // Verificar que el usuario esté logueado y sea padre
+            var usuarioID = HttpContext.Session.GetInt32("UsuarioID");
+            if (usuarioID == null)
+            {
+                return RedirectToAction("Login", "Cuenta");
+            }
+
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.UsuarioID == usuarioID && u.RolID == 2 && u.EsActivo == true);
+            if (usuario == null)
+            {
+                TempData["MensajeError"] = "Usuario no válido.";
+                return RedirectToAction("Login", "Cuenta");
+            }
+
+            return View();
+        }
+
+        // POST: Pacientes/Consentimiento
+        [HttpPost]
+        public IActionResult Consentimiento(string consentimiento)
+        {
+            if (consentimiento == "true")
+            {
+                // Guardar en sesión que el usuario dio consentimiento
+                HttpContext.Session.SetString("ConsentimientoOtorgado", "true");
+                HttpContext.Session.SetString("FechaConsentimiento", DateTime.Now.ToString());
+                HttpContext.Session.SetString("IPConsentimiento", GetClientIP());
+
+                // Redirigir a la vista de crear paciente
+                return RedirectToAction("Crear");
+            }
+            else
+            {
+                TempData["MensajeInfo"] = "Es necesario aceptar el consentimiento para registrar un paciente.";
+                return RedirectToAction("Index"); // o Dashboard
+            }
+        }
+
+        // Método auxiliar para obtener IP del cliente
+        private string GetClientIP()
+        {
+            var xForwarded = Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(xForwarded))
+            {
+                return xForwarded.Split(',')[0].Trim();
+            }
+
+            var xRealIP = Request.Headers["X-Real-IP"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(xRealIP))
+            {
+                return xRealIP;
+            }
+
+            return Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+        }
+
+        // GET: Pacientes/Crear - MODIFICADO
         public IActionResult Crear()
         {
+            // Verificar consentimiento
+            var consentimientoOtorgado = HttpContext.Session.GetString("ConsentimientoOtorgado");
+            if (consentimientoOtorgado != "true")
+            {
+                // Redirigir a la página de consentimiento
+                return RedirectToAction("Consentimiento");
+            }
+
             // Cargar lista de psicólogos para el ComboBox (RolID = 3)
             ViewBag.Psicologos = new SelectList(
                 _context.Usuarios.Where(u => u.RolID == 3 && u.EsActivo == true),
@@ -57,13 +124,21 @@ namespace SistemaTEA.Controllers
             return View();
         }
 
-        // POST: Pacientes/Crear
+        // POST: Pacientes/Crear - MODIFICADO
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Crear(Paciente paciente)
         {
             try
             {
+                // Verificar consentimiento
+                var consentimientoOtorgado = HttpContext.Session.GetString("ConsentimientoOtorgado");
+                if (consentimientoOtorgado != "true")
+                {
+                    TempData["MensajeError"] = "Es necesario aceptar el consentimiento para registrar un paciente.";
+                    return RedirectToAction("Consentimiento");
+                }
+
                 // Debug: Verificar qué datos llegan
                 Console.WriteLine($"Datos recibidos - Nombre: {paciente.Nombre}, Apellido: {paciente.Apellido}, Fecha: {paciente.FechaNacimiento}, Género: {paciente.Genero}");
 
@@ -115,6 +190,10 @@ namespace SistemaTEA.Controllers
 
                 if (ModelState.IsValid)
                 {
+                    // Obtener datos de consentimiento de la sesión
+                    var fechaConsentimiento = DateTime.TryParse(HttpContext.Session.GetString("FechaConsentimiento"), out DateTime fecha) ? fecha : DateTime.Now;
+                    var ipConsentimiento = HttpContext.Session.GetString("IPConsentimiento") ?? GetClientIP();
+
                     // Limpiar y asignar valores correctamente
                     var nuevoPaciente = new Paciente
                     {
@@ -125,7 +204,12 @@ namespace SistemaTEA.Controllers
                         PadreID = padreID.Value,
                         PsicologoAsignadoID = paciente.PsicologoAsignadoID,
                         FechaRegistro = DateTime.Now,
-                        Observaciones = !string.IsNullOrEmpty(paciente.Observaciones) ? paciente.Observaciones.Trim() : null
+                        Observaciones = !string.IsNullOrEmpty(paciente.Observaciones) ? paciente.Observaciones.Trim() : null,
+
+                        // Campos de consentimiento
+                        ConsentimientoOtorgado = true,
+                        FechaConsentimiento = fechaConsentimiento,
+                        IPConsentimiento = ipConsentimiento
                     };
 
                     // Agregar al contexto
@@ -138,6 +222,11 @@ namespace SistemaTEA.Controllers
                     var resultado = await _context.SaveChangesAsync();
 
                     Console.WriteLine($"Registros afectados: {resultado}");
+
+                    // Limpiar sesión de consentimiento después de usarla
+                    HttpContext.Session.Remove("ConsentimientoOtorgado");
+                    HttpContext.Session.Remove("FechaConsentimiento");
+                    HttpContext.Session.Remove("IPConsentimiento");
 
                     TempData["MensajeExito"] = $"Paciente {paciente.Nombre} {paciente.Apellido} registrado con éxito.";
                     return RedirectToAction("Index");
@@ -190,9 +279,6 @@ namespace SistemaTEA.Controllers
             return View(pacientes);
         }
 
-
-
-
         // GET: Pacientes/VerTodos - Para que el administrador pueda ver todos los pacientes
         public async Task<IActionResult> VerTodos()
         {
@@ -241,6 +327,12 @@ namespace SistemaTEA.Controllers
                 .ThenBy(p => p.Apellido)
                 .ToListAsync();
 
+            var psicologos = await _context.Usuarios
+                .Where(u => u.RolID == 3 && u.EsActivo == true)
+                .Select(u => new { u.UsuarioID, NombreCompleto = u.Nombre + " " + u.Apellido })
+                .OrderBy(u => u.NombreCompleto)
+                .ToListAsync();
+
             // Pasar información del usuario actual a la vista
             ViewBag.NombreUsuario = HttpContext.Session.GetString("nombre") ?? "Usuario";
             ViewData["rol"] = rol;
@@ -248,8 +340,103 @@ namespace SistemaTEA.Controllers
             ViewBag.PacientesConPsicologo = pacientes.Count(p => p.PsicologoAsignadoID.HasValue);
             ViewBag.PacientesSinPsicologo = pacientes.Count(p => !p.PsicologoAsignadoID.HasValue);
 
+            ViewBag.Psicologos = psicologos;
+
             return View(pacientes);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AsignarPsicologo(int pacienteId, int psicologoId)
+        {
+            try
+            {
+                // Verificar permisos del usuario
+                var usuarioID = HttpContext.Session.GetInt32("UsuarioID");
+                var rol = HttpContext.Session.GetInt32("rol");
+
+                if (usuarioID == null || (rol != 1 && rol != 3))
+                {
+                    return Json(new { success = false, message = "No tiene permisos para realizar esta acción." });
+                }
+
+                // Buscar el paciente
+                var paciente = await _context.Pacientes.FindAsync(pacienteId);
+                if (paciente == null)
+                {
+                    return Json(new { success = false, message = "Paciente no encontrado." });
+                }
+
+                // Verificar que el psicólogo existe y está activo
+                var psicologo = await _context.Usuarios
+                    .FirstOrDefaultAsync(u => u.UsuarioID == psicologoId && u.RolID == 3 && u.EsActivo == true);
+
+                if (psicologo == null)
+                {
+                    return Json(new { success = false, message = "Psicólogo no válido o inactivo." });
+                }
+
+                // Asignar el psicólogo
+                paciente.PsicologoAsignadoID = psicologoId;
+
+                // Guardar cambios
+                await _context.SaveChangesAsync();
+
+                return Json(new
+                {
+                    success = true,
+                    message = $"Psicólogo {psicologo.Nombre} {psicologo.Apellido} asignado correctamente al paciente {paciente.Nombre} {paciente.Apellido}.",
+                    psicologoNombre = $"{psicologo.Nombre} {psicologo.Apellido}",
+                    psicologoEmail = psicologo.Email
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al asignar psicólogo: {ex.Message}");
+                return Json(new { success = false, message = "Error interno del servidor. Intente nuevamente." });
+            }
+        }
+
+        // POST: Pacientes/RemoverPsicologo - Nuevo método para remover psicólogos
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoverPsicologo(int pacienteId)
+        {
+            try
+            {
+                // Verificar permisos del usuario
+                var usuarioID = HttpContext.Session.GetInt32("UsuarioID");
+                var rol = HttpContext.Session.GetInt32("rol");
+
+                if (usuarioID == null || (rol != 1 && rol != 3))
+                {
+                    return Json(new { success = false, message = "No tiene permisos para realizar esta acción." });
+                }
+
+                // Buscar el paciente
+                var paciente = await _context.Pacientes.FindAsync(pacienteId);
+                if (paciente == null)
+                {
+                    return Json(new { success = false, message = "Paciente no encontrado." });
+                }
+
+                // Remover la asignación del psicólogo
+                paciente.PsicologoAsignadoID = null;
+
+                // Guardar cambios
+                await _context.SaveChangesAsync();
+
+                return Json(new
+                {
+                    success = true,
+                    message = $"Psicólogo removido correctamente del paciente {paciente.Nombre} {paciente.Apellido}."
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al remover psicólogo: {ex.Message}");
+                return Json(new { success = false, message = "Error interno del servidor. Intente nuevamente." });
+            }
+        }
     }
 }

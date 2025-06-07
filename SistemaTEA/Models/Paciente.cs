@@ -49,5 +49,15 @@ namespace SistemaTEA.Models
 
         [ForeignKey("PsicologoAsignadoID")]
         public virtual Usuario? PsicologoAsignado { get; set; }
+
+        [Display(Name = "Consentimiento Otorgado")]
+        public bool? ConsentimientoOtorgado { get; set; }
+
+        [Display(Name = "Fecha de Consentimiento")]
+        public DateTime? FechaConsentimiento { get; set; }
+
+        [StringLength(45)]
+        [Display(Name = "IP de Consentimiento")]
+        public string? IPConsentimiento { get; set; }
     }
 }
