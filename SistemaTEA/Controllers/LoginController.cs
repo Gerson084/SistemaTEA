@@ -7,9 +7,7 @@ using SistemaTEA.Models;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Tls;
 using SistemaTEA.Atributos;
-using System.Security.Cryptography;
 
 namespace SistemaTEA.Controllers
 {
@@ -27,7 +25,6 @@ namespace SistemaTEA.Controllers
             return View();
         }
 
-        // GET: Registro
         public IActionResult Registro()
         {
             return View();
@@ -53,7 +50,7 @@ namespace SistemaTEA.Controllers
                 }
 
                 var ContraseñaSinHash = usuario.Contraseña;
-                
+
                 usuario.RolID = 2;
                 usuario.Contraseña = SeguridadHelper.HashPassword(usuario.Contraseña);
                 usuario.EsActivo = false; // pendiente de aprobación
@@ -63,7 +60,7 @@ namespace SistemaTEA.Controllers
                     _testContext.Usuarios.Add(usuario);
                     _testContext.SaveChanges();
 
-                    HttpContext.Session.SetInt32("id_usuario", usuario.UsuarioID);
+                    HttpContext.Session.SetInt32("UsuarioID", usuario.UsuarioID); // CAMBIO AQUI
                     HttpContext.Session.SetString("nombre", usuario.Nombre);
                     HttpContext.Session.SetInt32("rol", usuario.RolID);
                     HttpContext.Session.SetString("telefono", usuario.Telefono ?? "");
@@ -85,27 +82,23 @@ namespace SistemaTEA.Controllers
             return View(usuario);
         }
 
-        // GET: Login
         [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
-        // POST: Login
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string correo, string clave)
         {
-            // Validaciones básicas
             if (string.IsNullOrEmpty(correo) || string.IsNullOrEmpty(clave))
             {
                 ViewBag.Error = "Debe completar todos los campos.";
                 return View();
             }
 
-            // Validación de formato de email
             string emailRegex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
             if (!Regex.IsMatch(correo, emailRegex))
             {
@@ -113,35 +106,30 @@ namespace SistemaTEA.Controllers
                 return View();
             }
 
-            // Buscar usuario
             var user = await _testContext.Usuarios.FirstOrDefaultAsync(u => u.Email == correo);
-
             if (user == null)
             {
                 ViewBag.Error = "Usuario no encontrado.";
                 return View();
             }
 
-            // Verificar contraseña
             if (!SeguridadHelper.VerificarPassword(clave, user.Contraseña))
             {
                 ViewBag.Error = "Correo o clave incorrectos.";
                 return View();
             }
 
-            // Verificar si está activo
             if (!user.EsActivo)
             {
                 ViewBag.Error = "Tu cuenta aún no ha sido aprobada por un administrador.";
                 return View();
             }
 
-            // Crear Claims para autenticación
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Nombre),
                 new Claim(ClaimTypes.Role, user.RolID == 1 ? "Administrador" :
-                                         user.RolID == 2 ? "Padre" : "Psicologo"),
+                                             user.RolID == 2 ? "Padre" : "Psicologo"),
                 new Claim(ClaimTypes.NameIdentifier, user.UsuarioID.ToString())
             };
 
@@ -149,18 +137,16 @@ namespace SistemaTEA.Controllers
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            // Configurar sesión
-            HttpContext.Session.SetInt32("id_usuario", user.UsuarioID);
+            HttpContext.Session.SetInt32("UsuarioID", user.UsuarioID); // CAMBIO AQUI
             HttpContext.Session.SetString("nombre", user.Nombre);
             HttpContext.Session.SetInt32("rol", user.RolID);
             HttpContext.Session.SetString("telefono", user.Telefono ?? "");
 
-            // Redirección según rol
             return user.RolID switch
             {
-                1 => RedirectToAction("InicioADMIN", "Login"),     // Administrador
-                2 => RedirectToAction("InicioPADRE", "login"),     // Padre
-                3 => RedirectToAction("InicioPSICOLOGO", "login"), // Psicólogo
+                1 => RedirectToAction("InicioADMIN", "Login"),
+                2 => RedirectToAction("InicioPADRE", "Login"),
+                3 => RedirectToAction("InicioPSICOLOGO", "Login"),
                 _ => RedirectToAction("Login", "Login")
             };
         }
@@ -170,39 +156,39 @@ namespace SistemaTEA.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Session.Clear();
-            return RedirectToAction("Login");
+            return RedirectToAction("Login", "Login");
         }
 
-
+        // ✅ CAMBIO REALIZADO: Se usa "UsuarioID"
         private bool ValidarSesion()
         {
-            return HttpContext.Session.GetInt32("id_usuario") != null;
+            return HttpContext.Session.GetInt32("UsuarioID") != null;
         }
+
         [HttpGet]
         public ActionResult InicioADMIN()
         {
             if (!ValidarSesion()) return RedirectToAction("Login", "Login");
             ViewBag.NombreUsuario = HttpContext.Session.GetString("nombre") ?? "Invitado";
             ViewData["rol"] = HttpContext.Session.GetInt32("rol") ?? 0;
-
             return View();
         }
+
         [HttpGet]
         public ActionResult InicioPADRE()
         {
             if (!ValidarSesion()) return RedirectToAction("Login", "Login");
             ViewBag.NombreUsuario = HttpContext.Session.GetString("nombre") ?? "Invitado";
             ViewData["rol"] = HttpContext.Session.GetInt32("rol") ?? 0;
-
             return View();
         }
+
         [HttpGet]
         public ActionResult InicioPSICOLOGO()
         {
             if (!ValidarSesion()) return RedirectToAction("Login", "Login");
             ViewBag.NombreUsuario = HttpContext.Session.GetString("nombre") ?? "Invitado";
             ViewData["rol"] = HttpContext.Session.GetInt32("rol") ?? 0;
-
             return View();
         }
     }

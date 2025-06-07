@@ -3,36 +3,51 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SistemaTEA.Models
 {
+    [Table("Pacientes")]
     public class Paciente
     {
         [Key]
         public int PacienteID { get; set; }
 
-        [Required, StringLength(100)]
-        public string Nombre { get; set; }
+        [Required(ErrorMessage = "El nombre es requerido")]
+        [StringLength(100, ErrorMessage = "El nombre no puede exceder 100 caracteres")]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; } = string.Empty;
 
-        [Required, StringLength(100)]
-        public string Apellido { get; set; }
+        [Required(ErrorMessage = "El apellido es requerido")]
+        [StringLength(100, ErrorMessage = "El apellido no puede exceder 100 caracteres")]
+        [Display(Name = "Apellido")]
+        public string Apellido { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage = "La fecha de nacimiento es requerida")]
+        [DataType(DataType.Date)]
+        [Display(Name = "Fecha de Nacimiento")]
         public DateTime FechaNacimiento { get; set; }
 
-        [Required, StringLength(1)]
-        public string Genero { get; set; } // 'M' o 'F'
+        [Required(ErrorMessage = "El género es requerido")]
+        [StringLength(1)]
+        [RegularExpression("^[MF]$", ErrorMessage = "El género debe ser M o F")]
+        [Display(Name = "Género")]
+        public string Genero { get; set; } = string.Empty;
 
+        [Column("PadreID")]
         public int PadreID { get; set; }
 
+        [Column("PsicologoAsignadoID")]
         public int? PsicologoAsignadoID { get; set; }
 
+        [Column("FechaRegistro")]
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
 
-        public string Observaciones { get; set; }
+        [StringLength(int.MaxValue)]
+        [Display(Name = "Observaciones")]
+        public string? Observaciones { get; set; }
 
+        // Propiedades de navegación
         [ForeignKey("PadreID")]
-        public virtual Usuario Padre { get; set; }
+        public virtual Usuario? Padre { get; set; }
 
         [ForeignKey("PsicologoAsignadoID")]
-        public virtual Usuario PsicologoAsignado { get; set; }
+        public virtual Usuario? PsicologoAsignado { get; set; }
     }
-
 }

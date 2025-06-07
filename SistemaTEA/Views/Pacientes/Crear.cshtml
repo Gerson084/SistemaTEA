@@ -1,0 +1,728 @@
+﻿@model SistemaTEA.Models.Paciente
+@{
+    Layout = null;
+    ViewData["Title"] = "PANEL PADRE";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Paciente - Sistema TEA</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            color: #1a202c;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .form-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .form-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .required::after {
+            content: "*";
+            color: #e53e3e;
+            margin-left: 0.25rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-input.is-valid {
+            border-color: #48bb78;
+            background: #f0fff4;
+        }
+
+        .form-input.is-invalid {
+            border-color: #f56565;
+            background: #fed7d7;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-hint {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #718096;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .character-count {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            text-align: right;
+            color: #718096;
+        }
+
+        .character-count.warning {
+            color: #ed8936;
+            font-weight: 600;
+        }
+
+        .error-message {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #e53e3e;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .floating-label {
+            position: relative;
+        }
+
+        .floating-label input,
+        .floating-label select,
+        .floating-label textarea {
+            padding-top: 1.5rem;
+        }
+
+        .floating-label label {
+            position: absolute;
+            left: 1.25rem;
+            top: 1rem;
+            color: #a0aec0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            margin-bottom: 0;
+        }
+
+        .floating-label input:focus + label,
+        .floating-label input:not(:placeholder-shown) + label,
+        .floating-label select:focus + label,
+        .floating-label select:not([value=""]) + label,
+        .floating-label textarea:focus + label,
+        .floating-label textarea:not(:placeholder-shown) + label {
+            top: 0.5rem;
+            font-size: 0.75rem;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .gender-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .gender-option {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .gender-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .gender-option label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .gender-option input[type="radio"]:checked + label {
+            border-color: #667eea;
+            background: #f7faff;
+        }
+
+        .gender-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .validation-summary {
+            background: #fed7d7;
+            border: 1px solid #f56565;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .validation-summary ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .validation-summary li {
+            color: #e53e3e;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @@keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @@keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .loading {
+            animation: pulse 1s infinite;
+        }
+
+        @@media (max-width: 768px) {
+            .form-card {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-heart"></i> Sistema TEA</h1>
+            <p>Registro de nuevo paciente</p>
+        </div>
+
+        <div class="form-card">
+            <div class="form-header">
+                <div class="form-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div>
+                    <h2 class="form-title">Registrar Nuevo Paciente</h2>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <!-- Mensajes de éxito y error desde TempData -->
+            @if (TempData["MensajeExito"] != null)
+            {
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    <span>@TempData["MensajeExito"]</span>
+                </div>
+            }
+
+            @if (TempData["MensajeError"] != null)
+            {
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>@TempData["MensajeError"]</span>
+                </div>
+            }
+
+            <!-- Resumen de errores de validación -->
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="validation-summary">
+                    <ul>
+                        @foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>
+                                <i class="fas fa-exclamation-circle"></i>
+                                @modelError.ErrorMessage
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            @using (Html.BeginForm("Crear", "Pacientes", FormMethod.Post, new { id = "patientForm", @class = "needs-validation", novalidate = "novalidate" }))
+            {
+                @Html.AntiForgeryToken()
+                
+                <div class="form-grid">
+                    <div class="form-group floating-label">
+                        @Html.TextBoxFor(m => m.Nombre, new { 
+                            @class = "form-input", 
+                            placeholder = " ", 
+                            required = "required", 
+                            maxlength = "50",
+                            id = "nombre"
+                        })
+                        <label for="nombre" class="form-label required">
+                            <i class="fas fa-user"></i>
+                            Nombre
+                        </label>
+                        @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "error-message" })
+                    </div>
+
+                    <div class="form-group floating-label">
+                        @Html.TextBoxFor(m => m.Apellido, new { 
+                            @class = "form-input", 
+                            placeholder = " ", 
+                            required = "required", 
+                            maxlength = "50",
+                            id = "apellido"
+                        })
+                        <label for="apellido" class="form-label required">
+                            <i class="fas fa-user"></i>
+                            Apellido
+                        </label>
+                        @Html.ValidationMessageFor(m => m.Apellido, "", new { @class = "error-message" })
+                    </div>
+
+                    <div class="form-group floating-label">
+                        @Html.TextBoxFor(m => m.FechaNacimiento, "{0:yyyy-MM-dd}", new { 
+                            @class = "form-input", 
+                            type = "date", 
+                            required = "required",
+                            id = "fechaNacimiento"
+                        })
+                        <label for="fechaNacimiento" class="form-label required">
+                            <i class="fas fa-calendar-alt"></i>
+                            Fecha de Nacimiento
+                        </label>
+                        <div class="form-hint">
+                            <i class="fas fa-info-circle"></i>
+                            La fecha no puede ser futura
+                        </div>
+                        @Html.ValidationMessageFor(m => m.FechaNacimiento, "", new { @class = "error-message" })
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required">
+                            <i class="fas fa-venus-mars"></i>
+                            Género
+                        </label>
+                        <div class="gender-options">
+                            <div class="gender-option">
+                                @Html.RadioButtonFor(m => m.Genero, "M", new { id = "masculino", required = "required" })
+                                <label for="masculino">
+                                    <div class="gender-icon">
+                                        <i class="fas fa-mars"></i>
+                                    </div>
+                                    Masculino
+                                </label>
+                            </div>
+                            <div class="gender-option">
+                                @Html.RadioButtonFor(m => m.Genero, "F", new { id = "femenino", required = "required" })
+                                <label for="femenino">
+                                    <div class="gender-icon">
+                                        <i class="fas fa-venus"></i>
+                                    </div>
+                                    Femenino
+                                </label>
+                            </div>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Genero, "", new { @class = "error-message" })
+                    </div>
+
+                    <div class="form-group floating-label">
+                        @Html.DropDownListFor(m => m.PsicologoAsignadoID, 
+                            (SelectList)ViewBag.Psicologos, 
+                            "-- Sin asignar por el momento --", 
+                            new { 
+                                @class = "form-input form-select",
+                                id = "psicologo"
+                            })
+                        <label for="psicologo" class="form-label">
+                            <i class="fas fa-user-md"></i>
+                            Psicólogo Asignado
+                        </label>
+                        <div class="form-hint">
+                            <i class="fas fa-info-circle"></i>
+                            Podrá asignar un psicólogo más tarde
+                        </div>
+                        @Html.ValidationMessageFor(m => m.PsicologoAsignadoID, "", new { @class = "error-message" })
+                    </div>
+                </div>
+
+                <div class="form-group floating-label">
+                    @Html.TextAreaFor(m => m.Observaciones, new { 
+                        @class = "form-input form-textarea", 
+                        placeholder = " ", 
+                        maxlength = "500",
+                        id = "observaciones"
+                    })
+                    <label for="observaciones" class="form-label">
+                        <i class="fas fa-sticky-note"></i>
+                        Observaciones
+                    </label>
+                    <div class="character-count">
+                        <span id="charCount">500</span> caracteres restantes
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Observaciones, "", new { @class = "error-message" })
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="window.history.back();">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="fas fa-save"></i>
+                        Registrar Paciente
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('patientForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const progressFill = document.getElementById('progressFill');
+            const charCount = document.getElementById('charCount');
+            const observaciones = document.getElementById('observaciones');
+            const fechaNacimiento = document.getElementById('fechaNacimiento');
+
+            // Establecer fecha máxima (hoy)
+            const today = new Date().toISOString().split('T')[0];
+            fechaNacimiento.setAttribute('max', today);
+
+            // Contador de caracteres
+            if (observaciones) {
+                // Inicializar contador
+                const currentLength = observaciones.value.length;
+                const remaining = 500 - currentLength;
+                charCount.textContent = remaining;
+                
+                observaciones.addEventListener('input', function() {
+                    const remaining = 500 - this.value.length;
+                    charCount.textContent = remaining;
+                    charCount.className = remaining < 50 ? 'character-count warning' : 'character-count';
+                });
+            }
+
+            // Validación en tiempo real
+            const inputs = form.querySelectorAll('input[required], select[required]');
+            inputs.forEach(input => {
+                input.addEventListener('blur', validateField);
+                input.addEventListener('input', updateProgress);
+            });
+
+            function validateField(e) {
+                const field = e.target;
+                const fieldType = field.type || field.tagName.toLowerCase();
+
+                // Limpiar clases previas
+                field.classList.remove('is-valid', 'is-invalid');
+
+                if (fieldType === 'text' && field.value.trim().length < 2) {
+                    field.classList.add('is-invalid');
+                } else if (fieldType === 'date' && field.value) {
+                    const selectedDate = new Date(field.value);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    if (selectedDate > today) {
+                        field.classList.add('is-invalid');
+                    } else {
+                        field.classList.add('is-valid');
+                    }
+                } else if (field.value.trim()) {
+                    field.classList.add('is-valid');
+                }
+            }
+
+            function updateProgress() {
+                const totalFields = inputs.length + 1; // +1 para género
+                let completedFields = 0;
+
+                inputs.forEach(input => {
+                    if (input.value && input.value.trim()) completedFields++;
+                });
+
+                // Verificar género
+                const genero = form.querySelector('input[name="Genero"]:checked');
+                if (genero) completedFields++;
+
+                const progress = (completedFields / totalFields) * 100;
+                progressFill.style.width = progress + '%';
+            }
+
+            // Limpiar espacios en blanco al salir del campo
+            form.querySelectorAll('input[type="text"]').forEach(input => {
+                input.addEventListener('blur', function() {
+                    this.value = this.value.trim();
+                });
+            });
+
+            // Mejorar el envío del formulario
+            form.addEventListener('submit', function(e) {
+                // Deshabilitar botón para evitar doble envío
+                submitBtn.disabled = true;
+                submitBtn.classList.add('loading');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+            });
+
+            // Validación inicial y progreso
+            updateProgress();
+
+            // Auto-focus en primer campo
+            const nombreField = document.getElementById('nombre');
+            if (nombreField) {
+                nombreField.focus();
+            }
+
+            // Ocultar alertas después de 5 segundos
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.display = 'none';
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>

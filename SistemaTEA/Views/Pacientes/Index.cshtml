@@ -1,0 +1,853 @@
+﻿@model IEnumerable<SistemaTEA.Models.Paciente>
+
+@{
+    ViewData["Title"] = "Mis Pacientes";
+    Layout = null;
+}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Pacientes - Sistema TEA</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #32ab6c 0%, #d1bd49 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            color: white;
+        }
+
+        .header-title h1 {
+            font-size: 2.2rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .header-title p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .add-patient-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-patient-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 2rem;
+        }
+
+        .alert {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .alert-success {
+            border-left: 4px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        .alert-danger {
+            border-left: 4px solid #f44336;
+            color: #c62828;
+        }
+
+        .alert-dismissible {
+            position: relative;
+            padding-right: 3rem;
+        }
+
+        .btn-close {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .btn-close:hover {
+            opacity: 1;
+        }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid #4facfe;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .patients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .patient-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .patient-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .patient-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .patient-card.male {
+            border-left-color: #4facfe;
+        }
+
+        .patient-card.female {
+            border-left-color: #e91e63;
+        }
+
+        .patient-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .patient-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            position: relative;
+        }
+
+        .patient-avatar.male {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .patient-avatar.female {
+            background: linear-gradient(135deg, #e91e63 0%, #ff6ec7 100%);
+        }
+
+        .patient-info h3 {
+            color: #2d3748;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .patient-age {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        .patient-age.child {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .patient-age.adult {
+            background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+        }
+
+        .patient-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: #718096;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .psychologist-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem;
+            background: #f0f9ff;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .psychologist-info.assigned {
+            background: #f0fdf4;
+            border-left: 3px solid #22c55e;
+        }
+
+        .psychologist-info.unassigned {
+            background: #fff7ed;
+            border-left: 3px solid #f59e0b;
+        }
+
+        .observations {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid #6366f1;
+        }
+
+        .observations h4 {
+            color: #4c51bf;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .observations p {
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .patient-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .empty-state {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .empty-state .empty-icon {
+            font-size: 5rem;
+            color: #cbd5e0;
+            margin-bottom: 2rem;
+        }
+
+        .empty-state h3 {
+            color: #4a5568;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .empty-state p {
+            color: #718096;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .empty-state .btn {
+            font-size: 1.1rem;
+            padding: 1rem 2rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-weight: 300;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .modal-section h4 {
+            color: #4facfe;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .modal-table {
+            width: 100%;
+        }
+
+        .modal-table tr {
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .modal-table td {
+            padding: 0.8rem 0;
+            vertical-align: top;
+        }
+
+        .modal-table td:first-child {
+            font-weight: 600;
+            color: #4a5568;
+            width: 40%;
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        @@media (max-width: 768px) {
+            .main-container {
+                padding: 0 1rem 2rem;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .header-title h1 {
+                font-size: 1.8rem;
+            }
+
+            .patients-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+
+            .patient-details {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-info-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>
+                    <i class="fas fa-users"></i>
+                    Mis Pacientes
+                </h1>
+                <p>Lista de pacientes registrados por @ViewBag.NombrePadre</p>
+            </div>
+            <a href="@Url.Action("Crear", "Pacientes")" class="add-patient-btn">
+                <i class="fas fa-plus"></i>
+                Agregar Nuevo Paciente
+            </a>
+            <a href="@Url.Action("InicioPADRE", "Login")" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                 Regresar
+            </a>
+
+            
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Mensajes de éxito o error -->
+        @if (TempData["MensajeExito"] != null)
+        {
+            <div class="alert alert-success alert-dismissible">
+                <i class="fas fa-check-circle"></i>
+                @TempData["MensajeExito"]
+                <button type="button" class="btn-close">&times;</button>
+            </div>
+        }
+
+        @if (TempData["MensajeError"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible">
+                <i class="fas fa-exclamation-circle"></i>
+                @TempData["MensajeError"]
+                <button type="button" class="btn-close">&times;</button>
+            </div>
+        }
+
+        @if (Model != null && Model.Any())
+        {
+            <!-- Estadísticas -->
+            <div class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-number">@Model.Count()</div>
+                            <div class="stat-label">Total Pacientes</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid de Pacientes -->
+            <div class="patients-grid">
+                @foreach (var paciente in Model)
+                {
+                    var edad = DateTime.Now.Year - paciente.FechaNacimiento.Year;
+                    if (DateTime.Now.DayOfYear < paciente.FechaNacimiento.DayOfYear)
+                        edad--;
+                    
+                    var genderClass = paciente.Genero?.ToUpper() == "M" ? "male" : "female";
+                    var ageClass = edad < 18 ? "child" : "adult";
+
+                    <div class="patient-card @genderClass">
+                        <div class="patient-header">
+                            <div class="patient-avatar @genderClass">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="patient-info">
+                                <h3>@paciente.Nombre @paciente.Apellido</h3>
+                                <span class="patient-age @ageClass">@edad años</span>
+                            </div>
+                        </div>
+
+                        <div class="patient-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Fecha Nacimiento</span>
+                                <span class="detail-value">@paciente.FechaNacimiento.ToString("dd/MM/yyyy")</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Género</span>
+                                <span class="detail-value">
+                                    @(paciente.Genero?.ToUpper() == "M" ? "Masculino" : paciente.Genero?.ToUpper() == "F" ? "Femenino" : "No especificado")
+                                </span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Fecha Registro</span>
+                                <span class="detail-value">@paciente.FechaRegistro.ToString("dd/MM/yyyy")</span>
+                            </div>
+                        </div>
+
+                        @if (paciente.PsicologoAsignado != null)
+                        {
+                            <div class="psychologist-info assigned">
+                                <i class="fas fa-user-md text-success"></i>
+                                <span><strong>Psicólogo:</strong> @paciente.PsicologoAsignado.Nombre</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="psychologist-info unassigned">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span><strong>Sin psicólogo asignado</strong></span>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(paciente.Observaciones))
+                        {
+                            <div class="observations">
+                                <h4>Observaciones</h4>
+                                <p>@paciente.Observaciones</p>
+                            </div>
+                        }
+
+                        <div class="patient-actions">
+                            <button type="button" class="btn btn-primary" onclick="openModal('modal@(paciente.PacienteID)')">
+                                <i class="fas fa-eye"></i>
+                                Ver Detalles
+                            </button>
+                            <button type="button" class="btn btn-success">
+                                <i class="fas fa-edit"></i>
+                                Editar
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <!-- Estado vacío -->
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>No tienes pacientes registrados</h3>
+                <p>Comienza agregando tu primer paciente para poder gestionar sus evaluaciones y realizar un seguimiento completo de su desarrollo.</p>
+            </div>
+        }
+    </div>
+
+    <!-- Modales -->
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var paciente in Model)
+        {
+            <div class="modal" id="modal@(paciente.PacienteID)">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>
+                            <i class="fas fa-user"></i>
+                            Detalles de @paciente.Nombre @paciente.Apellido
+                        </h3>
+                        <button type="button" class="modal-close" onclick="closeModal('modal@(paciente.PacienteID)')">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-info-grid">
+                            <div class="modal-section">
+                                <h4>Información Personal</h4>
+                                <table class="modal-table">
+                                    <tr>
+                                        <td><strong>Nombre completo:</strong></td>
+                                        <td>@paciente.Nombre @paciente.Apellido</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Fecha de nacimiento:</strong></td>
+                                        <td>@paciente.FechaNacimiento.ToString("dd/MM/yyyy")</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Edad:</strong></td>
+                                        <td>
+                                            @{
+                                                var edadModal = DateTime.Now.Year - paciente.FechaNacimiento.Year;
+                                                if (DateTime.Now.DayOfYear < paciente.FechaNacimiento.DayOfYear)
+                                                    edadModal--;
+                                            }
+                                            @edadModal años
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Género:</strong></td>
+                                        <td>@(paciente.Genero?.ToUpper() == "M" ? "Masculino" : paciente.Genero?.ToUpper() == "F" ? "Femenino" : "No especificado")</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="modal-section">
+                                <h4>Información de Tratamiento</h4>
+                                <table class="modal-table">
+                                    <tr>
+                                        <td><strong>Psicólogo asignado:</strong></td>
+                                        <td>
+                                            @if (paciente.PsicologoAsignado != null)
+                                            {
+                                                <span style="color: #22c55e;">@paciente.PsicologoAsignado.Nombre</span>
+                                            }
+                                            else
+                                            {
+                                                <span style="color: #f59e0b;">Sin asignar</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Fecha de registro:</strong></td>
+                                        <td>@paciente.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</td>
+                                    </tr>
+                                </table>
+                                
+                                @if (!string.IsNullOrEmpty(paciente.Observaciones))
+                                {
+                                    <h4 style="margin-top: 1.5rem;">Observaciones</h4>
+                                    <div style="background: #f0f9ff; padding: 1rem; border-radius: 10px; border-left: 3px solid #4facfe;">
+                                        @paciente.Observaciones
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" style="background: #e2e8f0; color: #4a5568;" onclick="closeModal('modal@(paciente.PacienteID)')">
+                            Cerrar
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-edit"></i>
+                            Editar Paciente
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+    <script>
+        // Funciones del modal
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Cerrar alertas
+        document.querySelectorAll('.btn-close').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.closest('.alert').remove();
+            });
+        });
+
+        // Animaciones de entrada
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animación para las tarjetas de pacientes
+            const patientCards = document.querySelectorAll('.patient-card');
+            patientCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+
+            // Animación para las estadísticas
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(number => {
+                const target = parseInt(number.textContent);
+                let current = 0;
+                const increment = target / 30;
+
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    number.textContent = Math.floor(current);
+                }, 50);
+            });
+        });
+    </script>
+</body>
+</html>

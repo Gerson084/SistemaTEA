@@ -111,20 +111,37 @@ namespace SistemaTEA.Controllers
         }
 
         // --------------------
-        // Métodos de validación
+        // Métodos de validación CORREGIDOS
         // --------------------
 
         private bool SesionValida(out int? rol)
         {
             rol = HttpContext.Session.GetInt32("rol");
-            return HttpContext.Session.GetInt32("id_usuario") != null;
+            return HttpContext.Session.GetInt32("UsuarioID") != null; // CAMBIO: Usar "UsuarioID"
         }
 
         private bool SesionValida(out int? rol, out int? idUsuario)
         {
             rol = HttpContext.Session.GetInt32("rol");
-            idUsuario = HttpContext.Session.GetInt32("id_usuario");
+            idUsuario = HttpContext.Session.GetInt32("UsuarioID"); // CAMBIO: Usar "UsuarioID"
             return idUsuario != null;
+        }
+
+        //VER USUARIOS (PADRES ACTIVOS)
+        public async Task<IActionResult> VerUsuarios()
+        {
+            if (!SesionValida(out int? rol)) return RedirectToAction("Login", "Login");
+            if (rol != 1) return RedirectToAction("Login", "Login");
+
+            ViewBag.NombreUsuario = HttpContext.Session.GetString("nombre") ?? "Invitado";
+            ViewData["rol"] = rol;
+
+            var padresActivos = await _context.Usuarios
+                .Where(u => u.RolID == 2 && u.EsActivo)
+                .OrderBy(u => u.Nombre)
+                .ToListAsync();
+
+            return View(padresActivos);
         }
     }
 }

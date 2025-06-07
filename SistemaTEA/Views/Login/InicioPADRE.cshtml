@@ -484,7 +484,7 @@
         </div>
     </div>
 
-    <a href="@Url.Action("Logout", "Login")" class="logout-btn">
+    <a href="@Url.Action("Login", "Login")" class="logout-btn">
         <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
     </a>
 
@@ -549,13 +549,10 @@
                 <h3><i class="fas fa-baby"></i> Gestión de Hijos</h3>
                 <div class="action-buttons">
                     <a href="@Url.Action("Crear", "Pacientes")" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Registrar Nuevo Hijo
+                        <i class="fas fa-plus"></i> Registrar pacientes
                     </a>
-                    <a href="@Url.Action("MisHijos", "Pacientes")" class="btn btn-info">
-                        <i class="fas fa-list"></i> Ver Todos mis Hijos
-                    </a>
-                    <a href="@Url.Action("ActualizarInfo", "Pacientes")" class="btn btn-warning">
-                        <i class="fas fa-edit"></i> Actualizar Información
+                    <a href="@Url.Action("Index", "Pacientes")" class="btn btn-info">
+                        <i class="fas fa-list"></i> Ver mis hijos pacientes
                     </a>
                 </div>
             </div>
@@ -594,81 +591,7 @@
         <div class="children-section">
             <h3><i class="fas fa-children"></i> Mis Hijos</h3>
 
-            <!-- Ejemplo de hijo registrado -->
-            <div class="child-card">
-                <div class="child-avatar">
-                    <i class="fas fa-child"></i>
-                </div>
-                <div class="child-info">
-                    <div class="child-name">Ana María López</div>
-                    <div class="child-details">2 años, 8 meses • Última evaluación: Hace 3 semanas</div>
-                </div>
-                <div class="child-actions">
-                    <a href="@Url.Action("VerPerfil", "Pacientes", new { id = 1 })" class="btn btn-info btn-small">
-                        <i class="fas fa-eye"></i> Ver
-                    </a>
-                    <a href="@Url.Action("NuevaEvaluacion", "MCHAT", new { pacienteId = 1 })" class="btn btn-success btn-small">
-                        <i class="fas fa-clipboard-check"></i> Evaluar
-                    </a>
-                </div>
-            </div>
-
-            <div class="child-card">
-                <div class="child-avatar">
-                    <i class="fas fa-child"></i>
-                </div>
-                <div class="child-info">
-                    <div class="child-name">Carlos Andrés López</div>
-                    <div class="child-details">4 años, 2 meses • Evaluación pendiente</div>
-                </div>
-                <div class="child-actions">
-                    <a href="@Url.Action("VerPerfil", "Pacientes", new { id = 2 })" class="btn btn-info btn-small">
-                        <i class="fas fa-eye"></i> Ver
-                    </a>
-                    <a href="@Url.Action("NuevaEvaluacion", "MCHAT", new { pacienteId = 2 })" class="btn btn-warning btn-small">
-                        <i class="fas fa-clipboard-check"></i> Evaluar
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="recent-evaluations">
-            <h3><i class="fas fa-history"></i> Evaluaciones Recientes</h3>
-
-            <div class="evaluation-item">
-                <div class="eval-icon mchat">
-                    <i class="fas fa-clipboard-check"></i>
-                </div>
-                <div class="eval-details">
-                    <div class="eval-title">M-CHAT completado - Ana María</div>
-                    <div class="eval-time">Evaluación realizada hace 3 semanas</div>
-                </div>
-                <span class="eval-status status-completed">Completado</span>
-            </div>
-
-            <div class="evaluation-item">
-                <div class="eval-icon pending">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="eval-details">
-                    <div class="eval-title">M-CHAT pendiente - Carlos Andrés</div>
-                    <div class="eval-time">Recordatorio: Evaluación programada</div>
-                </div>
-                <span class="eval-status status-pending">Pendiente</span>
-            </div>
-
-            <div class="evaluation-item">
-                <div class="eval-icon completed">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="eval-details">
-                    <div class="eval-title">Consulta con Psicóloga - Ana María</div>
-                    <div class="eval-time">Dra. González revisó resultados - Hace 1 semana</div>
-                </div>
-                <span class="eval-status status-completed">Revisado</span>
-            </div>
-        </div>
-
+           
         <div class="quick-tips">
             <h3><i class="fas fa-lightbulb"></i> Consejos Importantes</h3>
             <div class="tip-item">
