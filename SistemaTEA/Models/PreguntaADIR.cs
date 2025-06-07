@@ -19,8 +19,6 @@ namespace SistemaTEA.Models
 
         public bool EsActiva { get; set; } = true;
 
-        [ForeignKey("AreaID")]
-        public virtual AreaADIR Area { get; set; }
     }
 
 }

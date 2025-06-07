@@ -18,8 +18,10 @@ namespace SistemaTEA.Controllers
         public ActionResult Index()
         {
             var tipoTest = _context.TiposTest.ToList();
+
+            ViewBag.PreguntasMCHAT = _context.PreguntasMCHAT.Count();
             ViewBag.PreguntasADIR = _context.PreguntasADIR.Count();
-            ViewBag.AreasADIR = _context.AreasADIR.Where(a => a.EsActivo == true).Count();
+            ViewBag.AreasADIR = _context.AreasADIR.Where(a => a.EsActivo).Count();
 
             ViewBag.Preguntas = _context.PreguntasMCHAT.Count();
             return View(tipoTest);
@@ -196,19 +198,33 @@ namespace SistemaTEA.Controllers
             }
         }
 
+        // Métodos adicionales para el controlador PreguntasController para manejar ADI-R
+
         public ActionResult VerPreguntas_ADIR()
         {
-            var preguntas = _context.PreguntasADIR
-                .Include(p => p.Area) // Incluir la relación con AreasADIR
+            var preguntasConAreas = _context.PreguntasADIR
+                .Join(_context.AreasADIR,
+                      pregunta => pregunta.AreaID,
+                      area => area.AreaID,
+                      (pregunta, area) => new
+                      {
+                          PreguntaID = pregunta.PreguntaID,
+                          AreaID = pregunta.AreaID,
+                          NombreArea = area.NombreArea,
+                          NumeroPregunta = pregunta.NumeroPregunta,
+                          TextoPregunta = pregunta.TextoPregunta,
+                          TipoPregunta = pregunta.TipoPregunta,
+                          EsActiva = pregunta.EsActiva
+                      })
                 .ToList();
-            return View(preguntas);
+
+            return View(preguntasConAreas);
         }
 
-        //Crear controlador de ADI-R
+        // GET: Crear pregunta ADI-R
         public ActionResult CreateADIR()
         {
-            // Cargar las áreas disponibles para el dropdown
-            ViewBag.Areas = new SelectList(_context.AreasADIR.Where(a => a.EsActivo == true), "AreaID", "NombreArea");
+            ViewBag.Areas = _context.AreasADIR.Where(a => a.EsActivo).ToList();
             return View();
         }
 
@@ -228,7 +244,6 @@ namespace SistemaTEA.Controllers
                         .FirstOrDefault();
 
                     pregunta_ADIR.NumeroPregunta = ultimaPreguntaEnArea != null ? ultimaPreguntaEnArea.NumeroPregunta + 1 : 1;
-                    pregunta_ADIR.EsActiva = true; // Por defecto activa
 
                     _context.PreguntasADIR.Add(pregunta_ADIR);
                     _context.SaveChanges();
@@ -236,26 +251,36 @@ namespace SistemaTEA.Controllers
                     return RedirectToAction("CreateADIR", "Preguntas", new { id = id_test });
                 }
 
-                // Si hay errores, recargar las áreas
-                ViewBag.Areas = new SelectList(_context.AreasADIR.Where(a => a.EsActivo == true), "AreaID", "NombreArea");
+                ViewBag.Areas = _context.AreasADIR.Where(a => a.EsActivo).ToList();
                 return View(pregunta_ADIR);
             }
             catch
             {
-                ViewBag.Areas = new SelectList(_context.AreasADIR.Where(a => a.EsActivo == true), "AreaID", "NombreArea");
+                ViewBag.Areas = _context.AreasADIR.Where(a => a.EsActivo).ToList();
                 return View();
             }
         }
 
+        // GET: Editar preguntas ADI-R
         public ActionResult EditADIR()
         {
-            var preguntas = _context.PreguntasADIR
-                .Include(p => p.Area) // Incluir la relación con AreasADIR
+            var preguntasConAreas = _context.PreguntasADIR
+                .Join(_context.AreasADIR,
+                      pregunta => pregunta.AreaID,
+                      area => area.AreaID,
+                      (pregunta, area) => new
+                      {
+                          PreguntaID = pregunta.PreguntaID,
+                          AreaID = pregunta.AreaID,
+                          NombreArea = area.NombreArea,
+                          NumeroPregunta = pregunta.NumeroPregunta,
+                          TextoPregunta = pregunta.TextoPregunta,
+                          TipoPregunta = pregunta.TipoPregunta,
+                          EsActiva = pregunta.EsActiva
+                      })
                 .ToList();
 
-            // Cargar las áreas para los dropdowns de edición
-            ViewBag.Areas = new SelectList(_context.AreasADIR.Where(a => a.EsActivo == true), "AreaID", "NombreArea");
-            return View(preguntas);
+            return View(preguntasConAreas);
         }
 
         // POST: Editar pregunta ADI-R
@@ -290,7 +315,19 @@ namespace SistemaTEA.Controllers
         public ActionResult DeleteADIR(int id)
         {
             var pregunta = _context.PreguntasADIR
-                .Include(p => p.Area)
+                .Join(_context.AreasADIR,
+                      p => p.AreaID,
+                      a => a.AreaID,
+                      (p, a) => new
+                      {
+                          PreguntaID = p.PreguntaID,
+                          AreaID = p.AreaID,
+                          NombreArea = a.NombreArea,
+                          NumeroPregunta = p.NumeroPregunta,
+                          TextoPregunta = p.TextoPregunta,
+                          TipoPregunta = p.TipoPregunta,
+                          EsActiva = p.EsActiva
+                      })
                 .FirstOrDefault(p => p.PreguntaID == id);
 
             if (pregunta == null)
@@ -301,55 +338,38 @@ namespace SistemaTEA.Controllers
             return View(pregunta);
         }
 
-        // POST: Confirmar eliminación de pregunta ADI-R
-        [HttpPost, ActionName("DeleteADIR")]
+        // POST: Eliminar pregunta ADI-R
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteADIRConfirmed(int id)
+        public ActionResult DeleteADIR(int id, IFormCollection collection)
         {
             try
             {
                 var pregunta = _context.PreguntasADIR.FirstOrDefault(p => p.PreguntaID == id);
 
-                if (pregunta == null)
+                if (pregunta != null)
                 {
-                    return Json(new { success = false, message = "Pregunta no encontrada." });
+                    _context.PreguntasADIR.Remove(pregunta);
+                    _context.SaveChanges();
                 }
 
-                // En lugar de eliminar físicamente, desactivar la pregunta
-                pregunta.EsActiva = false;
-                _context.SaveChanges();
-
-                return RedirectToAction("VerPreguntas_ADIR", "Preguntas");
+                return RedirectToAction("VerPreguntas_ADIR");
             }
-            catch (Exception)
+            catch
             {
-                return Json(new { success = false, message = "Error al eliminar la pregunta." });
+                return View();
             }
         }
 
-        // Método adicional para obtener preguntas por área (útil para AJAX)
-        [HttpGet]
-        public JsonResult GetPreguntasPorArea(int areaId)
+        // Método auxiliar para obtener preguntas por área
+        public ActionResult GetPreguntasPorArea(int areaId)
         {
-            try
-            {
-                var preguntas = _context.PreguntasADIR
-                    .Where(p => p.AreaID == areaId && p.EsActiva == true)
-                    .Select(p => new {
-                        p.PreguntaID,
-                        p.NumeroPregunta,
-                        p.TextoPregunta,
-                        p.TipoPregunta
-                    })
-                    .OrderBy(p => p.NumeroPregunta)
-                    .ToList();
+            var preguntas = _context.PreguntasADIR
+                .Where(p => p.AreaID == areaId && p.EsActiva)
+                .OrderBy(p => p.NumeroPregunta)
+                .ToList();
 
-                return Json(new { success = true, preguntas = preguntas });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "Error al obtener las preguntas: " + ex.Message });
-            }
+            return Json(preguntas);
         }
     }
 }
