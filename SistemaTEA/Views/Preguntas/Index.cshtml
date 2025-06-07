@@ -14,21 +14,21 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
         }
 
         .header {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -38,538 +38,583 @@
 
             .header h1 {
                 color: white;
-                font-size: 1.8rem;
+                font-size: 1.6rem;
                 font-weight: 300;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+                .header h1 i {
+                    color: #ffd700;
+                }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-back {
+            padding: 0.6rem 1.2rem;
+            background: rgba(108, 117, 125, 0.9);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+            .btn-back:hover {
+                background: rgba(108, 117, 125, 1);
+                transform: translateY(-2px);
             }
 
         @@keyframes fadeInDown {
-            from
+        from
 
         {
-            opacity: 0;
-            transform: translateY(-20px);
+        opacity: 0;
+        transform: translateY(-20px);
         }
 
         to {
-            opacity: 1;
-            transform: translateY(0);
+        opacity: 1;
+        transform: translateY(0);
         }
 
         }
 
         .user-info {
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 0.5rem;
         }
 
-            .user-info i {
-                font-size: 1.2rem;
-            }
+        .user-info i {
+        font-size: 1.2rem;
+        }
 
         .main-container {
-            padding: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
+        padding: 0 2rem 2rem 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
         }
 
         .page-header {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 2rem;
         }
 
         .page-title {
-            flex: 1;
+        flex: 1;
+        min-width: 300px;
         }
 
         .page-header h2 {
-            color: #4a5568;
-            margin-bottom: 0.5rem;
-            font-size: 2rem;
-            font-weight: 300;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        color: #4a5568;
+        margin-bottom: 1rem;
+        font-size: 2rem;
+        font-weight: 300;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
         }
 
         .page-header p {
-            color: #718096;
-            font-size: 1.1rem;
-            line-height: 1.6;
+        color: #718096;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-top: 0.5rem;
         }
 
         .header-actions {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: flex-start;
         }
 
         .btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
-            white-space: nowrap;
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        white-space: nowrap;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        color: white;
         }
 
         .btn-warning {
-            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
-            color: white;
+        background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+        color: white;
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-            color: white;
+        background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        color: white;
         }
 
         .btn-info {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            color: white;
+        background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+        color: white;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            text-decoration: none;
-            color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+        color: white;
         }
 
         .tests-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .tests-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
         }
 
         .test-card {
-            background: #f7fafc;
-            border-radius: 15px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            border: 1px solid #e2e8f0;
-            position: relative;
-            overflow: hidden;
+        background: #f7fafc;
+        border-radius: 15px;
+        padding: 2.5rem;
+        transition: all 0.3s ease;
+        border: 1px solid #e2e8f0;
+        position: relative;
+        overflow: hidden;
         }
 
-            .test-card::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 4px;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            }
+        .test-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
 
-            .test-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-                background: white;
-            }
+        .test-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        background: white;
+        }
 
         .test-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
         }
 
         .test-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: white;
-            flex-shrink: 0;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: white;
+        flex-shrink: 0;
         }
 
         .test-info {
-            flex: 1;
+        flex: 1;
+        padding-top: 0.5rem;
         }
 
         .test-name {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 1rem;
+        line-height: 1.4;
         }
 
         .test-stats {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
         }
 
         .stat-badge {
-            background: #edf2f7;
-            color: #4a5568;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
+        background: #edf2f7;
+        color: #4a5568;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-weight: 500;
         }
 
-            .stat-badge.questions {
-                background: #e6fffa;
-                color: #00b3a6;
-            }
+        .stat-badge.questions {
+        background: #e6fffa;
+        color: #00b3a6;
+        }
 
-            .stat-badge.evaluations {
-                background: #e6f3ff;
-                color: #0066cc;
-            }
+        .stat-badge.evaluations {
+        background: #e6f3ff;
+        color: #0066cc;
+        }
 
         .test-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.8rem;
-            margin-top: 1rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-top: 1.5rem;
         }
 
-            .test-actions .btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.9rem;
-                justify-content: center;
-            }
+        .test-actions .btn {
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+        justify-content: center;
+        }
+
+        .test-actions-full {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        }
+
+        .test-actions-full .btn {
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+        justify-content: center;
+        }
 
         .back-btn {
-            position: fixed;
-            top: 1rem;
-            left: 1rem;
-            padding: 0.5rem 1rem;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 25px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            z-index: 1000;
-            margin-top: 80px;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        padding: 0.6rem 1.2rem;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 25px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        z-index: 1000;
+        margin-top: 90px;
         }
 
-            .back-btn:hover {
-                background: rgba(255, 255, 255, 0.3);
-                transform: translateY(-2px);
-                color: white;
-                text-decoration: none;
-            }
+        .back-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        color: white;
+        text-decoration: none;
+        }
 
         .stats-overview {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
         }
 
         .overview-stat {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 1rem;
-            border-radius: 10px;
-            text-align: center;
-            color: white;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 1.5rem;
+        border-radius: 10px;
+        text-align: center;
+        color: white;
         }
 
-            .overview-stat .number {
-                font-size: 2rem;
-                font-weight: bold;
-                margin-bottom: 0.5rem;
-            }
+        .overview-stat .number {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
 
-            .overview-stat .label {
-                font-size: 0.9rem;
-                opacity: 0.9;
-            }
+        .overview-stat .label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        }
 
         /* Modal styles */
         .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
         }
 
         .modal-content {
-            background-color: white;
-            margin: 5% auto;
-            padding: 2rem;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: modalSlideIn 0.3s ease;
+        background-color: white;
+        margin: 5% auto;
+        padding: 2.5rem;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 600px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: modalSlideIn 0.3s ease;
         }
 
         @@keyframes modalSlideIn {
-            from
+        from
 
         {
-            opacity: 0;
-            transform: translateY(-50px);
+        opacity: 0;
+        transform: translateY(-50px);
         }
 
         to {
-            opacity: 1;
-            transform: translateY(0);
+        opacity: 1;
+        transform: translateY(0);
         }
 
         }
 
         .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e2e8f0;
         }
 
-            .modal-header h3 {
-                color: #2d3748;
-                font-size: 1.5rem;
-                font-weight: 600;
-            }
+        .modal-header h3 {
+        color: #2d3748;
+        font-size: 1.5rem;
+        font-weight: 600;
+        }
 
         .close {
-            color: #718096;
-            font-size: 2rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s ease;
+        color: #718096;
+        font-size: 2rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.3s ease;
         }
 
-            .close:hover {
-                color: #2d3748;
-            }
+        .close:hover {
+        color: #2d3748;
+        }
 
         .form-group {
-            margin-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
         }
 
-            .form-group label {
-                display: block;
-                margin-bottom: 0.5rem;
-                color: #2d3748;
-                font-weight: 500;
-            }
+        .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #2d3748;
+        font-weight: 500;
+        }
 
-            .form-group input,
-            .form-group textarea,
-            .form-group select {
-                width: 100%;
-                padding: 0.8rem;
-                border: 1px solid #e2e8f0;
-                border-radius: 8px;
-                font-size: 1rem;
-                transition: border-color 0.3s ease;
-            }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+        width: 100%;
+        padding: 0.8rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+        }
 
-                .form-group input:focus,
-                .form-group textarea:focus,
-                .form-group select:focus {
-                    outline: none;
-                    border-color: #667eea;
-                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-                }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
 
-            .form-group textarea {
-                resize: vertical;
-                min-height: 100px;
-            }
+        .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+        }
 
         .form-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-            margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 2rem;
         }
 
         /* Estilos para tests específicos */
         .test-card.mchat .test-icon {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
         }
 
         .test-card.ados .test-icon {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+        background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
         }
 
         .test-card.cars .test-icon {
-            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+        background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
         }
 
         .test-card.abc .test-icon {
-            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
         }
 
         @@media (max-width: 768px) {
-            .main-container
+        .main-container
 
         {
-            padding: 1rem;
+        padding: 0 1rem 1rem 1rem;
         }
 
         .header {
-            padding: 1rem;
-            flex-direction: column;
-            gap: 1rem;
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
         }
 
-            .header h1 {
-                font-size: 1.5rem;
-            }
+        .header h1 {
+        font-size: 1.5rem;
+        }
 
         .page-header {
-            flex-direction: column;
-            align-items: flex-start;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 2rem;
         }
 
         .header-actions {
-            width: 100%;
-            justify-content: flex-start;
+        width: 100%;
+        justify-content: flex-start;
         }
 
         .tests-grid {
-            grid-template-columns: 1fr;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        }
+
+        .test-card {
+        padding: 2rem;
         }
 
         .test-actions {
-            grid-template-columns: 1fr;
+        grid-template-columns: 1fr;
         }
 
         .stats-overview {
-            grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
         }
 
         .modal-content {
-            margin: 10% auto;
-            width: 95%;
+        margin: 10% auto;
+        width: 95%;
+        padding: 2rem;
         }
 
         }
 
         /* Animaciones */
         @@keyframes fadeInUp {
-            from
+        from
 
         {
-            opacity: 0;
-            transform: translateY(30px);
+        opacity: 0;
+        transform: translateY(30px);
         }
 
         to {
-            opacity: 1;
-            transform: translateY(0);
+        opacity: 1;
+        transform: translateY(0);
         }
 
         }
 
         .test-card {
-            animation: fadeInUp 0.6s ease forwards;
+        animation: fadeInUp 0.6s ease forwards;
         }
 
-            .test-card:nth-child(1) {
-                animation-delay: 0.1s;
-            }
+        .test-card:nth-child(1) {
+        animation-delay: 0.1s;
+        }
 
-            .test-card:nth-child(2) {
-                animation-delay: 0.2s;
-            }
+        .test-card:nth-child(2) {
+        animation-delay: 0.2s;
+        }
 
-            .test-card:nth-child(3) {
-                animation-delay: 0.3s;
-            }
+        .test-card:nth-child(3) {
+        animation-delay: 0.3s;
+        }
 
-            .test-card:nth-child(4) {
-                animation-delay: 0.4s;
-            }
+        .test-card:nth-child(4) {
+        animation-delay: 0.4s;
+        }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div>
-            <h1><i class="fas fa-cogs"></i> Sistema TEA - Administración de Tests</h1>
-            <div class="user-info">
-                <i class="fas fa-user-shield"></i>
-                <span>@ViewBag.NombreUsuario (Administrador)</span>
-            </div>
+        <h1><i class="fas fa-brain"></i> Sistema TEA - Administración de Tests</h1>
+        <div class="header-right">
+            <a href="@Url.Action("InicioADMIN", "Login")" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
         </div>
-
-
     </div>
 
-
-
-    <div class="main-container ">
-        <div class="stats-overview">
-            <div class="overview-stat">
-                <div class="number">@Model.Count()</div>
-                <div class="label">Tests Configurados</div>
-            </div>
-            <div class="overview-stat">
-                <div class="number">@ViewBag.TotalPreguntas</div>
-                <div class="label">Preguntas Totales</div>
-            </div>
-            <div class="overview-stat">
-                <div class="number">@ViewBag.TestsActivos</div>
-                <div class="label">Tests Activos</div>
-            </div>
-            <div class="overview-stat">
-                <div class="number">@ViewBag.UltimaModificacion</div>
-                <div class="label">Días desde última modificación</div>
-            </div>
-        </div>
-
+    <div class="main-container">
         <div class="page-header">
             <div class="page-title">
                 <h2>
@@ -578,105 +623,90 @@
                 </h2>
                 <p>Gestiona los tests de evaluación TEA, configura preguntas y supervisa el contenido</p>
             </div>
-            <div class="header-actions">
-                <a href="#" class="btn btn-success" onclick="openModal('createTestModal')">
-                    <i class="fas fa-plus"></i> Nuevo Test
-                </a>
-
-            </div>
         </div>
 
         <div class="tests-container">
-    <div class="tests-grid">
-        @foreach (var item in Model)
-        {
-            <div class="test-card @GetTestClass(item.NombreTest)">
-                <div class="test-header">
-                    <div class="test-icon">
-                        <i class="@GetTestIcon(item.NombreTest)"></i>
-                    </div>
-                    <div class="test-info">
-                        <div class="test-name">@item.NombreTest</div>
-                        <div class="test-stats">
-                            <div class="stat-badge questions">
-                                <i class="fas fa-question-circle"></i>
-                                @GetQuestionCount(item.TipoTestID) Preguntas
+            <div class="tests-grid">
+                @foreach (var item in Model)
+                {
+                    <div class="test-card @GetTestClass(item.NombreTest)">
+                        <div class="test-header">
+                            <div class="test-icon">
+                                <i class="@GetTestIcon(item.NombreTest)"></i>
+                            </div>
+                            <div class="test-info">
+                                <div class="test-name">@item.NombreTest</div>
+                                <div class="test-stats">
+                                    <div class="stat-badge questions">
+                                        <i class="fas fa-question-circle"></i>
+                                        @GetQuestionCount(item.TipoTestID) Preguntas
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <div class="test-actions">
+                            @if (item.NombreTest == "M-CHAT")
+                            {
+                                <a href="@Url.Action("EditMCHAT", "Preguntas")"
+                                class="btn btn-primary">
+                                    <i class="fas fa-pencil-alt"></i>Editar
+                                </a>
+                                <a href="@Url.Action("CreateMCHAT", "Preguntas")"
+                                class="btn btn-info">
+                                    <i class="fas fa-plus-circle"></i>Agregar
+                                </a>
+                            }
+                            else if (item.NombreTest == "ADOS-2")
+                            {
+                                <a href="@Url.Action("EditADOS2", "Preguntas")"
+                                class="btn btn-primary">
+                                    <i class="fas fa-pencil-alt"></i>Editar
+                                </a>
+                                <a href="@Url.Action("CreateADOS2", "Preguntas")"
+                                class="btn btn-info">
+                                    <i class="fas fa-plus-circle"></i>Agregar
+                                </a>
+                            }
+                            else if (item.NombreTest == "ADI-R")
+                            {
+                                <a href="@Url.Action("EditADIR", "Preguntas")"
+                                class="btn btn-primary">
+                                    <i class="fas fa-pencil-alt"></i>Editar
+                                </a>
+                                <a href="@Url.Action("CreateADIR", "Preguntas")"
+                                class="btn btn-info">
+                                    <i class="fas fa-plus-circle"></i>Agregar
+                                </a>
+                            }
+                        </div>
+                        <div class="test-actions-full">
+                            @if (item.NombreTest == "M-CHAT")
+                            {
+                                <a href="@Url.Action("VerPreguntas_MCHAT", "Preguntas")"
+                                class="btn btn-success">
+                                    <i class="fas fa-eye"></i> Ver Todas las Preguntas
+                                </a>
+                            }
+                            else if (item.NombreTest == "ADOS-2")
+                            {
+                                <a href="@Url.Action("VerPreguntas_ADOS2", "Preguntas")"
+                                class="btn btn-success">
+                                    <i class="fas fa-eye"></i> Ver Todas las Preguntas
+                                </a>
+                            }
+                            else if (item.NombreTest == "ADI-R")
+                            {
+                                <a href="@Url.Action("VerPreguntas_ADIR", "Preguntas")"
+                                class="btn btn-success">
+                                    <i class="fas fa-eye"></i> Ver Todas las Preguntas
+                                </a>
+                            }
+                        </div>
                     </div>
-                </div>
-                <div class="test-actions">
-                    @if (item.NombreTest == "M-CHAT")
-                    {
-                        <a href="@Url.Action("EditMCHAT", "Preguntas")"
-                           class="btn btn-primary">
-                            <i class="fas fa-pencil-alt"></i>Editar Preguntas
-                        </a>
-                        <a href="@Url.Action("CreateMCHAT", "Preguntas")"
-                           class="btn btn-info">
-                            <i class="fas fa-plus-circle"></i> Agregar Preguntas
-                        </a>
-                        <a href="@Url.Action("VerPreguntas_MCHAT", "Preguntas")"
-                           class="btn btn-primary">
-                            <i class="fas fa-eye"></i> Ver Preguntas
-                        </a>
-                    }
-                    else if (item.NombreTest == "ADOS-2")
-                    {
-                        <a href="@Url.Action("EditADOS", "Preguntas")"
-                           class="btn btn-primary">
-                            <i class="fas fa-pencil-alt"></i>Editar Preguntas
-                        </a>
-                        <a href="@Url.Action("CreateADOS", "Preguntas")"
-                           class="btn btn-info">
-                            <i class="fas fa-plus-circle"></i> Agregar Preguntas
-                        </a>
-                        <a href="@Url.Action("VerPreguntas_ADOS", "Preguntas")"
-                           class="btn btn-primary">
-                            <i class="fas fa-eye"></i> Ver Preguntas
-                        </a>
-                    }
-                    else if (item.NombreTest == "ADI-R")
-                    {
-                        <a href="@Url.Action("EditADIR", "Preguntas")"
-                           class="btn btn-primary">
-                            <i class="fas fa-pencil-alt"></i>Editar Preguntas
-                        </a>
-                        <a href="@Url.Action("CreateADIR", "Preguntas")"
-                           class="btn btn-info">
-                            <i class="fas fa-plus-circle"></i> Agregar Preguntas
-                        </a>
-                        <a href="@Url.Action("VerPreguntas_ADIR", "Preguntas")"
-                           class="btn btn-primary">
-                            <i class="fas fa-eye"></i> Ver Preguntas
-                        </a>
-                    }
-                    
-                    <!-- Botón de resultados común para todos -->
-                    <a href="@Url.Action("VerResultados", "Tests", new { id = item.TipoTestID })"
-                       class="btn btn-success">
-                        <i class="fas fa-chart-bar"></i> Resultados
-                    </a>
-                </div>
-            </div>
-        }
-        <div class="test-card" style="border: 2px dashed #cbd5e0; background: rgba(255,255,255,0.5);">
-            <div style="text-align: center; padding: 2rem 0;">
-                <div class="test-icon" style="background: #e2e8f0; color: #718096; margin: 0 auto 1rem;">
-                    <i class="fas fa-plus"></i>
-                </div>
-                <div class="test-name" style="color: #718096; margin-bottom: 1rem;">
-                    Agregar Nuevo Test
-                </div>
-                <button class="btn btn-primary" onclick="openModal('createTestModal')" style="width: auto;">
-                    <i class="fas fa-plus"></i> Crear Test
-                </button>
+                }
             </div>
         </div>
     </div>
-</div>
-    </div>
-
 
     <div id="createTestModal" class="modal">
         <div class="modal-content">
@@ -688,12 +718,12 @@
                 <div class="form-group">
                     <label for="nombreTest">Nombre del Test</label>
                     <input type="text" id="nombreTest" name="NombreTest" required
-                           placeholder="Ej: M-CHAT-R, ADOS-2, etc.">
+                    placeholder="Ej: M-CHAT-R, ADOS-2, etc.">
                 </div>
                 <div class="form-group">
                     <label for="descripcionTest">Descripción</label>
                     <textarea id="descripcionTest" name="Descripcion"
-                              placeholder="Describe el propósito y características del test"></textarea>
+                    placeholder="Describe el propósito y características del test"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="edadMinima">Edad Mínima (meses)</label>
@@ -709,7 +739,7 @@
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn" onclick="closeModal('createTestModal')"
-                            style="background: #e2e8f0; color: #4a5568;">
+                    style="background: #e2e8f0; color: #4a5568;">
                         Cancelar
                     </button>
                     <button type="submit" class="btn btn-success">
@@ -722,60 +752,57 @@
 
     <script>
         function openModal(modalId) {
-            document.getElementById(modalId).style.display = 'block';
+        document.getElementById(modalId).style.display = 'block';
         }
 
         function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
+        document.getElementById(modalId).style.display = 'none';
         }
 
         function confirmarEliminacion(testId, nombreTest) {
-            if (confirm(`¿Estás seguro de que deseas eliminar el test "${nombreTest}"?\n\nEsta acción no se puede deshacer y eliminará todas las preguntas y evaluaciones asociadas.`)) {
-
-                window.location.href = `@Url.Action("EliminarTest", "Tests")?id=${testId}`;
-            }
+        if (confirm(`¿Estás seguro de que deseas eliminar el test "${nombreTest}"?\n\nEsta acción no se puede deshacer y eliminará todas las preguntas y evaluaciones asociadas.`)) {
+        window.location.href = `@Url.Action("EliminarTest", "Tests")?id=${testId}`;
+        }
         }
 
         // Cerrar modal al hacer clic fuera
         window.onclick = function(event) {
-            const modals = document.querySelectorAll('.modal');
-            modals.forEach(modal => {
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+        if (event.target === modal) {
+        modal.style.display = 'none';
+        }
+        });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+        const testCards = document.querySelectorAll('.test-card');
+        testCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
 
-            const testCards = document.querySelectorAll('.test-card');
-            testCards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
+        setTimeout(() => {
+        card.style.transition = 'all 0.6s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+        }, index * 100);
+        });
 
-                setTimeout(() => {
-                    card.style.transition = 'all 0.6s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 100);
-            });
+        const statNumbers = document.querySelectorAll('.overview-stat .number');
+        statNumbers.forEach(number => {
+        const target = parseInt(number.textContent);
+        let current = 0;
+        const increment = target / 30;
 
-
-            const statNumbers = document.querySelectorAll('.overview-stat .number');
-            statNumbers.forEach(number => {
-                const target = parseInt(number.textContent);
-                let current = 0;
-                const increment = target / 30;
-
-                const timer = setInterval(() => {
-                    current += increment;
-                    if (current >= target) {
-                        current = target;
-                        clearInterval(timer);
-                    }
-                    number.textContent = Math.floor(current);
-                }, 50);
-            });
+        const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+        current = target;
+        clearInterval(timer);
+        }
+        number.textContent = Math.floor(current);
+        }, 50);
+        });
         });
     </script>
 </body>
@@ -808,8 +835,18 @@
 
     int GetQuestionCount(int testId)
     {
-
-        return (@ViewBag.Preguntas);
+        if (testId == 1)
+        {
+            return (@ViewBag.PreguntasMCHAT);
+        }
+        else if (testId == 2)
+        {
+            return (@ViewBag.PreguntasADOS2);
+        }
+        else
+        {
+            return (@ViewBag.PreguntasADIR);
+        }
     }
 
     int GetEvaluationCount(int testId)

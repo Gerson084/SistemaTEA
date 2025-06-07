@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Preguntas ADI-R</title>
+    <title>Editar Preguntas ADOS-2</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -131,12 +131,12 @@
                 color: #95a5a6;
             }
 
-        .filter-area {
+        .filter-module {
             position: relative;
             min-width: 200px;
         }
 
-            .filter-area select {
+            .filter-module select {
                 width: 100%;
                 padding: 12px 20px;
                 border: 2px solid #e0e6ed;
@@ -147,7 +147,7 @@
                 transition: all 0.3s ease;
             }
 
-                .filter-area select:focus {
+                .filter-module select:focus {
                     outline: none;
                     border-color: #667eea;
                     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -230,8 +230,8 @@
             font-size: 1.1rem;
         }
 
-        .area-badge {
-            background: linear-gradient(45deg, #f39c12, #f1c40f);
+        .module-badge {
+            background: linear-gradient(45deg, #3498db, #2980b9);
             color: white;
             padding: 5px 12px;
             border-radius: 15px;
@@ -406,7 +406,7 @@
             align-items: stretch;
         }
 
-        .search-box, .filter-area {
+        .search-box, .filter-module {
             min-width: 100%;
         }
 
@@ -421,7 +421,7 @@
     @Html.AntiForgeryToken()
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-brain"></i> Sistema TEA - Editor de Preguntas ADI-R</h1>
+            <h1><i class="fas fa-brain"></i> Sistema TEA - Editor de Preguntas ADOS-2</h1>
             <div class="header-right">
                 <a href="@Url.Action("InicioADMIN", "Login")" class="btn-back">
                     <i class="fas fa-arrow-left"></i> Volver
@@ -438,8 +438,8 @@
                 <div>Mostrando</div>
             </div>
             <div class="stats-item">
-                <div class="stats-number">@ViewBag.Areas.Count</div>
-                <div>Áreas Activas</div>
+                <div class="stats-number">@ViewBag.Modulos.Count</div>
+                <div>Módulos Activos</div>
             </div>
         </div>
 
@@ -448,16 +448,16 @@
                 <i class="fas fa-search"></i>
                 <input type="text" id="searchInput" placeholder="Buscar preguntas...">
             </div>
-            <div class="filter-area">
-                <select id="areaFilter">
-                    <option value="">Todas las áreas</option>
-                    @foreach (var area in ViewBag.Areas)
+            <div class="filter-module">
+                <select id="moduleFilter">
+                    <option value="">Todos los módulos</option>
+                    @foreach (var modulo in ViewBag.Modulos)
                     {
-                        <option value="@area.AreaID">@area.NombreArea</option>
+                        <option value="@modulo.ModuloID">@modulo.NombreModulo</option>
                     }
                 </select>
             </div>
-            <a href="/Preguntas/CreateADIR" class="btn btn-primary">
+            <a href="/Preguntas/CreateADOS2" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Nueva Pregunta
             </a>
         </div>
@@ -465,10 +465,10 @@
         <div class="questions-grid" id="questionsGrid">
             @foreach (var item in Model)
             {
-                <div class="question-card" data-area-id="@item.AreaID">
+                <div class="question-card" data-module-id="@item.ModuloID">
                     <div class="question-header">
                         <div class="question-number">@item.NumeroPregunta</div>
-                        <div class="area-badge">@item.NombreArea</div>
+                        <div class="module-badge">@item.NombreModulo</div>
                     </div>
                     <div class="question-text">@item.TextoPregunta</div>
                     @if (!string.IsNullOrEmpty(item.TipoPregunta))
@@ -476,7 +476,7 @@
                         <div class="question-type">Tipo: @item.TipoPregunta</div>
                     }
                     <div class="question-actions">
-                        <button class="btn btn-edit btn-small" onclick="openModal(@item.PreguntaID, '@item.NombreArea')">
+                        <button class="btn btn-edit btn-small" onclick="openModal(@item.PreguntaID, '@item.NombreModulo')">
                             <i class="fas fa-edit"></i>
                             Editar
                         </button>
@@ -489,17 +489,17 @@
     <div id="questionModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modalTitle">Editar Pregunta ADI-R</h2>
-            <form id="editForm" method="post" asp-action="EditADIR" asp-controller="Preguntas">
+            <h2 id="modalTitle">Editar Pregunta ADOS-2</h2>
+            <form id="editForm" method="post" asp-action="EditADOS2" asp-controller="Preguntas">
                 @Html.AntiForgeryToken()
                 <input type="hidden" id="questionId" name="PreguntaID" />
 
                 <div class="form-group">
-                    <label for="areaSelect">Área:</label>
-                    <select id="areaSelect" name="AreaID">
-                        @foreach (var area in ViewBag.Areas)
+                    <label for="moduleSelect">Módulo:</label>
+                    <select id="moduleSelect" name="ModuloID">
+                        @foreach (var modulo in ViewBag.Modulos)
                         {
-                            <option value="@area.AreaID">@area.NombreArea</option>
+                            <option value="@modulo.ModuloID">@modulo.NombreModulo</option>
                         }
                     </select>
                 </div>
@@ -511,7 +511,7 @@
 
                 <div class="form-group">
                     <label for="questionType">Tipo de Pregunta (Opcional):</label>
-                    <input type="text" id="questionType" name="TipoPregunta" placeholder="Ej: Observación, Interacción, Comportamiento...">
+                    <input type="text" id="questionType" name="TipoPregunta" placeholder="Ej: Observación, Interacción, Juego social...">
                 </div>
 
                 <div class="modal-actions">
@@ -528,18 +528,18 @@
 
     <script>
         const questions = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
-        const areas = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Areas));
+        const modules = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Modulos));
 
-        function openModal(id, areaName) {
+        function openModal(id, moduleName) {
             const question = questions.find(q => q.PreguntaID === id);
             if (!question) return;
 
             document.getElementById('questionId').value = question.PreguntaID;
             document.getElementById('questionText').value = question.TextoPregunta;
             document.getElementById('questionType').value = question.TipoPregunta || '';
-            document.getElementById('areaSelect').value = question.AreaID;
+            document.getElementById('moduleSelect').value = question.ModuloID;
 
-            document.getElementById('modalTitle').textContent = `Editar Pregunta - ${areaName}`;
+            document.getElementById('modalTitle').textContent = `Editar Pregunta - ${moduleName}`;
             document.getElementById('questionModal').style.display = 'block';
         }
 
@@ -550,29 +550,29 @@
         // Funcionalidad de búsqueda
         document.getElementById('searchInput').addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
-            const areaFilter = document.getElementById('areaFilter').value;
-            filterQuestions(searchTerm, areaFilter);
+            const moduleFilter = document.getElementById('moduleFilter').value;
+            filterQuestions(searchTerm, moduleFilter);
         });
 
-        // Funcionalidad de filtro por área
-        document.getElementById('areaFilter').addEventListener('change', function() {
-            const areaFilter = this.value;
+        // Funcionalidad de filtro por módulo
+        document.getElementById('moduleFilter').addEventListener('change', function() {
+            const moduleFilter = this.value;
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            filterQuestions(searchTerm, areaFilter);
+            filterQuestions(searchTerm, moduleFilter);
         });
 
-        function filterQuestions(searchTerm, areaFilter) {
+        function filterQuestions(searchTerm, moduleFilter) {
             const cards = document.querySelectorAll('.question-card');
             let visibleCount = 0;
 
             cards.forEach(card => {
                 const questionText = card.querySelector('.question-text').textContent.toLowerCase();
-                const areaId = card.getAttribute('data-area-id');
+                const moduleId = card.getAttribute('data-module-id');
 
                 const matchesSearch = questionText.includes(searchTerm);
-                const matchesArea = !areaFilter || areaId === areaFilter;
+                const matchesModule = !moduleFilter || moduleId === moduleFilter;
 
-                if (matchesSearch && matchesArea) {
+                if (matchesSearch && matchesModule) {
                     card.style.display = 'block';
                     visibleCount++;
                 } else {
