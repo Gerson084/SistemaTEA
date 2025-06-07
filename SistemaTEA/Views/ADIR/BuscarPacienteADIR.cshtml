@@ -1,0 +1,459 @@
+﻿@{
+
+
+    ViewData["Title"] = "Buscar Paciente para Evaluación";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-purple: #8B5CF6;
+            --light-purple: #A78BFA;
+            --pale-purple: #F3F4F6;
+            --purple-bg: #FAF5FF;
+            --success-green: #10B981;
+            --light-green: #34D399;
+            --text-dark: #374151;
+            --border-color: #E5E7EB;
+            --info-blue: #3B82F6;
+        }
+
+        body {
+            background: linear-gradient(135deg, #FAF5FF 0%, #F8FAFC 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-purple), var(--light-purple));
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+
+            .header-section h2 {
+                font-size: 2.2rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+
+            .header-section p {
+                font-size: 1.1rem;
+                opacity: 0.9;
+                margin: 0;
+            }
+
+        .search-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .search-header {
+            background: linear-gradient(135deg, var(--purple-bg), #FFFFFF);
+            padding: 1.5rem;
+            border-bottom: 2px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .search-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-purple);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label, label {
+            font-weight: 600;
+            color: var(--primary-purple);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+            .form-control:focus, .form-select:focus {
+                border-color: var(--primary-purple);
+                box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25);
+            }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-green), var(--light-green)) !important;
+            border: none !important;
+            color: white;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+            .btn-success:hover {
+                transform: translateY(-2px) !important;
+                box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4) !important;
+            }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-purple), var(--light-purple)) !important;
+            border: none !important;
+            color: white;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px) !important;
+                box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4) !important;
+            }
+
+        .patient-info-section {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @@keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .patient-header {
+            background: linear-gradient(135deg, #E0F2FE, #FFFFFF);
+            padding: 1.5rem;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .patient-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--info-blue);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .patient-body {
+            padding: 2rem;
+        }
+
+        .patient-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--purple-bg);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-purple);
+        }
+
+        .info-icon {
+            color: var(--primary-purple);
+            font-size: 1.2rem;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-purple);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .alert-primary {
+            background: linear-gradient(135deg, #DBEAFE, #EBF8FF) !important;
+            border: 1px solid #93C5FD !important;
+            border-radius: 12px !important;
+            padding: 1.5rem !important;
+            margin-bottom: 2rem !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .alert-primary::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 4px;
+                height: 100%;
+                background: var(--info-blue);
+            }
+
+            .alert-primary strong {
+                color: var(--info-blue);
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+        .module-selection {
+            background: var(--purple-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-purple), transparent);
+            margin: 2rem 0;
+            border-radius: 1px;
+        }
+
+        hr {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-purple), transparent);
+            border: none;
+            border-radius: 1px;
+            margin: 2rem 0;
+        }
+
+        @@media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .header-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .search-body, .patient-body {
+                padding: 1.5rem;
+            }
+
+            .patient-info-grid {
+                grid-template-columns: 1fr;
+            }
+        }</style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <h2><i class="fas fa-user-search"></i> Iniciar Nueva Evaluación ADIR</h2>
+            <p>Sistema de Evaluación del Trastorno del Espectro Autista</p>
+        </div>
+
+        <!-- Search Card -->
+        <div class="search-card">
+            <div class="search-header">
+                <h3 class="search-title">
+                    <i class="fas fa-search"></i>
+                    Buscar Paciente
+                </h3>
+            </div>
+            <div class="search-body">
+                <form asp-action="BuscarPacienteADIR" method="post">
+                    <div class="form-group">
+                        <label for="nombrePaciente">
+                            <i class="fas fa-user"></i>
+                            Ingrese el nombre del paciente:
+                        </label>
+                        <input type="text" class="form-control" id="nombrePaciente" name="nombrePaciente"
+                               placeholder="Ingrese el nombre completo del paciente..." required />
+                    </div>
+                    <button type="submit" class="btn btn-success mt-2">
+                        <i class="fas fa-search"></i>
+                        Buscar
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- procesooooooooooooo -->
+        @if (ViewBag.EvaluacionEnProceso != null && ViewBag.EvaluacionEnProceso == true)
+        {
+            <div class="alert alert-warning">
+                <p>@ViewBag.MensajeEvaluacion</p>
+                <form asp-controller="Evaluacion" asp-action="ContinuarEvaluacion" method="post">
+                    <input type="hidden" name="evaluacionId" value="@ViewBag.EvaluacionID" />
+                    <button type="submit" class="btn btn-primary mt-2">Continuar evaluación</button>
+                </form>
+            </div>
+        }
+
+
+
+
+
+
+
+
+
+        <!-- Search Card -->
+
+
+        <div>
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-warning">
+                    @TempData["Error"]
+                </div>
+            }
+
+        </div>
+
+
+        @if (Model != null)
+        {
+            <hr />
+
+            <!-- Patient Information Section -->
+            <div class="patient-info-section">
+                <div class="patient-header">
+                    <h4 class="patient-title">
+                        <i class="fas fa-user-check"></i>
+                        Datos del Paciente
+                    </h4>
+                </div>
+                <div class="patient-body">
+                    <!-- Patient Info Grid -->
+                    <div class="patient-info-grid">
+                        <div class="info-item">
+                            <i class="fas fa-user info-icon"></i>
+                            <div class="info-content">
+                                <div class="info-label">Nombre Completo</div>
+                                <div class="info-value">@Model.Nombre @Model.Apellido</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-birthday-cake info-icon"></i>
+                            <div class="info-content">
+                                <div class="info-label">Edad</div>
+                                <div class="info-value">@(DateTime.Today.Year - Model.FechaNacimiento.Year) años</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-venus-mars info-icon"></i>
+                            <div class="info-content">
+                                <div class="info-label">Género</div>
+                                <div class="info-value">@(Model.Genero == "M" ? "Masculino" : "Femenino")</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (ViewBag.ModuloSugerido != null)
+                    {
+                        <div class="alert alert-primary">
+                            <strong>
+                                <i class="fas fa-lightbulb"></i>
+                                Módulo sugerido:
+                            </strong>
+                            @ViewBag.ModuloSugerido
+                        </div>
+                    }
+
+                    <!-- Module Selection Form -->
+                    <form asp-action="IniciarEvaluacionADIR" method="post">
+                        <input type="hidden" name="pacienteId" value="@Model.PacienteID" />
+
+                        <div class="module-selection">
+                            <div class="form-group">
+                                <label for="moduloSeleccionado">
+                                    <i class="fas fa-list-ul"></i>
+                                    Seleccione un módulo:
+                                </label>
+                                <select class="form-control" id="areaSeleccionado" name="areaSeleccionado" required>
+                                    <option value="">-- Seleccione --</option>
+                                   
+                                    <option value="1">Area 1</option>
+                                    <option value="2">Area 2</option>
+                                    <option value="3">Area 3</option>
+                                    <option value="4">Area 4</option>
+                                    <option value="5">Area 5</option>
+                                    <option value="6">Area 6</option>
+                                    <option value="7">Area 7</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary mt-2">
+                            <i class="fas fa-play-circle"></i>
+                            Iniciar Evaluación
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
