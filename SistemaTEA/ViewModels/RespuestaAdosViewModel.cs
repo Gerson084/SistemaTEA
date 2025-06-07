@@ -1,5 +1,6 @@
 ﻿using SistemaTEA.ViewModels;
 
+
 namespace SistemaTEA.ViewModels
 {
     public class RespuestaADOSViewModel

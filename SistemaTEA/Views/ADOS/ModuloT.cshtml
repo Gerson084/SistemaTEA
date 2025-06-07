@@ -261,7 +261,6 @@
                 font-weight: 600;
             }
 
-        /* Separadores visuales para las secciones */
         .section-divider {
             height: 1px;
             background: linear-gradient(90deg, transparent, var(--border-color), transparent);
@@ -273,7 +272,6 @@
             gap: 1.5rem;
         }
 
-        /* Estilos para puntuación rápida */
         .score-input {
             width: 100px;
             text-align: center;
@@ -286,45 +284,6 @@
                 box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
             }
 
-        @@media (max-width: 768px) {
-            .main-container
-
-        {
-            padding: 1rem;
-        }
-
-        .header-section h1 {
-            font-size: 2rem;
-        }
-
-        .question-header {
-            padding: 1rem;
-        }
-
-        .question-body {
-            padding: 1.5rem;
-        }
-
-        .radio-group {
-            flex-direction: column;
-        }
-
-        .evaluation-sections {
-            grid-template-columns: 1fr;
-        }
-
-        }
-
-        @@media (min-width: 769px) {
-            .evaluation-sections
-
-        {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        }
-        
-        /* Guía de Puntuación */
         .scoring-guide {
             background: rgba(255, 255, 255, 0.15);
             border-radius: 16px;
@@ -427,11 +386,83 @@
                 line-height: 1.4;
             }
 
-        /* Responsive para la guía de puntuación */
+        /* Botón de guardado individual */
+        .btn-save-individual {
+            background: linear-gradient(135deg, #059669, #10B981);
+            border: none;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3);
+        }
+
+            .btn-save-individual:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 15px rgba(5, 150, 105, 0.4);
+            }
+
+            .btn-save-individual:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        /* Indicador de estado guardado */
+        .save-status {
+            display: none;
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+            .save-status.success {
+                background: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+                display: block;
+            }
+
+            .save-status.error {
+                background: #f8d7da;
+                color: #721c24;
+                border: 1px solid #f5c6cb;
+                display: block;
+            }
+
         @@media (max-width: 768px) {
-            .scoring-grid
+            .main-container
 
         {
+            padding: 1rem;
+        }
+
+        .header-section h1 {
+            font-size: 2rem;
+        }
+
+        .question-header {
+            padding: 1rem;
+        }
+
+        .question-body {
+            padding: 1.5rem;
+        }
+
+        .radio-group {
+            flex-direction: column;
+        }
+
+        .evaluation-sections {
+            grid-template-columns: 1fr;
+        }
+
+        .scoring-grid {
             grid-template-columns: 1fr;
         }
 
@@ -441,21 +472,13 @@
 
         }
 
-        @@keyframes spin {
-            0%
+        @@media (min-width: 769px) {
+            .evaluation-sections
 
         {
-            transform: rotate(0deg);
+            grid-template-columns: 1fr 1fr;
         }
 
-        100% {
-            transform: rotate(360deg);
-        }
-
-        }
-
-        .btn-save-question.loading .loading-spinner {
-            display: inline-block;
         }</style>
 </head>
 <body>
@@ -464,47 +487,42 @@
         <div class="header-section">
             <h1><i class="fas fa-clipboard-check"></i> Evaluación ADOS Módulo T</h1>
             <p>Evaluación del Trastorno del Espectro Autista</p>
-           
-        </div>
 
-        <!-- Guía de Puntuación -->
-        <div class="scoring-guide">
-            <h3 class ="text-dark"><i class="fas fa-info-circle text-dark"></i> Guía de Puntuación (Escala 0-3)</h3>
-            <div class="scoring-grid">
-                <div class="score-item score-0">
-                    <div class="score-badge">0</div>
-                    <div class="score-content">
-                        <strong>Conducta Típica</strong>
-                        <p>No hay signos de alteración en esta área. Comportamiento esperado para el desarrollo.</p>
+            <!-- Guía de Puntuación -->
+            <div class="scoring-guide">
+                <h3><i class="fas fa-info-circle"></i> Guía de Puntuación (Escala 0-3)</h3>
+                <div class="scoring-grid">
+                    <div class="score-item score-0">
+                        <div class="score-badge">0</div>
+                        <div class="score-content">
+                            <strong>Conducta Típica</strong>
+                            <p>No hay signos de alteración en esta área. Comportamiento esperado para el desarrollo.</p>
+                        </div>
                     </div>
-                </div>
-
-                <div class="score-item score-1">
-                    <div class="score-badge">1</div>
-                    <div class="score-content">
-                        <strong>Ligeramente Atípica</strong>
-                        <p>Conducta limitada, pero no clínicamente significativa. Puede observarse en algunos niños sin TEA.</p>
+                    <div class="score-item score-1">
+                        <div class="score-badge">1</div>
+                        <div class="score-content">
+                            <strong>Ligeramente Atípica</strong>
+                            <p>Conducta limitada, pero no clínicamente significativa. Puede observarse en algunos niños sin TEA.</p>
+                        </div>
                     </div>
-                </div>
-
-                <div class="score-item score-2">
-                    <div class="score-badge">2</div>
-                    <div class="score-content">
-                        <strong>Claramente Inusual</strong>
-                        <p>Conducta afectada, fuera del rango esperado para el desarrollo típico.</p>
+                    <div class="score-item score-2">
+                        <div class="score-badge">2</div>
+                        <div class="score-content">
+                            <strong>Claramente Inusual</strong>
+                            <p>Conducta afectada, fuera del rango esperado para el desarrollo típico.</p>
+                        </div>
                     </div>
-                </div>
-
-                <div class="score-item score-3">
-                    <div class="score-badge">3</div>
-                    <div class="score-content">
-                        <strong>Marcadamente Anormal</strong>
-                        <p>Ausencia total de la conducta esperada. Sugiere dificultad significativa en esa área.</p>
+                    <div class="score-item score-3">
+                        <div class="score-badge">3</div>
+                        <div class="score-content">
+                            <strong>Marcadamente Anormal</strong>
+                            <p>Ausencia total de la conducta esperada. Sugiere dificultad significativa en esa área.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
         <!-- Progress Indicator -->
         <div class="progress-indicator">
@@ -517,126 +535,156 @@
             </div>
         </div>
 
-        <!-- Form -->
-        <form method="post" asp-action="GuardarEvaluacion" id="adosForm">
-            @for (int i = 0; i < Model.Preguntas.Count(); i++)
-            {
-                var pregunta = Model.Preguntas.ElementAt(i);
+        <!-- Form Container (sin formulario principal, solo contenedor) -->
+        <!-- Form Container (sin formulario principal, solo contenedor) -->
+<div id="adosForm">
+    <input type="hidden" name="EvaluacionID" value="@Model.EvaluacionID" />
 
-                <div class="question-card">
-                    <div class="question-header">
-                        <div class="d-flex align-items-center flex-wrap">
-                            <span class="question-number">@pregunta.NumeroPregunta</span>
-                            <div class="question-text flex-grow-1">
-                                @pregunta.TextoPregunta
-                            </div>
-                            <span class="question-type">@pregunta.TipoPregunta</span>
-                        </div>
+    @for (int i = 0; i < Model.Preguntas.Count(); i++)
+    {
+        var pregunta = Model.Preguntas.ElementAt(i);
+
+        
+            var respuestaGuardada = ViewBag.RespuestasGuardadas != null ? 
+                ((List<RespuestaADOS2>)ViewBag.RespuestasGuardadas).FirstOrDefault(r => r.PreguntaID == pregunta.PreguntaID) : null;
+            var estaGuardada = respuestaGuardada != null;
+        
+
+        <div class="question-card @(estaGuardada ? "question-saved" : "")" data-pregunta-id="@pregunta.PreguntaID">
+            <div class="question-header">
+                <div class="d-flex align-items-center flex-wrap">
+                    <span class="question-number">@pregunta.NumeroPregunta</span>
+                    <div class="question-text flex-grow-1">
+                        @pregunta.TextoPregunta
+                        @if (estaGuardada)
+                        {
+                            <i class="fas fa-check-circle text-success ms-2" title="Pregunta guardada"></i>
+                        }
                     </div>
-                    <div class="question-body">
-                        <!-- Sección Principal de Respuesta -->
-                        <div class="form-section">
-                            <label class="form-label primary">
-                                <i class="fas fa-pencil-alt icon"></i>
-                                Respuesta 
-                            </label>
+                    <span class="question-type">@pregunta.TipoPregunta</span>
+                </div>
+            </div>
+            <div class="question-body">
+                <!-- Campo oculto para identificar la pregunta -->
+                <input type="hidden" name="PreguntaID_@pregunta.PreguntaID" value="@pregunta.PreguntaID" />
 
-                           
-                        </div>
+                <!-- Sección Principal de Respuesta -->
 
-                        <div class="section-divider"></div>
+                <div class="section-divider"></div>
 
-                        <!-- Secciones de Evaluación Adicionales -->
-                        <div class="evaluation-sections">
-                            <!-- Sección de Puntuación -->
-                            <div class="form-section">
-                                <label class="form-label success">
-                                    <i class="fas fa-star icon success"></i>
-                                    Puntuación Clínica
-                                </label>
-                                <input type="number" class="form-control score-input"
-                                       name="Puntuaciones[@pregunta.PreguntaID]"
-                                       min="0" max="3" step="1.0"
-                                       placeholder="0-3"
-                                       title="Puntuación del 0 al 3">
-                                <small class="text-muted">Puntuación del 0 al 3 según criterios clínicos</small>
-                            </div>
+                <!-- Secciones de Evaluación Adicionales -->
+                <div class="evaluation-sections">
+                    <!-- Sección de Puntuación -->
+                    <div class="form-section">
+                        <label class="form-label success">
+                            <i class="fas fa-star icon success"></i>
+                            Puntuación Clínica
+                        </label>
+                        <input type="number" class="form-control score-input"
+                               name="Puntuacion_@pregunta.PreguntaID"
+                               id="puntuacion_@pregunta.PreguntaID"
+                               min="0" max="3" step="1"
+                               placeholder="0-3"
+                               title="Puntuación del 0 al 3"
+                               value="@(respuestaGuardada?.Puntuacion?.ToString() ?? "")">
+                        <small class="text-muted">Puntuación del 0 al 3 según criterios clínicos</small>
+                    </div>
 
-                            <!-- Sección de Comentarios -->
-                            <div class="form-section">
-                                <label class="form-label warning">
-                                    <i class="fas fa-comment-alt icon warning"></i>
-                                    Comentarios Evaluativos
-                                </label>
-                                <textarea class="form-control textarea-field"
-                                          name="Comentarios[@pregunta.PreguntaID]"
-                                          placeholder="Añada comentarios sobre la evaluación, interpretación o consideraciones especiales..."></textarea>
-                            </div>
-                        </div>
-
-                        <div class="section-divider"></div>
-
-                        <!-- Sección de Observaciones Detalladas -->
-                        <div class="form-section">
-                            <label class="form-label info">
-                                <i class="fas fa-eye icon info"></i>
-                                Observaciones Clínicas Detalladas
-                            </label>
-                            <textarea class="form-control textarea-field large"
-                                      name="Observaciones[@pregunta.PreguntaID]"
-                                      placeholder="Describa las observaciones específicas, comportamientos observados, contexto de la evaluación, reacciones del paciente, etc..."></textarea>
-                            <small class="text-muted">
-                                <i class="fas fa-lightbulb"></i>
-                                Incluya detalles sobre comportamientos, reacciones, contexto y cualquier observación relevante para el diagnóstico
-                            </small>
-                        </div>
-
-                    <button type="button" class="btn btn-success position-relative px-4 py-2 rounded-pill shadow-sm" onclick="saveQuestion(1)">
-                        <i class="fas fa-save me-2"></i> Guardar Pregunta
-                        <span class="spinner-border spinner-border-sm position-absolute end-0 top-50 translate-middle-y me-3 d-none" id="spinner-1" role="status" aria-hidden="true"></span>
-                    </button>
-
-
+                    <!-- Sección de Comentarios -->
+                    <div class="form-section">
+                        <label class="form-label warning">
+                            <i class="fas fa-comment-alt icon warning"></i>
+                            Comentarios Evaluativos
+                        </label>
+                        <textarea class="form-control textarea-field"
+                                  name="Comentarios_@pregunta.PreguntaID"
+                                  id="comentarios_@pregunta.PreguntaID"
+                                  placeholder="Añada comentarios sobre la evaluación, interpretación o consideraciones especiales...">@(respuestaGuardada?.Comentarios ?? "")</textarea>
                     </div>
                 </div>
-            }
 
-            <!-- Submit Section -->
-            <div class="submit-section">
-                <button type="submit" class="btn-submit">
-                    <i class="fas fa-save"></i>
-                    Guardar Evaluación Completa
-                </button>
-                <p class="text-muted mt-3 mb-0">
-                    <i class="fas fa-info-circle"></i>
-                    Complete todas las secciones: respuesta, puntuación, comentarios y observaciones para una evaluación integral
-                </p>
+                <div class="section-divider"></div>
+
+                <!-- Sección de Observaciones Detalladas -->
+                <div class="form-section">
+                    <label class="form-label info">
+                        <i class="fas fa-eye icon info"></i>
+                        Observaciones Clínicas Detalladas
+                    </label>
+                    <textarea class="form-control textarea-field large"
+                              name="Observaciones_@pregunta.PreguntaID"
+                              id="observaciones_@pregunta.PreguntaID"
+                              placeholder="Describa las observaciones específicas, comportamientos observados, contexto de la evaluación, reacciones del paciente, etc...">@(respuestaGuardada?.Observaciones ?? "")</textarea>
+                    <small class="text-muted">
+                        <i class="fas fa-lightbulb"></i>
+                        Incluya detalles sobre comportamientos, reacciones, contexto y cualquier observación relevante para el diagnóstico
+                    </small>
+                </div>
+
+                <!-- Botón de guardado individual -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <form method="post" asp-action="GuardarRespuestaIndividual" style="display: inline;">
+                        <input type="hidden" name="EvaluacionID" value="@Model.EvaluacionID" />
+                        <input type="hidden" name="PreguntaID" value="@pregunta.PreguntaID" />
+                        <input type="hidden" name="Puntuacion" value="" id="hidden-puntuacion-@pregunta.PreguntaID" />
+                        <input type="hidden" name="Comentarios" value="" id="hidden-comentarios-@pregunta.PreguntaID" />
+                        <input type="hidden" name="Observaciones" value="" id="hidden-observaciones-@pregunta.PreguntaID" />
+
+                        <button type="submit"
+                                class="btn-save-individual @(estaGuardada ? "saved" : "")"
+                                onclick="copiarValores(@pregunta.PreguntaID)"
+                                id="btn-save-@pregunta.PreguntaID">
+                            <i class="fas fa-@(estaGuardada ? "check" : "save") me-2"></i>
+                            @(estaGuardada ? "Actualizar pregunta" : "Guardar esta pregunta")
+                        </button>
+                    </form>
+
+                    <div class="save-status" id="status-@pregunta.PreguntaID">
+                        @if (TempData["SuccessPregunta"] != null && TempData["PreguntaID"]?.ToString() == pregunta.PreguntaID.ToString())
+                        {
+                            <div class="save-status success">
+                                <i class="fas fa-check-circle me-1"></i>@TempData["SuccessPregunta"]
+                            </div>
+                        }
+                        @if (TempData["ErrorPregunta"] != null && TempData["PreguntaID"]?.ToString() == pregunta.PreguntaID.ToString())
+                        {
+                            <div class="save-status error">
+                                <i class="fas fa-exclamation-triangle me-1"></i>@TempData["ErrorPregunta"]
+                            </div>
+                        }
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
+    }
+</div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
+        function copiarValores(preguntaID) {
+            // Copiar valores a los campos hidden antes del submit
+            const puntuacion = document.getElementById(`puntuacion_${preguntaID}`)?.value || "";
+            const comentarios = document.getElementById(`comentarios_${preguntaID}`)?.value || "";
+            const observaciones = document.getElementById(`observaciones_${preguntaID}`)?.value || "";
+
+            document.getElementById(`hidden-puntuacion-${preguntaID}`).value = puntuacion;
+            document.getElementById(`hidden-comentarios-${preguntaID}`).value = comentarios;
+            document.getElementById(`hidden-observaciones-${preguntaID}`).value = observaciones;
+        }
+
         function updateProgress() {
-            const inputs = document.querySelectorAll('input[name*="Respuestas"], select[name*="Respuestas"]');
-            const totalQuestions = inputs.length;
-            let answeredQuestions = 0;
+            const inputs = document.querySelectorAll('input[type="number"], textarea');
+            const totalFields = inputs.length;
+            let filledFields = 0;
 
             inputs.forEach(input => {
-                if (input.type === 'radio') {
-                    // Para radios, verificar si alguno del grupo está seleccionado
-                    const groupName = input.name;
-                    const checkedRadio = document.querySelector(`input[name="${groupName}"]:checked`);
-                    if (checkedRadio && !input.previousElementSibling) {
-                        // Solo contar una vez por grupo
-                        answeredQuestions++;
-                    }
-                } else if (input.value && input.value.trim() !== '') {
-                    answeredQuestions++;
+                if (input.value && input.value.trim() !== '') {
+                    filledFields++;
                 }
             });
 
-            const percentage = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
+            const percentage = totalFields > 0 ? Math.round((filledFields / totalFields) * 100) : 0;
             const progressBar = document.getElementById('progress-bar');
             const progressText = document.getElementById('progress-text');
 
@@ -646,35 +694,25 @@
             }
         }
 
-        // Función para validar puntuaciones
         function validateScore(input) {
             const value = parseFloat(input.value);
             if (value < 0) input.value = 0;
-            if (value > 10) input.value = 10;
+            if (value > 3) input.value = 3;
         }
 
-        // Inicializar el progreso al cargar la página
+        // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
             updateProgress();
 
-            // Añadir validación a campos de puntuación
-            document.querySelectorAll('input[name*="Puntuaciones"]').forEach(input => {
+            // Validación para campos de puntuación
+            document.querySelectorAll('input[type="number"]').forEach(input => {
                 input.addEventListener('blur', function() {
                     validateScore(this);
                 });
                 input.addEventListener('input', function() {
-                    if (this.value > 10) this.value = 10;
+                    if (this.value > 3) this.value = 3;
                     if (this.value < 0) this.value = 0;
-                });
-            });
-
-            // Añadir smooth scroll para mejor experiencia
-            document.querySelectorAll('.question-card').forEach(card => {
-                card.addEventListener('click', function(e) {
-                    // Solo hacer scroll si no se está interactuando con un input
-                    if (!e.target.matches('input, textarea, select, label')) {
-                        this.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
+                    updateProgress();
                 });
             });
 
@@ -683,22 +721,10 @@
                 textarea.addEventListener('input', function() {
                     this.style.height = 'auto';
                     this.style.height = this.scrollHeight + 'px';
+                    updateProgress();
                 });
             });
         });
-
-        // Actualizar progreso para radios
-        document.querySelectorAll('input[type="radio"]').forEach(radio => {
-            radio.addEventListener('change', updateProgress);
-        });
-
-        // Función para mostrar/ocultar secciones (futuro uso)
-        function toggleSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            if (section) {
-                section.style.display = section.style.display === 'none' ? 'block' : 'none';
-            }
-        }
     </script>
 </body>
 </html>

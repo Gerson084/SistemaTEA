@@ -35,9 +35,7 @@ public class ADOSController : Controller
                        .ToList();
     }
 
-
-
-    // Módulo T
+   
     public IActionResult ModuloT(int evaluacionId)
     {
 
@@ -57,6 +55,13 @@ public class ADOSController : Controller
 
             Preguntas = preguntas
         };
+
+        var respuestasGuardadas = _context.RespuestasADOS2
+       .Where(r => r.EvaluacionID == evaluacionId)
+       .ToList();
+
+        // Pasar las respuestas al modelo
+        ViewBag.RespuestasGuardadas = respuestasGuardadas;
 
         return View(viewModel);
     }
@@ -182,7 +187,7 @@ public class ADOSController : Controller
         return View(vm);
     }
 
-    [HttpPost]
+   /* [HttpPost]
     public IActionResult GuardarEvaluacion(EvaluacionADOSViewModel modelo)
     {
         foreach (var r in modelo.Preguntas)
@@ -199,7 +204,7 @@ public class ADOSController : Controller
         }
         _context.SaveChanges();
         return RedirectToAction("DetalleEvaluacion", new { id = modelo.EvaluacionID });
-    }
+    }*/
 
 
 
@@ -235,6 +240,107 @@ public class ADOSController : Controller
                        .Where(r => r.EvaluacionID == evaluacionId)
                        .ToList();
     }
+
+
+
+
+
+
+
+
+
+    [HttpPost]
+    public IActionResult GuardarRespuestaIndividual(int EvaluacionID, int PreguntaID, int? Puntuacion, string Comentarios, string Observaciones)
+    {
+        try
+        {
+            // Validar que los datos requeridos estén presentes
+            if (EvaluacionID <= 0 || PreguntaID <= 0)
+            {
+                TempData["ErrorPregunta"] = "EvaluacionID y PreguntaID son requeridos.";
+                TempData["PreguntaID"] = PreguntaID;
+                return RedirectToAction("FormularioEvaluacion", new { id = EvaluacionID });
+            }
+
+            // Verificar si ya existe una respuesta para esta pregunta en esta evaluación
+            var respuestaExistente = _context.RespuestasADOS2
+                .FirstOrDefault(r => r.EvaluacionID == EvaluacionID && r.PreguntaID == PreguntaID);
+
+            if (respuestaExistente != null)
+            {
+                // Actualizar respuesta existente
+                respuestaExistente.Puntuacion = Puntuacion;
+                respuestaExistente.Comentarios = Comentarios;
+                respuestaExistente.Observaciones = Observaciones;
+                respuestaExistente.FechaRespuesta = DateTime.Now;
+            }
+            else
+            {
+                // Crear nueva respuesta
+                var nuevaRespuesta = new RespuestaADOS2
+                {
+                    EvaluacionID = EvaluacionID,
+                    PreguntaID = PreguntaID,
+                    Puntuacion = Puntuacion,
+                    Comentarios = Comentarios,
+                    Observaciones = Observaciones,
+                    FechaRespuesta = DateTime.Now
+                };
+                _context.RespuestasADOS2.Add(nuevaRespuesta);
+            }
+
+            _context.SaveChanges();
+
+            TempData["SuccessPregunta"] = "Pregunta guardada correctamente.";
+            TempData["PreguntaID"] = PreguntaID;
+          //  return RedirectToAction("FormularioEvaluacion", new { id = EvaluacionID });
+            return RedirectToModuloCorrespondiente(EvaluacionID);
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorPregunta"] = $"Ocurrió un error: {ex.Message}";
+            TempData["PreguntaID"] = PreguntaID;
+           // return RedirectToAction("FormularioEvaluacion", new { id = EvaluacionID });
+            return RedirectToModuloCorrespondiente(EvaluacionID);
+        }
+    }
+
+
+    private IActionResult RedirectToModuloCorrespondiente(int evaluacionId)
+    {
+        var evaluacion = _context.Evaluaciones
+            .FirstOrDefault(e => e.EvaluacionID == evaluacionId);
+
+        if (evaluacion == null)
+        {
+            TempData["Error"] = "No se encontró la evaluación.";
+            return RedirectToAction("BuscarPaciente");
+        }
+
+        // Determinar el módulo según ModuloADOS2ID
+        string moduloAction = evaluacion.ModuloADOS2ID switch
+        {
+            1 => "ModuloT",
+            2 => "Modulo1",
+            3 => "Modulo2",
+            4 => "Modulo3",
+            5 => "Modulo4",
+            _ => null
+        };
+
+        if (moduloAction == null)
+        {
+            TempData["Error"] = "Módulo inválido.";
+            return RedirectToAction("BuscarPaciente");
+        }
+
+        return RedirectToAction(moduloAction, new { evaluacionId = evaluacionId });
+    }
+
+
+
+
+
 
 
 
