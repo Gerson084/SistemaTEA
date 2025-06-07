@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<dynamic>
+@{
     Layout = null;
 }
 
@@ -64,18 +65,10 @@
             gap: 15px;
         }
 
-        .filters-section {
-            display: flex;
-            gap: 15px;
-            flex: 1;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
         .search-box {
             position: relative;
-            min-width: 300px;
             flex: 1;
+            min-width: 300px;
         }
 
             .search-box input {
@@ -102,22 +95,27 @@
                 color: #95a5a6;
             }
 
-        .filter-select {
-            padding: 12px 20px;
-            border: 2px solid #e0e6ed;
-            border-radius: 50px;
-            font-size: 1rem;
-            background: white;
-            min-width: 180px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .filter-area {
+            position: relative;
+            min-width: 200px;
         }
 
-            .filter-select:focus {
-                outline: none;
-                border-color: #667eea;
-                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            .filter-area select {
+                width: 100%;
+                padding: 12px 20px;
+                border: 2px solid #e0e6ed;
+                border-radius: 50px;
+                font-size: 1rem;
+                background: white;
+                cursor: pointer;
+                transition: all 0.3s ease;
             }
+
+                .filter-area select:focus {
+                    outline: none;
+                    border-color: #667eea;
+                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+                }
 
         .btn {
             padding: 12px 24px;
@@ -157,7 +155,7 @@
 
         .questions-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
             gap: 25px;
         }
 
@@ -201,32 +199,23 @@
             color: white;
             padding: 5px 12px;
             border-radius: 15px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .question-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            color: #7f8c8d;
-        }
-
-        .question-type {
-            background: #ecf0f1;
-            padding: 3px 8px;
-            border-radius: 10px;
             font-size: 0.8rem;
+            font-weight: 600;
         }
 
         .question-text {
             font-size: 1.1rem;
             color: #2c3e50;
             line-height: 1.6;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-weight: 500;
+        }
+
+        .question-type {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 20px;
         }
 
         .question-actions {
@@ -278,15 +267,13 @@
 
         .modal-content {
             background: white;
-            margin: 3% auto;
+            margin: 5% auto;
             padding: 30px;
             border-radius: 20px;
             width: 90%;
-            max-width: 700px;
+            max-width: 600px;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
             position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
         }
 
         .close {
@@ -322,16 +309,13 @@
                 color: #2c3e50;
             }
 
-            .form-group textarea,
-            .form-group select,
-            .form-group input {
+            .form-group textarea, .form-group input, .form-group select {
                 width: 100%;
                 padding: 15px;
                 border: 2px solid #e0e6ed;
                 border-radius: 10px;
                 font-size: 1rem;
                 font-family: inherit;
-                transition: all 0.3s ease;
             }
 
             .form-group textarea {
@@ -339,9 +323,7 @@
                 min-height: 120px;
             }
 
-                .form-group textarea:focus,
-                .form-group select:focus,
-                .form-group input:focus {
+                .form-group textarea:focus, .form-group input:focus, .form-group select:focus {
                     outline: none;
                     border-color: #667eea;
                     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -376,13 +358,6 @@
             color: #667eea;
         }
 
-        .no-questions {
-            text-align: center;
-            padding: 60px 20px;
-            color: #7f8c8d;
-            font-size: 1.2rem;
-        }
-
         @@media (max-width: 768px) {
             .questions-grid
 
@@ -395,23 +370,12 @@
             align-items: stretch;
         }
 
-        .filters-section {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .search-box {
+        .search-box, .filter-area {
             min-width: 100%;
         }
 
         .header h1 {
             font-size: 2rem;
-        }
-
-        .question-header {
-            flex-direction: column;
-            gap: 10px;
-            align-items: flex-start;
         }
 
         }
@@ -421,58 +385,36 @@
     @Html.AntiForgeryToken()
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-comments"></i> Editor de Preguntas ADI-R</h1>
+            <h1><i class="fas fa-brain"></i> Editor de Preguntas ADI-R</h1>
             <p>Gestiona y edita las preguntas del cuestionario ADI-R organizadas por áreas</p>
         </div>
 
         <div class="stats">
             <div class="stats-item">
-                <div class="stats-number" id="totalQuestions">@Model.Count</div>
+                <div class="stats-number" id="totalQuestions">@Model.Count()</div>
                 <div>Total de Preguntas</div>
             </div>
             <div class="stats-item">
-                <div class="stats-number" id="filteredQuestions">@Model.Count</div>
+                <div class="stats-number" id="filteredQuestions">@Model.Count()</div>
                 <div>Mostrando</div>
             </div>
             <div class="stats-item">
-                <div class="stats-number" id="totalAreas">
-                    @{
-                        var areas = new List<int>();
-                        foreach (var item in Model)
-                        {
-                            if (!areas.Contains(item.AreaID))
-                            {
-                                areas.Add(item.AreaID);
-                            }
-                        }
-                    }
-                    @areas.Count
-                </div>
-                <div>Áreas</div>
+                <div class="stats-number">@ViewBag.Areas.Count</div>
+                <div>Áreas Activas</div>
             </div>
         </div>
 
         <div class="actions-bar">
-            <div class="filters-section">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Buscar preguntas...">
-                </div>
-                <select id="areaFilter" class="filter-select">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Buscar preguntas...">
+            </div>
+            <div class="filter-area">
+                <select id="areaFilter">
                     <option value="">Todas las áreas</option>
-                    @{
-                        var areasDistintas = new Dictionary<int, string>();
-                        foreach (var item in Model)
-                        {
-                            if (!areasDistintas.ContainsKey(item.AreaID))
-                            {
-                                areasDistintas.Add(item.AreaID, item.NombreArea);
-                            }
-                        }
-                    }
-                    @foreach (var area in areasDistintas)
+                    @foreach (var area in ViewBag.Areas)
                     {
-                        <option value="@area.Key">@area.Value</option>
+                        <option value="@area.AreaID">@area.NombreArea</option>
                     }
                 </select>
             </div>
@@ -482,39 +424,24 @@
         </div>
 
         <div class="questions-grid" id="questionsGrid">
-            @if (Model != null && Model.Any())
+            @foreach (var item in Model)
             {
-                @foreach (var item in Model)
-                {
-                    <div class="question-card" data-area-id="@item.AreaID" data-question-text="@item.TextoPregunta.ToLower()">
-                        <div class="question-header">
-                            <div class="question-number">@item.NumeroPregunta</div>
-                            <div class="area-badge">@item.NombreArea</div>
-                        </div>
-                        <div class="question-meta">
-                            <span>Pregunta #@item.PreguntaID</span>
-                            @if (!string.IsNullOrEmpty(item.TipoPregunta))
-                            {
-                                <span class="question-type">@item.TipoPregunta</span>
-                            }
-                        </div>
-                        <div class="question-text">@item.TextoPregunta</div>
-                        <div class="question-actions">
-                            <button class="btn btn-edit btn-small" onclick="openModal(@item.PreguntaID)">
-                                <i class="fas fa-edit"></i> Editar
-                            </button>
-                            <a href="/Preguntas/DeleteADIR/@item.PreguntaID" class="btn btn-delete btn-small">
-                                <i class="fas fa-trash"></i> Eliminar
-                            </a>
-                        </div>
+                <div class="question-card" data-area-id="@item.AreaID">
+                    <div class="question-header">
+                        <div class="question-number">@item.NumeroPregunta</div>
+                        <div class="area-badge">@item.NombreArea</div>
                     </div>
-                }
-            }
-            else
-            {
-                <div class="no-questions">
-                    <i class="fas fa-inbox" style="font-size: 4rem; color: #bdc3c7; margin-bottom: 20px;"></i>
-                    <p>No hay preguntas disponibles</p>
+                    <div class="question-text">@item.TextoPregunta</div>
+                    @if (!string.IsNullOrEmpty(item.TipoPregunta))
+                    {
+                        <div class="question-type">Tipo: @item.TipoPregunta</div>
+                    }
+                    <div class="question-actions">
+                        <button class="btn btn-edit btn-small" onclick="openModal(@item.PreguntaID, '@item.NombreArea')">
+                            <i class="fas fa-edit"></i>
+                            Editar
+                        </button>
+                    </div>
                 </div>
             }
         </div>
@@ -530,33 +457,22 @@
 
                 <div class="form-group">
                     <label for="areaSelect">Área:</label>
-                    <select id="areaSelect" name="AreaID" required>
-                        <option value="">Seleccione un área</option>
-                        @{
-                            var areasModal = new Dictionary<int, string>();
-                            foreach (var item in Model)
-                            {
-                                if (!areasModal.ContainsKey(item.AreaID))
-                                {
-                                    areasModal.Add(item.AreaID, item.NombreArea);
-                                }
-                            }
-                        }
-                        @foreach (var area in areasModal)
+                    <select id="areaSelect" name="AreaID">
+                        @foreach (var area in ViewBag.Areas)
                         {
-                            <option value="@area.Key">@area.Value</option>
+                            <option value="@area.AreaID">@area.NombreArea</option>
                         }
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="questionText">Texto de la Pregunta:</label>
-                    <textarea id="questionText" name="TextoPregunta" rows="5" placeholder="Escribe aquí el texto de la pregunta..." required></textarea>
+                    <textarea id="questionText" name="TextoPregunta" rows="5" placeholder="Escribe aquí el texto de la pregunta..."></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="questionType">Tipo de Pregunta:</label>
-                    <input type="text" id="questionType" name="TipoPregunta" placeholder="Ej: Observación, Interacción, etc.">
+                    <label for="questionType">Tipo de Pregunta (Opcional):</label>
+                    <input type="text" id="questionType" name="TipoPregunta" placeholder="Ej: Observación, Interacción, Comportamiento...">
                 </div>
 
                 <div class="modal-actions">
@@ -573,9 +489,9 @@
 
     <script>
         const questions = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
-        let filteredQuestions = questions;
+        const areas = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Areas));
 
-        function openModal(id) {
+        function openModal(id, areaName) {
             const question = questions.find(q => q.PreguntaID === id);
             if (!question) return;
 
@@ -584,7 +500,7 @@
             document.getElementById('questionType').value = question.TipoPregunta || '';
             document.getElementById('areaSelect').value = question.AreaID;
 
-            document.getElementById('modalTitle').textContent = `Editar Pregunta #${question.NumeroPregunta} - ${question.NombreArea}`;
+            document.getElementById('modalTitle').textContent = `Editar Pregunta - ${areaName}`;
             document.getElementById('questionModal').style.display = 'block';
         }
 
@@ -592,19 +508,30 @@
             document.getElementById('questionModal').style.display = 'none';
         }
 
-        function filterQuestions() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const selectedArea = document.getElementById('areaFilter').value;
+        // Funcionalidad de búsqueda
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const areaFilter = document.getElementById('areaFilter').value;
+            filterQuestions(searchTerm, areaFilter);
+        });
 
+        // Funcionalidad de filtro por área
+        document.getElementById('areaFilter').addEventListener('change', function() {
+            const areaFilter = this.value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            filterQuestions(searchTerm, areaFilter);
+        });
+
+        function filterQuestions(searchTerm, areaFilter) {
             const cards = document.querySelectorAll('.question-card');
             let visibleCount = 0;
 
             cards.forEach(card => {
-                const questionText = card.getAttribute('data-question-text');
+                const questionText = card.querySelector('.question-text').textContent.toLowerCase();
                 const areaId = card.getAttribute('data-area-id');
 
                 const matchesSearch = questionText.includes(searchTerm);
-                const matchesArea = !selectedArea || areaId === selectedArea;
+                const matchesArea = !areaFilter || areaId === areaFilter;
 
                 if (matchesSearch && matchesArea) {
                     card.style.display = 'block';
@@ -617,20 +544,13 @@
             document.getElementById('filteredQuestions').textContent = visibleCount;
         }
 
-        document.getElementById('searchInput').addEventListener('input', filterQuestions);
-        document.getElementById('areaFilter').addEventListener('change', filterQuestions);
-
+        // Cerrar modal al hacer clic fuera
         window.onclick = function (event) {
             const modal = document.getElementById('questionModal');
             if (event.target === modal) {
                 closeModal();
             }
         }
-
-        // Inicializar estadísticas
-        document.addEventListener('DOMContentLoaded', function() {
-            filterQuestions();
-        });
     </script>
 </body>
 </html>

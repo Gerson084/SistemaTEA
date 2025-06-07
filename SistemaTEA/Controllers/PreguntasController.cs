@@ -224,7 +224,8 @@ namespace SistemaTEA.Controllers
         // GET: Crear pregunta ADI-R
         public ActionResult CreateADIR()
         {
-            ViewBag.Areas = _context.AreasADIR.Where(a => a.EsActivo).ToList();
+            var areas = _context.AreasADIR.Where(a => a.EsActivo == true).ToList();
+            ViewBag.Areas = areas;
             return View();
         }
 
@@ -280,6 +281,8 @@ namespace SistemaTEA.Controllers
                       })
                 .ToList();
 
+            ViewBag.Areas = _context.AreasADIR.Where(a => a.EsActivo == true).ToList();
+
             return View(preguntasConAreas);
         }
 
@@ -311,55 +314,6 @@ namespace SistemaTEA.Controllers
             }
         }
 
-        // GET: Eliminar pregunta ADI-R
-        public ActionResult DeleteADIR(int id)
-        {
-            var pregunta = _context.PreguntasADIR
-                .Join(_context.AreasADIR,
-                      p => p.AreaID,
-                      a => a.AreaID,
-                      (p, a) => new
-                      {
-                          PreguntaID = p.PreguntaID,
-                          AreaID = p.AreaID,
-                          NombreArea = a.NombreArea,
-                          NumeroPregunta = p.NumeroPregunta,
-                          TextoPregunta = p.TextoPregunta,
-                          TipoPregunta = p.TipoPregunta,
-                          EsActiva = p.EsActiva
-                      })
-                .FirstOrDefault(p => p.PreguntaID == id);
-
-            if (pregunta == null)
-            {
-                return NotFound();
-            }
-
-            return View(pregunta);
-        }
-
-        // POST: Eliminar pregunta ADI-R
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteADIR(int id, IFormCollection collection)
-        {
-            try
-            {
-                var pregunta = _context.PreguntasADIR.FirstOrDefault(p => p.PreguntaID == id);
-
-                if (pregunta != null)
-                {
-                    _context.PreguntasADIR.Remove(pregunta);
-                    _context.SaveChanges();
-                }
-
-                return RedirectToAction("VerPreguntas_ADIR");
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
         // Método auxiliar para obtener preguntas por área
         public ActionResult GetPreguntasPorArea(int areaId)
