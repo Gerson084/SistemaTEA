@@ -18,8 +18,12 @@ namespace SistemaTEA.Controllers
         public ActionResult Index()
         {
             var tipoTest = _context.TiposTest.ToList();
+
+            ViewBag.PreguntasMCHAT = _context.PreguntasMCHAT.Count();
             ViewBag.PreguntasADIR = _context.PreguntasADIR.Count();
-            ViewBag.AreasADIR = _context.AreasADIR.Where(a => a.EsActivo == true).Count();
+            ViewBag.AreasADIR = _context.AreasADIR.Where(a => a.EsActivo).Count();
+            ViewBag.PreguntasADOS2 = _context.PreguntasADOS2.Count();
+            ViewBag.ModulosADOS2 = _context.ModulosADOS2.Where(m => m.EsActivo).Count();
 
             ViewBag.Preguntas = _context.PreguntasMCHAT.Count();
             return View(tipoTest);
@@ -196,19 +200,34 @@ namespace SistemaTEA.Controllers
             }
         }
 
+        // Métodos adicionales para el controlador PreguntasController para manejar ADI-R
+
         public ActionResult VerPreguntas_ADIR()
         {
-            var preguntas = _context.PreguntasADIR
-                .Include(p => p.Area) // Incluir la relación con AreasADIR
+            var preguntasConAreas = _context.PreguntasADIR
+                .Join(_context.AreasADIR,
+                      pregunta => pregunta.AreaID,
+                      area => area.AreaID,
+                      (pregunta, area) => new
+                      {
+                          PreguntaID = pregunta.PreguntaID,
+                          AreaID = pregunta.AreaID,
+                          NombreArea = area.NombreArea,
+                          NumeroPregunta = pregunta.NumeroPregunta,
+                          TextoPregunta = pregunta.TextoPregunta,
+                          TipoPregunta = pregunta.TipoPregunta,
+                          EsActiva = pregunta.EsActiva
+                      })
                 .ToList();
-            return View(preguntas);
+
+            return View(preguntasConAreas);
         }
 
-        //Crear controlador de ADI-R
+        // GET: Crear pregunta ADI-R
         public ActionResult CreateADIR()
         {
-            // Cargar las áreas disponibles para el dropdown
-            ViewBag.Areas = new SelectList(_context.AreasADIR.Where(a => a.EsActivo == true), "AreaID", "NombreArea");
+            var areas = _context.AreasADIR.Where(a => a.EsActivo == true).ToList();
+            ViewBag.Areas = areas;
             return View();
         }
 
@@ -228,7 +247,6 @@ namespace SistemaTEA.Controllers
                         .FirstOrDefault();
 
                     pregunta_ADIR.NumeroPregunta = ultimaPreguntaEnArea != null ? ultimaPreguntaEnArea.NumeroPregunta + 1 : 1;
-                    pregunta_ADIR.EsActiva = true; // Por defecto activa
 
                     _context.PreguntasADIR.Add(pregunta_ADIR);
                     _context.SaveChanges();
@@ -236,26 +254,38 @@ namespace SistemaTEA.Controllers
                     return RedirectToAction("CreateADIR", "Preguntas", new { id = id_test });
                 }
 
-                // Si hay errores, recargar las áreas
-                ViewBag.Areas = new SelectList(_context.AreasADIR.Where(a => a.EsActivo == true), "AreaID", "NombreArea");
+                ViewBag.Areas = _context.AreasADIR.Where(a => a.EsActivo).ToList();
                 return View(pregunta_ADIR);
             }
             catch
             {
-                ViewBag.Areas = new SelectList(_context.AreasADIR.Where(a => a.EsActivo == true), "AreaID", "NombreArea");
+                ViewBag.Areas = _context.AreasADIR.Where(a => a.EsActivo).ToList();
                 return View();
             }
         }
 
+        // GET: Editar preguntas ADI-R
         public ActionResult EditADIR()
         {
-            var preguntas = _context.PreguntasADIR
-                .Include(p => p.Area) // Incluir la relación con AreasADIR
+            var preguntasConAreas = _context.PreguntasADIR
+                .Join(_context.AreasADIR,
+                      pregunta => pregunta.AreaID,
+                      area => area.AreaID,
+                      (pregunta, area) => new
+                      {
+                          PreguntaID = pregunta.PreguntaID,
+                          AreaID = pregunta.AreaID,
+                          NombreArea = area.NombreArea,
+                          NumeroPregunta = pregunta.NumeroPregunta,
+                          TextoPregunta = pregunta.TextoPregunta,
+                          TipoPregunta = pregunta.TipoPregunta,
+                          EsActiva = pregunta.EsActiva
+                      })
                 .ToList();
 
-            // Cargar las áreas para los dropdowns de edición
-            ViewBag.Areas = new SelectList(_context.AreasADIR.Where(a => a.EsActivo == true), "AreaID", "NombreArea");
-            return View(preguntas);
+            ViewBag.Areas = _context.AreasADIR.Where(a => a.EsActivo == true).ToList();
+
+            return View(preguntasConAreas);
         }
 
         // POST: Editar pregunta ADI-R
@@ -286,70 +316,141 @@ namespace SistemaTEA.Controllers
             }
         }
 
-        // GET: Eliminar pregunta ADI-R
-        public ActionResult DeleteADIR(int id)
+
+        // Método auxiliar para obtener preguntas por área
+        public ActionResult GetPreguntasPorArea(int areaId)
         {
-            var pregunta = _context.PreguntasADIR
-                .Include(p => p.Area)
-                .FirstOrDefault(p => p.PreguntaID == id);
+            var preguntas = _context.PreguntasADIR
+                .Where(p => p.AreaID == areaId && p.EsActiva)
+                .OrderBy(p => p.NumeroPregunta)
+                .ToList();
 
-            if (pregunta == null)
-            {
-                return NotFound();
-            }
-
-            return View(pregunta);
+            return Json(preguntas);
         }
 
-        // POST: Confirmar eliminación de pregunta ADI-R
-        [HttpPost, ActionName("DeleteADIR")]
+        public ActionResult VerPreguntas_ADOS2()
+        {
+            var preguntasConModulos = _context.PreguntasADOS2
+                .Join(_context.ModulosADOS2,
+                      pregunta => pregunta.ModuloID,
+                      modulo => modulo.ModuloID,
+                      (pregunta, modulo) => new
+                      {
+                          PreguntaID = pregunta.PreguntaID,
+                          ModuloID = pregunta.ModuloID,
+                          NombreModulo = modulo.NombreModulo,
+                          NumeroPregunta = pregunta.NumeroPregunta,
+                          TextoPregunta = pregunta.TextoPregunta,
+                          TipoPregunta = pregunta.TipoPregunta,
+                          EsActiva = pregunta.EsActiva
+                      })
+                .ToList();
+
+            return View(preguntasConModulos);
+        }
+
+        // GET: Crear pregunta ADOS-2
+        public ActionResult CreateADOS2()
+        {
+            var modulos = _context.ModulosADOS2.Where(m => m.EsActivo == true).ToList();
+            ViewBag.Modulos = modulos;
+            return View();
+        }
+
+        // POST: Crear pregunta ADOS-2
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteADIRConfirmed(int id)
+        public ActionResult CreateADOS2([Bind("PreguntaID,ModuloID,NumeroPregunta,TextoPregunta,TipoPregunta,EsActiva")] PreguntaADOS2 pregunta_ADOS2, int id_test)
         {
             try
             {
-                var pregunta = _context.PreguntasADIR.FirstOrDefault(p => p.PreguntaID == id);
+                if (ModelState.IsValid)
+                {
+                    // Obtener el siguiente número de pregunta para el módulo específico
+                    var ultimaPreguntaEnModulo = _context.PreguntasADOS2
+                        .Where(p => p.ModuloID == pregunta_ADOS2.ModuloID)
+                        .OrderByDescending(p => p.NumeroPregunta)
+                        .FirstOrDefault();
 
-                if (pregunta == null)
+                    pregunta_ADOS2.NumeroPregunta = ultimaPreguntaEnModulo != null ? ultimaPreguntaEnModulo.NumeroPregunta + 1 : 1;
+
+                    _context.PreguntasADOS2.Add(pregunta_ADOS2);
+                    _context.SaveChanges();
+
+                    return RedirectToAction("CreateADOS2", "Preguntas", new { id = id_test });
+                }
+
+                ViewBag.Modulos = _context.ModulosADOS2.Where(m => m.EsActivo).ToList();
+                return View(pregunta_ADOS2);
+            }
+            catch
+            {
+                ViewBag.Modulos = _context.ModulosADOS2.Where(m => m.EsActivo).ToList();
+                return View();
+            }
+        }
+
+        // GET: Editar preguntas ADOS-2
+        public ActionResult EditADOS2()
+        {
+            var preguntasConModulos = _context.PreguntasADOS2
+                .Join(_context.ModulosADOS2,
+                      pregunta => pregunta.ModuloID,
+                      modulo => modulo.ModuloID,
+                      (pregunta, modulo) => new
+                      {
+                          PreguntaID = pregunta.PreguntaID,
+                          ModuloID = pregunta.ModuloID,
+                          NombreModulo = modulo.NombreModulo,
+                          NumeroPregunta = pregunta.NumeroPregunta,
+                          TextoPregunta = pregunta.TextoPregunta,
+                          TipoPregunta = pregunta.TipoPregunta,
+                          EsActiva = pregunta.EsActiva
+                      })
+                .ToList();
+
+            ViewBag.Modulos = _context.ModulosADOS2.Where(m => m.EsActivo == true).ToList();
+
+            return View(preguntasConModulos);
+        }
+
+        // POST: Editar pregunta ADOS-2
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditADOS2(PreguntaADOS2 model)
+        {
+            try
+            {
+                var preguntaExistente = _context.PreguntasADOS2.FirstOrDefault(p => p.PreguntaID == model.PreguntaID);
+
+                if (preguntaExistente == null)
                 {
                     return Json(new { success = false, message = "Pregunta no encontrada." });
                 }
 
-                // En lugar de eliminar físicamente, desactivar la pregunta
-                pregunta.EsActiva = false;
+                preguntaExistente.TextoPregunta = model.TextoPregunta;
+                preguntaExistente.TipoPregunta = model.TipoPregunta;
+                preguntaExistente.ModuloID = model.ModuloID;
+
                 _context.SaveChanges();
 
-                return RedirectToAction("VerPreguntas_ADIR", "Preguntas");
+                return RedirectToAction("EditADOS2", "Preguntas");
             }
             catch (Exception)
             {
-                return Json(new { success = false, message = "Error al eliminar la pregunta." });
+                return Json(new { success = false, message = "Error al guardar la pregunta." });
             }
         }
 
-        // Método adicional para obtener preguntas por área (útil para AJAX)
-        [HttpGet]
-        public JsonResult GetPreguntasPorArea(int areaId)
+        // Método auxiliar para obtener preguntas por módulo
+        public ActionResult GetPreguntasPorModulo(int moduloId)
         {
-            try
-            {
-                var preguntas = _context.PreguntasADIR
-                    .Where(p => p.AreaID == areaId && p.EsActiva == true)
-                    .Select(p => new {
-                        p.PreguntaID,
-                        p.NumeroPregunta,
-                        p.TextoPregunta,
-                        p.TipoPregunta
-                    })
-                    .OrderBy(p => p.NumeroPregunta)
-                    .ToList();
+            var preguntas = _context.PreguntasADOS2
+                .Where(p => p.ModuloID == moduloId && p.EsActiva)
+                .OrderBy(p => p.NumeroPregunta)
+                .ToList();
 
-                return Json(new { success = true, preguntas = preguntas });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "Error al obtener las preguntas: " + ex.Message });
-            }
+            return Json(preguntas);
         }
     }
 }

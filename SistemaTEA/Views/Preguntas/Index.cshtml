@@ -587,64 +587,94 @@
         </div>
 
         <div class="tests-container">
-            <div class="tests-grid">
-                @foreach (var item in Model)
-                {
-                    <div class="test-card @GetTestClass(item.NombreTest)">
-                        <div class="test-header">
-                            <div class="test-icon">
-                                <i class="@GetTestIcon(item.NombreTest)"></i>
-                            </div>
-                            <div class="test-info">
-                                <div class="test-name">@item.NombreTest</div>
-                                <div class="test-stats">
-                                    <div class="stat-badge questions">
-                                        <i class="fas fa-question-circle"></i>
-                                        @GetQuestionCount(item.TipoTestID) Preguntas
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="test-actions">
-                            <a href="@Url.Action("EditMCHAT", "Preguntas")"
-                               class="btn btn-primary">
-                                <i class="fas fa-pencil-alt"></i>Editar Preguntas
-                            </a>
-                            <a href="@Url.Action("CreateMCHAT", "Preguntas")"
-                               class="btn btn-info">
-                                <i class="fas fa-plus-circle"></i> Agregar Preguntas
-                            </a>
-                            <a href="@Url.Action("VerPreguntas_MCHAT", "Preguntas")"
-                               class="btn btn-primary">
-                                <i class="fas fa-eye"></i> Ver Preguntas
-                            </a>
-                            <a href="@Url.Action("VerResultados", "Tests", new { id = item.TipoTestID })"
-                               class="btn btn-success">
-                                <i class="fas fa-chart-bar"></i> Resultados
-                            </a>
-
-                        </div>
+    <div class="tests-grid">
+        @foreach (var item in Model)
+        {
+            <div class="test-card @GetTestClass(item.NombreTest)">
+                <div class="test-header">
+                    <div class="test-icon">
+                        <i class="@GetTestIcon(item.NombreTest)"></i>
                     </div>
-                }
-
-
-                <div class="test-card" style="border: 2px dashed #cbd5e0; background: rgba(255,255,255,0.5);">
-                    <div style="text-align: center; padding: 2rem 0;">
-                        <div class="test-icon" style="background: #e2e8f0; color: #718096; margin: 0 auto 1rem;">
-                            <i class="fas fa-plus"></i>
+                    <div class="test-info">
+                        <div class="test-name">@item.NombreTest</div>
+                        <div class="test-stats">
+                            <div class="stat-badge questions">
+                                <i class="fas fa-question-circle"></i>
+                                @GetQuestionCount(item.TipoTestID) Preguntas
+                            </div>
                         </div>
-                        <div class="test-name" style="color: #718096; margin-bottom: 1rem;">
-                            Agregar Nuevo Test
-                        </div>
-                        <button class="btn btn-primary" onclick="openModal('createTestModal')" style="width: auto;">
-                            <i class="fas fa-plus"></i> Crear Test
-                        </button>
                     </div>
                 </div>
+                <div class="test-actions">
+                    @if (item.NombreTest == "M-CHAT")
+                    {
+                        <a href="@Url.Action("EditMCHAT", "Preguntas")"
+                           class="btn btn-primary">
+                            <i class="fas fa-pencil-alt"></i>Editar Preguntas
+                        </a>
+                        <a href="@Url.Action("CreateMCHAT", "Preguntas")"
+                           class="btn btn-info">
+                            <i class="fas fa-plus-circle"></i> Agregar Preguntas
+                        </a>
+                        <a href="@Url.Action("VerPreguntas_MCHAT", "Preguntas")"
+                           class="btn btn-primary">
+                            <i class="fas fa-eye"></i> Ver Preguntas
+                        </a>
+                    }
+                    else if (item.NombreTest == "ADOS-2")
+                    {
+                        <a href="@Url.Action("EditADOS", "Preguntas")"
+                           class="btn btn-primary">
+                            <i class="fas fa-pencil-alt"></i>Editar Preguntas
+                        </a>
+                        <a href="@Url.Action("CreateADOS", "Preguntas")"
+                           class="btn btn-info">
+                            <i class="fas fa-plus-circle"></i> Agregar Preguntas
+                        </a>
+                        <a href="@Url.Action("VerPreguntas_ADOS", "Preguntas")"
+                           class="btn btn-primary">
+                            <i class="fas fa-eye"></i> Ver Preguntas
+                        </a>
+                    }
+                    else if (item.NombreTest == "ADI-R")
+                    {
+                        <a href="@Url.Action("EditADIR", "Preguntas")"
+                           class="btn btn-primary">
+                            <i class="fas fa-pencil-alt"></i>Editar Preguntas
+                        </a>
+                        <a href="@Url.Action("CreateADIR", "Preguntas")"
+                           class="btn btn-info">
+                            <i class="fas fa-plus-circle"></i> Agregar Preguntas
+                        </a>
+                        <a href="@Url.Action("VerPreguntas_ADIR", "Preguntas")"
+                           class="btn btn-primary">
+                            <i class="fas fa-eye"></i> Ver Preguntas
+                        </a>
+                    }
+                    
+                    <!-- Botón de resultados común para todos -->
+                    <a href="@Url.Action("VerResultados", "Tests", new { id = item.TipoTestID })"
+                       class="btn btn-success">
+                        <i class="fas fa-chart-bar"></i> Resultados
+                    </a>
+                </div>
+            </div>
+        }
+        <div class="test-card" style="border: 2px dashed #cbd5e0; background: rgba(255,255,255,0.5);">
+            <div style="text-align: center; padding: 2rem 0;">
+                <div class="test-icon" style="background: #e2e8f0; color: #718096; margin: 0 auto 1rem;">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="test-name" style="color: #718096; margin-bottom: 1rem;">
+                    Agregar Nuevo Test
+                </div>
+                <button class="btn btn-primary" onclick="openModal('createTestModal')" style="width: auto;">
+                    <i class="fas fa-plus"></i> Crear Test
+                </button>
             </div>
         </div>
+    </div>
+</div>
     </div>
 
 
