@@ -419,5 +419,52 @@ namespace SistemaTEA.Controllers
                 return Json(new { success = false, message = "Error interno del servidor. Intente nuevamente." });
             }
         }
+
+        public async Task<IActionResult> MisPacientes()
+        {
+            var psicologoID = HttpContext.Session.GetInt32("UsuarioID");
+            var rol = HttpContext.Session.GetInt32("rol");
+
+            if (psicologoID == null)
+            {
+                TempData["MensajeError"] = "Sesión expirada. Por favor inicie sesión nuevamente.";
+                return RedirectToAction("Login", "Login");
+            }
+
+            // Verificar que sea psicólogo
+            if (rol != 3)
+            {
+                TempData["MensajeError"] = "No tiene permisos para ver esta información.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Obtener pacientes asignados al psicólogo logueado
+            var pacientes = await _context.Pacientes
+                .Include(p => p.Padre)
+                .Where(p => p.PsicologoAsignadoID == psicologoID)
+                .Select(p => new
+                {
+                    PacienteID = p.PacienteID,
+                    Nombre = p.Nombre,
+                    Apellido = p.Apellido,
+                    FechaNacimiento = p.FechaNacimiento,
+                    Genero = p.Genero == "M" ? "Masculino" : "Femenino",
+                    NombrePadre = p.Padre.Nombre + " " + p.Padre.Apellido,
+                    EmailPadre = p.Padre.Email,
+                    TelefonoPadre = p.Padre.Telefono,
+                    FechaRegistro = p.FechaRegistro,
+                    Observaciones = p.Observaciones,
+                    Edad = DateTime.Now.Year - p.FechaNacimiento.Year -
+                           (DateTime.Now.DayOfYear < p.FechaNacimiento.DayOfYear ? 1 : 0)
+                })
+                .OrderBy(p => p.Nombre)
+                .ThenBy(p => p.Apellido)
+                .ToListAsync();
+
+            ViewBag.NombrePsicologo = HttpContext.Session.GetString("nombre") ?? "Psicólogo";
+            ViewBag.TotalPacientes = pacientes.Count();
+
+            return View(pacientes);
+        }
     }
 }
