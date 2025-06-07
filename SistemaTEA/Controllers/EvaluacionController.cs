@@ -69,16 +69,37 @@ namespace SistemaTEA.Controllers
         [HttpPost]
         public IActionResult BuscarPaciente(string nombrePaciente)
         {
+            int psicologoId = ObtenerUsuarioActual();
+
             var paciente = _context.Pacientes
-                .FirstOrDefault(p => (p.Nombre + " " + p.Apellido).Contains(nombrePaciente));
+                .FirstOrDefault(p =>
+                    (p.Nombre + " " + p.Apellido).Contains(nombrePaciente) &&
+                    p.PsicologoAsignadoID == psicologoId);
 
             if (paciente == null)
             {
-                ViewBag.Mensaje = "Paciente no encontrado.";
+                TempData["Error"] = "No se encontró ningún paciente con ese nombre.";
                 return View("~/Views/ADOS/BuscarPaciente.cshtml");
             }
 
-            // Calcular edad en años y meses
+            // Verificar si tiene una evaluación en proceso
+            var evaluacionEnProceso = _context.Evaluaciones
+                .FirstOrDefault(e =>
+                    e.PacienteID == paciente.PacienteID &&
+                    e.EstadoEvaluacion == "En Proceso");
+
+            if (evaluacionEnProceso != null)
+            {
+                ViewBag.EvaluacionEnProceso = true;
+                ViewBag.MensajeEvaluacion = "Este paciente ya tiene una evaluación en proceso.";
+                ViewBag.EvaluacionID = evaluacionEnProceso.EvaluacionID;
+            }
+            else
+            {
+                ViewBag.EvaluacionEnProceso = false;
+            }
+
+            // Calcular edad
             int edadEnMeses = ((DateTime.Now.Year - paciente.FechaNacimiento.Year) * 12) +
                               (DateTime.Now.Month - paciente.FechaNacimiento.Month);
 
@@ -86,25 +107,16 @@ namespace SistemaTEA.Controllers
             if (DateTime.Now.Date < paciente.FechaNacimiento.Date.AddYears(edadEnAnios))
                 edadEnAnios--;
 
-            // Sugerir módulo únicamente por edad
+            // Sugerir módulo
             string moduloSugerido = "";
-
             if (edadEnMeses >= 12 && edadEnMeses <= 30)
-            {
                 moduloSugerido = "Módulo T";
-            }
             else if (edadEnMeses >= 31 && edadEnAnios < 16)
-            {
                 moduloSugerido = "Módulo 1, 2 o 3 (según lenguaje)";
-            }
             else if (edadEnAnios >= 16)
-            {
                 moduloSugerido = "Módulo 4";
-            }
             else
-            {
                 moduloSugerido = "No hay módulo sugerido para esta edad.";
-            }
 
             ViewBag.ModuloSugerido = moduloSugerido;
 
@@ -112,8 +124,158 @@ namespace SistemaTEA.Controllers
         }
 
 
+        /* [HttpPost]
+         public IActionResult BuscarPaciente(string nombrePaciente)
+         {
+             int psicologoId = ObtenerUsuarioActual();
+
+             var paciente = _context.Pacientes
+                 .FirstOrDefault(p =>
+                     (p.Nombre + " " + p.Apellido).Contains(nombrePaciente) &&
+                     p.PsicologoAsignadoID == psicologoId);
+
+             if (paciente == null)
+             {
+                 ViewBag.Mensaje = "Paciente no encontrado o no está asignado a usted.";
+                 TempData["Error"] = "No se encontró ningún paciente con ese nombre.";
+                 return View("~/Views/ADOS/BuscarPaciente.cshtml");
+             }
+
+             // Calcular edad en años y meses
+             int edadEnMeses = ((DateTime.Now.Year - paciente.FechaNacimiento.Year) * 12) +
+                               (DateTime.Now.Month - paciente.FechaNacimiento.Month);
+
+             int edadEnAnios = DateTime.Now.Year - paciente.FechaNacimiento.Year;
+             if (DateTime.Now.Date < paciente.FechaNacimiento.Date.AddYears(edadEnAnios))
+                 edadEnAnios--;
+
+             // Sugerir módulo únicamente por edad
+             string moduloSugerido = "";
+
+             if (edadEnMeses >= 12 && edadEnMeses <= 30)
+             {
+                 moduloSugerido = "Módulo T";
+             }
+             else if (edadEnMeses >= 31 && edadEnAnios < 16)
+             {
+                 moduloSugerido = "Módulo 1, 2 o 3 (según lenguaje)";
+             }
+             else if (edadEnAnios >= 16)
+             {
+                 moduloSugerido = "Módulo 4";
+             }
+             else
+             {
+                 moduloSugerido = "No hay módulo sugerido para esta edad.";
+             }
+
+             ViewBag.ModuloSugerido = moduloSugerido;
+
+             return View("~/Views/ADOS/BuscarPaciente.cshtml", paciente);
+         }*/
+
+        [HttpGet]
+        public IActionResult IniciarEvaluacion(int pacienteId)
+        {
+            // Aquí mostrar vista o redirigir
+            // Puedes mostrar un formulario para seleccionar módulo o directamente crear la evaluación
+            return View();
+        }
+
+
 
         [HttpPost]
+        public IActionResult IniciarEvaluacion(int pacienteId, string moduloSeleccionado)
+        {
+            // Determinar el ID del módulo según el valor seleccionado
+            int? moduloId = moduloSeleccionado switch
+            {
+                "T" => 1,
+                "1" => 2,
+                "2" => 3,
+                "3" => 4,
+                "4" => 5,
+                _ => null
+            };
+
+            if (moduloId == null)
+            {
+                TempData["Error"] = "Debe seleccionar un módulo válido.";
+                return RedirectToAction("BuscarPaciente");
+            }
+
+            // Verificar si ya hay una evaluación "En Proceso" para este paciente, tipo ADOS
+            var evaluacionExistente = _context.Evaluaciones
+     .       FirstOrDefault(e => e.PacienteID == pacienteId
+                       && e.TipoTestID == 2 // ADOS
+                       && e.EstadoEvaluacion == "En Proceso");
+
+            if (evaluacionExistente != null)
+            {
+                // Ya tiene una evaluación en proceso, redirigir a esa
+                return RedirectToAction("Modulo" + moduloSeleccionado, "ADOS", new { evaluacionId = evaluacionExistente.EvaluacionID });
+            }
+
+
+            if (evaluacionExistente != null)
+            {
+                // Redirigir a la evaluación existente
+                switch (moduloSeleccionado)
+                {
+                    case "T":
+                        return RedirectToAction("ModuloT", "ADOS", new { evaluacionId = evaluacionExistente.EvaluacionID });
+                    case "1":
+                        return RedirectToAction("Modulo1", "ADOS", new { evaluacionId = evaluacionExistente.EvaluacionID });
+                    case "2":
+                        return RedirectToAction("Modulo2", "ADOS", new { evaluacionId = evaluacionExistente.EvaluacionID });
+                    case "3":
+                        return RedirectToAction("Modulo3", "ADOS", new { evaluacionId = evaluacionExistente.EvaluacionID });
+                    case "4":
+                        return RedirectToAction("Modulo4", "ADOS", new { evaluacionId = evaluacionExistente.EvaluacionID });
+                    default:
+                        TempData["Error"] = "Debe seleccionar un módulo válido.";
+                        return RedirectToAction("BuscarPaciente");
+                }
+            }
+
+            // Si no hay evaluación en proceso, crear una nueva
+            var nuevaEvaluacion = new Evaluacion
+            {
+                PacienteID = pacienteId,
+                FechaEvaluacion = DateTime.Now,
+                TipoTestID = 2, // ADOS
+                UsuarioEvaluadorID = ObtenerUsuarioActual(),
+                ModuloADOS2ID = moduloId,
+                EstadoEvaluacion = "En Proceso"
+            };
+
+            _context.Evaluaciones.Add(nuevaEvaluacion);
+            _context.SaveChanges();
+
+            // Redirige al módulo correspondiente
+            switch (moduloSeleccionado)
+            {
+                case "T":
+                    return RedirectToAction("ModuloT", "ADOS", new { evaluacionId = nuevaEvaluacion.EvaluacionID });
+                case "1":
+                    return RedirectToAction("Modulo1", "ADOS", new { evaluacionId = nuevaEvaluacion.EvaluacionID });
+                case "2":
+                    return RedirectToAction("Modulo2", "ADOS", new { evaluacionId = nuevaEvaluacion.EvaluacionID });
+                case "3":
+                    return RedirectToAction("Modulo3", "ADOS", new { evaluacionId = nuevaEvaluacion.EvaluacionID });
+                case "4":
+                    return RedirectToAction("Modulo4", "ADOS", new { evaluacionId = nuevaEvaluacion.EvaluacionID });
+                default:
+                    TempData["Error"] = "Debe seleccionar un módulo válido.";
+                    return RedirectToAction("BuscarPaciente");
+            }
+        }
+
+
+
+
+
+        /*[HttpPost]
         public IActionResult IniciarEvaluacion(int pacienteId, string moduloSeleccionado)
         {
             var nuevaEvaluacion = new Evaluacion
@@ -145,12 +307,12 @@ namespace SistemaTEA.Controllers
                     return RedirectToAction("BuscarPaciente");
             }
         }
+        */
 
-        
 
         private int ObtenerUsuarioActual()
         {
-            var userId = HttpContext.Session.GetInt32("id_usuario");
+            var userId = HttpContext.Session.GetInt32("UsuarioID");
             if (userId == null)
                 throw new Exception("Usuario no autenticado.");
             return userId.Value;
@@ -237,5 +399,45 @@ namespace SistemaTEA.Controllers
                 return View();
             }
         }
+
+        [HttpPost]
+        public IActionResult ContinuarEvaluacion(int evaluacionId)
+        {
+            var evaluacion = _context.Evaluaciones
+                .FirstOrDefault(e => e.EvaluacionID == evaluacionId);
+
+            if (evaluacion == null)
+            {
+                TempData["Error"] = "No se encontró la evaluación.";
+                return RedirectToAction("BuscarPaciente", "ADOS");
+            }
+
+            // Mapear moduloId a su código de módulo para la redirección
+            string moduloSeleccionado = evaluacion.ModuloADOS2ID switch
+            {
+                1 => "T",
+                2 => "1",
+                3 => "2",
+                4 => "3",
+                5 => "4",
+                _ => null
+            };
+
+            if (moduloSeleccionado == null)
+            {
+                TempData["Error"] = "Módulo inválido.";
+                return RedirectToAction("BuscarPaciente", "ADOS");
+            }
+
+            // Redirigir a la acción del módulo con evaluacionId
+            return RedirectToAction("Modulo" + moduloSeleccionado, "ADOS", new { evaluacionId = evaluacion.EvaluacionID });
+        }
+
+
+
+
+
+
+
     }
 }

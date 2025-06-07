@@ -40,7 +40,7 @@ public class ADOSController : Controller
     // Módulo T
     public IActionResult ModuloT(int evaluacionId)
     {
-       
+
 
         int moduloId = 5; // O el módulo que corresponda para "T".
 
@@ -54,7 +54,30 @@ public class ADOSController : Controller
         {
             EvaluacionID = evaluacionId,
             ModuloID = moduloId,
-    
+
+            Preguntas = preguntas
+        };
+
+        return View(viewModel);
+    }
+
+    public IActionResult Modulo1(int evaluacionId)
+    {
+
+
+        int moduloId = 1; // O el módulo que corresponda para "T".
+
+        // Traer las preguntas del módulo 5
+        var preguntas = _context.PreguntasADOS2
+            .Where(p => p.ModuloID == moduloId)
+            .OrderBy(p => p.NumeroPregunta)
+            .ToList();
+
+        var viewModel = new ADOSEvaluacionViewModel
+        {
+            EvaluacionID = evaluacionId,
+            ModuloID = moduloId,
+
             Preguntas = preguntas
         };
 
@@ -63,34 +86,79 @@ public class ADOSController : Controller
 
 
 
-    public IActionResult Modulo1(int evaluacionId)
-    {
-        var preguntas = ObtenerPreguntasPorModulo(1);
-        return View("Modulo1", CrearViewModel(evaluacionId, preguntas));
-    }
 
+
+  
     // Módulo 1
     public IActionResult Modulo2(int evaluacionId)
-{
-    var preguntas = ObtenerPreguntasPorModulo(2);
-    return View("Modulo2", CrearViewModel(evaluacionId, preguntas));
-}
+    {
 
-// Módulo 2
-public IActionResult Modulo3(int evaluacionId)
-{
-    var preguntas = ObtenerPreguntasPorModulo(3);
-    return View("Modulo3", CrearViewModel(evaluacionId, preguntas));
-}
+        int moduloId = 2; // O el módulo que corresponda para "T".
 
-// Módulo 3
-public IActionResult Modulo4(int evaluacionId)
-{
-    var preguntas = ObtenerPreguntasPorModulo(4);
-    return View("Modulo4", CrearViewModel(evaluacionId, preguntas));
-}
+        // Traer las preguntas del módulo 5
+        var preguntas = _context.PreguntasADOS2
+            .Where(p => p.ModuloID == moduloId)
+            .OrderBy(p => p.NumeroPregunta)
+            .ToList();
 
-// Módulo 4
+        var viewModel = new ADOSEvaluacionViewModel
+        {
+            EvaluacionID = evaluacionId,
+            ModuloID = moduloId,
+
+            Preguntas = preguntas
+        };
+
+        return View(viewModel);
+    }
+
+    // Módulo 2
+    public IActionResult Modulo3(int evaluacionId)
+    {
+
+        int moduloId = 3; // O el módulo que corresponda para "T".
+
+        // Traer las preguntas del módulo 5
+        var preguntas = _context.PreguntasADOS2
+            .Where(p => p.ModuloID == moduloId)
+            .OrderBy(p => p.NumeroPregunta)
+            .ToList();
+
+        var viewModel = new ADOSEvaluacionViewModel
+        {
+            EvaluacionID = evaluacionId,
+            ModuloID = moduloId,
+
+            Preguntas = preguntas
+        };
+
+        return View(viewModel);
+    }
+
+    // Módulo 3
+    public IActionResult Modulo4(int evaluacionId)
+    {
+
+        int moduloId = 4; // O el módulo que corresponda para "T".
+
+        // Traer las preguntas del módulo 5
+        var preguntas = _context.PreguntasADOS2
+            .Where(p => p.ModuloID == moduloId)
+            .OrderBy(p => p.NumeroPregunta)
+            .ToList();
+
+        var viewModel = new ADOSEvaluacionViewModel
+        {
+            EvaluacionID = evaluacionId,
+            ModuloID = moduloId,
+
+            Preguntas = preguntas
+        };
+
+        return View(viewModel);
+    }
+
+    // Módulo 4
 
 
 

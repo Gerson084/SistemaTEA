@@ -22,7 +22,8 @@ namespace SistemaTEA.Models
 
         public string EstadoEvaluacion { get; set; } = "En Proceso";
 
-        public string ObservacionesGenerales { get; set; }
+        public string? ObservacionesGenerales { get; set; }
+
 
         public decimal? PuntajeTotal { get; set; }
 

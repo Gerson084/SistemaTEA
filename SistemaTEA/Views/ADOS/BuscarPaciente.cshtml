@@ -1,5 +1,8 @@
 ﻿@{
+
+    
     ViewData["Title"] = "Buscar Paciente para Evaluación";
+    Layout = null;
 }
 
 <!DOCTYPE html>
@@ -160,18 +163,15 @@
         }
 
         @@keyframes slideUp {
-            from
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
 
-        {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .patient-header {
@@ -286,24 +286,21 @@
         }
 
         @@media (max-width: 768px) {
-            .main-container
+            .main-container {
+                padding: 1rem;
+            }
 
-        {
-            padding: 1rem;
-        }
+            .header-section h2 {
+                font-size: 1.8rem;
+            }
 
-        .header-section h2 {
-            font-size: 1.8rem;
-        }
+            .search-body, .patient-body {
+                padding: 1.5rem;
+            }
 
-        .search-body, .patient-body {
-            padding: 1.5rem;
-        }
-
-        .patient-info-grid {
-            grid-template-columns: 1fr;
-        }
-
+            .patient-info-grid {
+                grid-template-columns: 1fr;
+            }
         }</style>
 </head>
 <body>
@@ -339,6 +336,40 @@
                 </form>
             </div>
         </div>
+
+        <!-- procesooooooooooooo -->
+        @if (ViewBag.EvaluacionEnProceso != null && ViewBag.EvaluacionEnProceso == true)
+        {
+            <div class="alert alert-warning">
+                <p>@ViewBag.MensajeEvaluacion</p>
+                <form asp-controller="Evaluacion" asp-action="ContinuarEvaluacion" method="post">
+                    <input type="hidden" name="evaluacionId" value="@ViewBag.EvaluacionID" />
+                    <button type="submit" class="btn btn-primary mt-2">Continuar evaluación</button>
+                </form>
+            </div>
+        }
+      
+
+
+
+
+
+       
+
+      
+        <!-- Search Card -->
+      
+
+       <div>
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-warning">
+                    @TempData["Error"]
+                </div>
+            }
+
+        </div>
+
 
         @if (Model != null)
         {
