@@ -277,27 +277,31 @@
 
             /* Anchos específicos para cada columna */
             .patients-table th:nth-child(1), .patients-table td:nth-child(1) {
-                width: 20%;
+                width: 18%;
             }
 
             .patients-table th:nth-child(2), .patients-table td:nth-child(2) {
-                width: 22%;
+                width: 20%;
             }
 
             .patients-table th:nth-child(3), .patients-table td:nth-child(3) {
-                width: 22%;
+                width: 20%;
             }
 
             .patients-table th:nth-child(4), .patients-table td:nth-child(4) {
-                width: 15%;
+                width: 13%;
             }
 
             .patients-table th:nth-child(5), .patients-table td:nth-child(5) {
-                width: 12%;
+                width: 11%;
             }
 
             .patients-table th:nth-child(6), .patients-table td:nth-child(6) {
-                width: 9%;
+                width: 8%;
+            }
+
+            .patients-table th:nth-child(7), .patients-table td:nth-child(7) {
+                width: 10%;
             }
 
         .patient-info {
@@ -488,6 +492,188 @@
                 text-decoration: none;
             }
 
+        /* Botones de acción para pacientes */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: stretch;
+        }
+
+        .btn-assign {
+            padding: 0.5rem 0.8rem;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            justify-content: center;
+        }
+
+            .btn-assign:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+            }
+
+        .btn-remove {
+            padding: 0.5rem 0.8rem;
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            justify-content: center;
+        }
+
+            .btn-remove:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+            }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @@keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .close {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 0;
+            line-height: 1;
+        }
+
+            .close:hover {
+                opacity: 0.7;
+            }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+            .form-select:focus {
+                outline: none;
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .btn-modal-cancel {
+            padding: 0.8rem 1.5rem;
+            background: #e2e8f0;
+            color: #4a5568;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .btn-modal-cancel:hover {
+                background: #cbd5e0;
+            }
+
+        .btn-modal-confirm {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .btn-modal-confirm:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+            }
+
         .navigation-section {
             display: flex;
             justify-content: space-between;
@@ -512,47 +698,78 @@
                 color: #4a5568;
             }
 
+        /* Alerts */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+
+        .alert-danger {
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+        }
+
+        .alert-info {
+            background: #bee3f8;
+            color: #2c5282;
+            border: 1px solid #90cdf4;
+        }
+
         @@media (max-width: 768px) {
-            .main-container
+            .main-container {
+                padding: 1rem;
+            }
 
-        {
-            padding: 1rem;
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .page-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .search-controls {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: 100%;
+            }
+
+            .patients-table-container {
+                overflow-x: auto;
+            }
+
+            .patients-table {
+                min-width: 1200px;
+            }
+
+            .navigation-section {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+            }
         }
-
-        .header {
-            padding: 1rem;
-            flex-direction: column;
-            gap: 1rem;
-            text-align: center;
-        }
-
-        .page-header {
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .search-controls {
-            flex-direction: column;
-        }
-
-        .search-input {
-            min-width: 100%;
-        }
-
-        .patients-table-container {
-            overflow-x: auto;
-        }
-
-        .patients-table {
-            min-width: 1200px;
-        }
-
-        .navigation-section {
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        }</style>
+    </style>
 </head>
 <body>
 
@@ -569,17 +786,20 @@
         <!-- Mostrar mensajes de error o éxito -->
         @if (TempData["MensajeError"] != null)
         {
-            <div class="alert alert-danger" style="background: #fed7d7; color: #c53030; padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
+            <div class="alert alert-danger">
                 <i class="fas fa-exclamation-triangle"></i> @TempData["MensajeError"]
             </div>
         }
 
         @if (TempData["MensajeExito"] != null)
         {
-            <div class="alert alert-success" style="background: #c6f6d5; color: #22543d; padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
+            <div class="alert alert-success">
                 <i class="fas fa-check-circle"></i> @TempData["MensajeExito"]
             </div>
         }
+
+        <!-- Contenedor para mensajes dinámicos -->
+        <div id="dynamicAlerts"></div>
 
         <div class="page-header">
             <div class="page-title">
@@ -633,6 +853,7 @@
                                 <th>Edad/Género</th>
                                 <th>Fecha Registro</th>
                                 <th>Observaciones</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -680,42 +901,43 @@
                                         }
                                     </td>
                                     <td>
-                                        @if (paciente.PsicologoAsignadoID != null)
-                                        {
-                                            <div class="info-item">
-                                                <i class="fas fa-user-md info-icon"></i>
-                                                <span class="info-text">@paciente.NombrePsicologo</span>
-                                            </div>
-                                            @if (!string.IsNullOrEmpty(paciente.EmailPsicologo))
+                                        <div class="psychologist-info" id="psychologist-info-@paciente.PacienteID">
+                                            @if (paciente.PsicologoAsignadoID != null)
                                             {
                                                 <div class="info-item">
-                                                    <i class="fas fa-envelope info-icon"></i>
-                                                    <span class="info-text">@paciente.EmailPsicologo</span>
+                                                    <i class="fas fa-user-md info-icon"></i>
+                                                    <span class="info-text">@paciente.NombrePsicologo</span>
+                                                </div>
+                                                @if (!string.IsNullOrEmpty(paciente.EmailPsicologo))
+                                                {
+                                                    <div class="info-item">
+                                                        <i class="fas fa-envelope info-icon"></i>
+                                                        <span class="info-text">@paciente.EmailPsicologo</span>
+                                                    </div>
+                                                }
+                                                <div class="psychologist-status status-assigned">
+                                                    <i class="fas fa-check-circle"></i> Asignado
                                                 </div>
                                             }
-                                            <div class="psychologist-status status-assigned">
-                                                <i class="fas fa-check-circle"></i> Asignado
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="info-item">
-                                                <i class="fas fa-exclamation-triangle info-icon"></i>
-                                                <span class="info-text">Sin psicólogo asignado</span>
-                                            </div>
-                                            <div class="psychologist-status status-unassigned">
-                                                <i class="fas fa-times-circle"></i> No asignado
-                                            </div>
-                                        }
+                                            else
+                                            {
+                                                <div class="info-item">
+                                                    <i class="fas fa-exclamation-triangle info-icon"></i>
+                                                    <span class="info-text">Sin psicólogo asignado</span>
+                                                </div>
+                                                <div class="psychologist-status status-unassigned">
+                                                    <i class="fas fa-times-circle"></i> No asignado
+                                                </div>
+                                            }
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="badge-container">
                                             <span class="age-badge">
-                                                <i class="fas fa-birthday-cake"></i>
-                                                @paciente.Edad años
+                                                <i class="fas fa-birthday-cake"></i> @paciente.Edad años
                                             </span>
                                             <span class="gender-badge @(paciente.Genero == "M" ? "gender-male" : "gender-female")">
-                                                <i class="fas fa-@(paciente.Genero == "M" ? "mars" : "venus")"></i>
+                                                <i class="fas @(paciente.Genero == "M" ? "fa-mars" : "fa-venus")"></i>
                                                 @(paciente.Genero == "M" ? "Masculino" : "Femenino")
                                             </span>
                                         </div>
@@ -730,13 +952,27 @@
                                         <div class="observations-container">
                                             @if (!string.IsNullOrEmpty(paciente.Observaciones))
                                             {
-                                                <div class="observations-text" title="@paciente.Observaciones">
-                                                    @paciente.Observaciones
-                                                </div>
+                                                <div class="observations-text">@paciente.Observaciones</div>
                                             }
                                             else
                                             {
-                                                <span class="observations-empty">Sin observaciones</span>
+                                                <div class="observations-empty">Sin observaciones</div>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            @if (paciente.PsicologoAsignadoID == null)
+                                            {
+                                                <button class="btn-assign" onclick="openAssignModal(@paciente.PacienteID, '@paciente.Nombre @paciente.Apellido')">
+                                                    <i class="fas fa-user-plus"></i> Asignar Psicólogo
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn-remove" onclick="removePsychologist(@paciente.PacienteID, '@paciente.Nombre @paciente.Apellido')">
+                                                    <i class="fas fa-user-minus"></i> Remover Psicólogo
+                                                </button>
                                             }
                                         </div>
                                     </td>
@@ -750,147 +986,263 @@
                     <div class="empty-state">
                         <i class="fas fa-child"></i>
                         <h3>No hay pacientes registrados</h3>
-                        <p>Actualmente no existen pacientes registrados en el sistema.</p>
+                        <p>No se encontraron pacientes en el sistema.</p>
                     </div>
                 }
             </div>
         </div>
     </div>
 
+    <!-- Modal para Asignar Psicólogo -->
+    <div id="assignModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Asignar Psicólogo</h3>
+                <button class="close" onclick="closeModal('assignModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="assignForm">
+                    <input type="hidden" id="assignPatientId" name="pacienteId" />
+                    <div class="form-group">
+                        <label class="form-label">Paciente:</label>
+                        <div id="assignPatientName" style="padding: 0.8rem; background: #f7fafc; border-radius: 8px; color: #4a5568; font-weight: 600;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="psychologistSelect" class="form-label">Seleccionar Psicólogo:</label>
+                        <select id="psychologistSelect" name="psicologoId" class="form-select" required>
+                            <option value="">Seleccione un psicólogo...</option>
+                            @if (ViewBag.Psicologos != null)
+                            {
+                                @foreach (var psicologo in ViewBag.Psicologos)
+                                {
+                                    <option value="@psicologo.UsuarioID">@psicologo.NombreCompleto</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal-cancel" onclick="closeModal('assignModal')">Cancelar</button>
+                <button type="button" class="btn-modal-confirm" onclick="assignPsychologist()">Asignar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Token antifalsificación para AJAX -->
+    @Html.AntiForgeryToken()
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeSearch();
-            initializeFilters();
-            animateRows();
-        });
-
-        function initializeSearch() {
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('input', function() {
-                filterPatients();
-            });
-        }
-
-        function initializeFilters() {
-            const filterSelect = document.getElementById('filterSelect');
-            const sortSelect = document.getElementById('sortSelect');
-
-            filterSelect.addEventListener('change', filterPatients);
-            if (sortSelect) sortSelect.addEventListener('change', sortPatients);
-        }
-
-        function filterPatients() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const filterValue = document.getElementById('filterSelect').value;
+        // Función para buscar pacientes
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
             const rows = document.querySelectorAll('.patient-row');
 
-            let visibleCount = 0;
-            let assignedCount = 0;
-            let unassignedCount = 0;
-
             rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                const gender = row.dataset.gender;
-                const hasPsychologist = row.dataset.hasPsychologist === "true";
+                const patientName = row.querySelector('.patient-details h4').textContent.toLowerCase();
+                const parentName = row.querySelector('.info-text').textContent.toLowerCase();
+                const psychologistInfo = row.querySelector('.psychologist-info').textContent.toLowerCase();
 
-                let matchesSearch = text.includes(searchTerm);
-                let matchesFilter = true;
-
-                if (filterValue === 'assigned') {
-                    matchesFilter = hasPsychologist;
-                } else if (filterValue === 'unassigned') {
-                    matchesFilter = !hasPsychologist;
-                } else if (filterValue === 'male') {
-                    matchesFilter = gender === 'M';
-                } else if (filterValue === 'female') {
-                    matchesFilter = gender === 'F';
-                }
-
-                if (matchesSearch && matchesFilter) {
+                if (patientName.includes(searchTerm) ||
+                    parentName.includes(searchTerm) ||
+                    psychologistInfo.includes(searchTerm)) {
                     row.style.display = '';
-                    visibleCount++;
-                    if (hasPsychologist) {
-                        assignedCount++;
-                    } else {
-                        unassignedCount++;
-                    }
                 } else {
                     row.style.display = 'none';
                 }
             });
+        });
 
-            // Actualizar estadísticas
-            updateStatsDisplay(visibleCount, assignedCount, unassignedCount);
+        // Función para abrir el modal de asignación
+        function openAssignModal(patientId, patientName) {
+            document.getElementById('assignPatientId').value = patientId;
+            document.getElementById('assignPatientName').textContent = patientName;
+            document.getElementById('psychologistSelect').value = '';
+            document.getElementById('assignModal').style.display = 'block';
         }
 
-        function sortPatients() {
-            const sortValue = document.getElementById('sortSelect').value;
-            const tbody = document.querySelector('.patients-table tbody');
-            if (!tbody) return;
+        // Función para cerrar modales
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
 
-            const rows = Array.from(document.querySelectorAll('.patient-row'));
+        // Función para asignar psicólogo
+        function assignPsychologist() {
+            const form = document.getElementById('assignForm');
+            const formData = new FormData(form);
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-            let sortedRows;
-
-            switch(sortValue) {
-                case 'name':
-                    sortedRows = rows.sort((a, b) => {
-                        const nameA = a.querySelector('.patient-details h4').textContent.trim();
-                        const nameB = b.querySelector('.patient-details h4').textContent.trim();
-                        return nameA.localeCompare(nameB, 'es');
-                    });
-                    break;
-                case 'age':
-                    sortedRows = rows.sort((a, b) => {
-                        const ageA = parseInt(a.dataset.age);
-                        const ageB = parseInt(b.dataset.age);
-                        return ageB - ageA; // Mayor a menor
-                    });
-                    break;
-                case 'date':
-                    sortedRows = rows.sort((a, b) => {
-                        const dateA = new Date(a.dataset.registrationDate);
-                        const dateB = new Date(b.dataset.registrationDate);
-                        return dateB - dateA; // Más reciente primero
-                    });
-                    break;
-                default:
-                    sortedRows = rows;
+            if (!formData.get('psicologoId')) {
+                showAlert('danger', 'Por favor seleccione un psicólogo.');
+                return;
             }
 
-            sortedRows.forEach(row => tbody.appendChild(row));
-        }
+            // Mostrar loading
+            const confirmBtn = document.querySelector('.btn-modal-confirm');
+            const originalText = confirmBtn.textContent;
+            confirmBtn.textContent = 'Asignando...';
+            confirmBtn.disabled = true;
 
-        function updateStatsDisplay(total, assigned, unassigned) {
-            const totalElement = document.querySelector('.stat-number:first-child');
-            const assignedElement = document.querySelectorAll('.stat-number')[1];
-            const unassignedElement = document.querySelectorAll('.stat-number')[2];
-
-            if (totalElement) totalElement.textContent = total;
-            if (assignedElement) assignedElement.textContent = assigned;
-            if (unassignedElement) unassignedElement.textContent = unassigned;
-        }
-
-        function animateRows() {
-            const rows = document.querySelectorAll('.patient-row');
-            rows.forEach((row, index) => {
-                row.style.opacity = '0';
-                row.style.transform = 'translateY(20px)';
-
-                setTimeout(() => {
-                    row.style.transition = 'all 0.6s ease';
-                    row.style.opacity = '1';
-                    row.style.transform = 'translateY(0)';
-                }, index * 50);
+            fetch('@Url.Action("AsignarPsicologo", "Pacientes")', {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': token
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('success', data.message);
+                    closeModal('assignModal');
+                    updatePatientPsychologistInfo(formData.get('pacienteId'), data.psicologoNombre, data.psicologoEmail);
+                } else {
+                    showAlert('danger', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('danger', 'Error de conexión. Intente nuevamente.');
+            })
+            .finally(() => {
+                confirmBtn.textContent = originalText;
+                confirmBtn.disabled = false;
             });
         }
 
-       
+        // Función para remover psicólogo
+        function removePsychologist(patientId, patientName) {
+            if (!confirm(`¿Está seguro de que desea remover el psicólogo asignado al paciente ${patientName}?`)) {
+                return;
+            }
 
- 
-    }
-}
-}
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            const formData = new FormData();
+            formData.append('pacienteId', patientId);
+
+            fetch('@Url.Action("RemoverPsicologo", "Pacientes")', {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': token
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('success', data.message);
+                    removePsychologistInfo(patientId);
+                } else {
+                    showAlert('danger', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('danger', 'Error de conexión. Intente nuevamente.');
+            });
+        }
+
+        // Función para actualizar la información del psicólogo en la tabla
+        function updatePatientPsychologistInfo(patientId, psychologistName, psychologistEmail) {
+            const row = document.querySelector(`[data-patient-id="${patientId}"]`);
+            const psychologistInfoDiv = row.querySelector(`#psychologist-info-${patientId}`);
+            const actionButtonsDiv = row.querySelector('.action-buttons');
+
+            // Actualizar información del psicólogo
+            psychologistInfoDiv.innerHTML = `
+                <div class="info-item">
+                    <i class="fas fa-user-md info-icon"></i>
+                    <span class="info-text">${psychologistName}</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope info-icon"></i>
+                    <span class="info-text">${psychologistEmail}</span>
+                </div>
+                <div class="psychologist-status status-assigned">
+                    <i class="fas fa-check-circle"></i> Asignado
+                </div>
+            `;
+
+            // Actualizar botones de acción
+            actionButtonsDiv.innerHTML = `
+                <button class="btn-remove" onclick="removePsychologist(${patientId}, '${row.querySelector('.patient-details h4').textContent}')">
+                    <i class="fas fa-user-minus"></i> Remover Psicólogo
+                </button>
+            `;
+
+            // Actualizar atributo data
+            row.setAttribute('data-has-psychologist', 'true');
+        }
+
+        // Función para remover la información del psicólogo de la tabla
+        function removePsychologistInfo(patientId) {
+            const row = document.querySelector(`[data-patient-id="${patientId}"]`);
+            const psychologistInfoDiv = row.querySelector(`#psychologist-info-${patientId}`);
+            const actionButtonsDiv = row.querySelector('.action-buttons');
+            const patientName = row.querySelector('.patient-details h4').textContent;
+
+            // Actualizar información del psicólogo
+            psychologistInfoDiv.innerHTML = `
+                <div class="info-item">
+                    <i class="fas fa-exclamation-triangle info-icon"></i>
+                    <span class="info-text">Sin psicólogo asignado</span>
+                </div>
+                <div class="psychologist-status status-unassigned">
+                    <i class="fas fa-times-circle"></i> No asignado
+                </div>
+            `;
+
+            // Actualizar botones de acción
+            actionButtonsDiv.innerHTML = `
+                <button class="btn-assign" onclick="openAssignModal(${patientId}, '${patientName}')">
+                    <i class="fas fa-user-plus"></i> Asignar Psicólogo
+                </button>
+            `;
+
+            // Actualizar atributo data
+            row.setAttribute('data-has-psychologist', 'false');
+        }
+
+        // Función para mostrar alertas dinámicas
+        function showAlert(type, message) {
+            const alertsContainer = document.getElementById('dynamicAlerts');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+
+            const icon = type === 'success' ? 'fa-check-circle' :
+                        type === 'danger' ? 'fa-exclamation-triangle' :
+                        'fa-info-circle';
+
+            alertDiv.innerHTML = `
+                <i class="fas ${icon}"></i> ${message}
+            `;
+
+            alertsContainer.appendChild(alertDiv);
+
+            // Remover la alerta después de 5 segundos
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+
+            // Scroll hacia la alerta
+            alertDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Cerrar modales al hacer clic fuera de ellos
+        window.onclick = function(event) {
+            const assignModal = document.getElementById('assignModal');
+            if (event.target === assignModal) {
+                closeModal('assignModal');
+            }
+        }
+
+        // Cerrar modales con la tecla Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal('assignModal');
+            }
+        });
     </script>
+
 </body>
 </html>

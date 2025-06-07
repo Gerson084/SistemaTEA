@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SistemaTEA.Models;
-using SistemaTEA.ViewModels; // Add this using directive
+using SistemaTEA.ViewModels; 
 
 public class ADOSController : Controller
 {
@@ -40,9 +40,8 @@ public class ADOSController : Controller
     {
 
 
-        int moduloId = 5; // O el módulo que corresponda para "T".
+        int moduloId = 5; 
 
-        // Traer las preguntas del módulo 5
         var preguntas = _context.PreguntasADOS2
             .Where(p => p.ModuloID == moduloId)
             .OrderBy(p => p.NumeroPregunta)
@@ -60,7 +59,6 @@ public class ADOSController : Controller
        .Where(r => r.EvaluacionID == evaluacionId)
        .ToList();
 
-        // Pasar las respuestas al modelo
         ViewBag.RespuestasGuardadas = respuestasGuardadas;
 
         return View(viewModel);
@@ -68,9 +66,8 @@ public class ADOSController : Controller
 
     public IActionResult Modulo1(int evaluacionId)
     {
-         int moduloId = 1; // O el módulo que corresponda para "T".
+         int moduloId = 1; 
 
-        // Traer las preguntas del módulo 5
         var preguntas = _context.PreguntasADOS2
             .Where(p => p.ModuloID == moduloId)
             .OrderBy(p => p.NumeroPregunta)
@@ -88,7 +85,6 @@ public class ADOSController : Controller
        .Where(r => r.EvaluacionID == evaluacionId)
        .ToList();
 
-        // Pasar las respuestas al modelo
         ViewBag.RespuestasGuardadas = respuestasGuardadas;
 
         return View(viewModel);
@@ -99,13 +95,11 @@ public class ADOSController : Controller
 
 
   
-    // Módulo 1
     public IActionResult Modulo2(int evaluacionId)
     {
 
-        int moduloId = 2; // O el módulo que corresponda para "T".
+        int moduloId = 2; 
 
-        // Traer las preguntas del módulo 5
         var preguntas = _context.PreguntasADOS2
             .Where(p => p.ModuloID == moduloId)
             .OrderBy(p => p.NumeroPregunta)
@@ -123,19 +117,16 @@ public class ADOSController : Controller
        .Where(r => r.EvaluacionID == evaluacionId)
        .ToList();
 
-        // Pasar las respuestas al modelo
         ViewBag.RespuestasGuardadas = respuestasGuardadas;
 
         return View(viewModel);
     }
 
-    // Módulo 2
     public IActionResult Modulo3(int evaluacionId)
     {
 
-        int moduloId = 3; // O el módulo que corresponda para "T".
+        int moduloId = 3;
 
-        // Traer las preguntas del módulo 5
         var preguntas = _context.PreguntasADOS2
             .Where(p => p.ModuloID == moduloId)
             .OrderBy(p => p.NumeroPregunta)
@@ -153,19 +144,16 @@ public class ADOSController : Controller
        .Where(r => r.EvaluacionID == evaluacionId)
        .ToList();
 
-        // Pasar las respuestas al modelo
         ViewBag.RespuestasGuardadas = respuestasGuardadas;
 
         return View(viewModel);
     }
 
-    // Módulo 3
     public IActionResult Modulo4(int evaluacionId)
     {
 
-        int moduloId = 4; // O el módulo que corresponda para "T".
+        int moduloId = 4; 
 
-        // Traer las preguntas del módulo 5
         var preguntas = _context.PreguntasADOS2
             .Where(p => p.ModuloID == moduloId)
             .OrderBy(p => p.NumeroPregunta)
@@ -183,13 +171,11 @@ public class ADOSController : Controller
        .Where(r => r.EvaluacionID == evaluacionId)
        .ToList();
 
-        // Pasar las respuestas al modelo
         ViewBag.RespuestasGuardadas = respuestasGuardadas;
 
         return View(viewModel);
     }
 
-    // Módulo 4
 
 
 
@@ -213,24 +199,6 @@ public class ADOSController : Controller
         return View(vm);
     }
 
-   /* [HttpPost]
-    public IActionResult GuardarEvaluacion(EvaluacionADOSViewModel modelo)
-    {
-        foreach (var r in modelo.Preguntas)
-        {
-            _context.RespuestasADOS2.Add(new RespuestaADOS2
-            {
-                EvaluacionID = modelo.EvaluacionID,
-                PreguntaID = r.PreguntaID,
-                Puntuacion = r.Puntuacion,
-                Observaciones = r.Observaciones,
-                Comentarios = r.Comentarios,
-                FechaRespuesta = DateTime.Now
-            });
-        }
-        _context.SaveChanges();
-        return RedirectToAction("DetalleEvaluacion", new { id = modelo.EvaluacionID });
-    }*/
 
 
 
@@ -253,7 +221,6 @@ public class ADOSController : Controller
 
     private IEnumerable<PreguntaADOS2> GetPreguntasByModulo(int moduloId)
     {
-        // Consulta a la base de datos
         return _context.PreguntasADOS2
             .Where(p => p.ModuloID == moduloId)
             .OrderBy(p => p.NumeroPregunta)
@@ -280,7 +247,6 @@ public class ADOSController : Controller
     {
         try
         {
-            // Validar que los datos requeridos estén presentes
             if (EvaluacionID <= 0 || PreguntaID <= 0)
             {
                 TempData["ErrorPregunta"] = "EvaluacionID y PreguntaID son requeridos.";
@@ -288,13 +254,11 @@ public class ADOSController : Controller
                 return RedirectToAction("FormularioEvaluacion", new { id = EvaluacionID });
             }
 
-            // Verificar si ya existe una respuesta para esta pregunta en esta evaluación
             var respuestaExistente = _context.RespuestasADOS2
                 .FirstOrDefault(r => r.EvaluacionID == EvaluacionID && r.PreguntaID == PreguntaID);
 
             if (respuestaExistente != null)
             {
-                // Actualizar respuesta existente
                 respuestaExistente.Puntuacion = Puntuacion;
                 respuestaExistente.Comentarios = Comentarios;
                 respuestaExistente.Observaciones = Observaciones;
@@ -302,7 +266,6 @@ public class ADOSController : Controller
             }
             else
             {
-                // Crear nueva respuesta
                 var nuevaRespuesta = new RespuestaADOS2
                 {
                     EvaluacionID = EvaluacionID,
@@ -319,14 +282,12 @@ public class ADOSController : Controller
 
             TempData["SuccessPregunta"] = "Pregunta guardada correctamente.";
             TempData["PreguntaID"] = PreguntaID;
-          //  return RedirectToAction("FormularioEvaluacion", new { id = EvaluacionID });
             return RedirectToModuloCorrespondiente(EvaluacionID);
         }
         catch (Exception ex)
         {
             TempData["ErrorPregunta"] = $"Ocurrió un error: {ex.Message}";
             TempData["PreguntaID"] = PreguntaID;
-           // return RedirectToAction("FormularioEvaluacion", new { id = EvaluacionID });
             return RedirectToModuloCorrespondiente(EvaluacionID);
         }
     }
@@ -343,7 +304,6 @@ public class ADOSController : Controller
             return RedirectToAction("BuscarPaciente");
         }
 
-        // Determinar el módulo según ModuloADOS2ID
         string moduloAction = evaluacion.ModuloADOS2ID switch
         {
             1 => "ModuloT",

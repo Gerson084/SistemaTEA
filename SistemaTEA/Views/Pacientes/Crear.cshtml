@@ -564,26 +564,7 @@
                             </div>
                         </div>
                         @Html.ValidationMessageFor(m => m.Genero, "", new { @class = "error-message" })
-                    </div>
-
-                    <div class="form-group floating-label">
-                        @Html.DropDownListFor(m => m.PsicologoAsignadoID, 
-                            (SelectList)ViewBag.Psicologos, 
-                            "-- Sin asignar por el momento --", 
-                            new { 
-                                @class = "form-input form-select",
-                                id = "psicologo"
-                            })
-                        <label for="psicologo" class="form-label">
-                            <i class="fas fa-user-md"></i>
-                            Psicólogo Asignado
-                        </label>
-                        <div class="form-hint">
-                            <i class="fas fa-info-circle"></i>
-                            Podrá asignar un psicólogo más tarde
-                        </div>
-                        @Html.ValidationMessageFor(m => m.PsicologoAsignadoID, "", new { @class = "error-message" })
-                    </div>
+                    </div>    
                 </div>
 
                 <div class="form-group floating-label">

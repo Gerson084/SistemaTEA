@@ -1,0 +1,374 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consentimiento Informado - Sistema TEA</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            color: #1a202c;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+            .header h1 {
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+
+        .consent-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .consent-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .consent-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .consent-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .consent-content {
+            line-height: 1.8;
+            color: #4a5568;
+            margin-bottom: 2rem;
+        }
+
+            .consent-content h3 {
+                color: #2d3748;
+                margin: 1.5rem 0 1rem 0;
+                font-size: 1.2rem;
+                font-weight: 600;
+            }
+
+            .consent-content p {
+                margin-bottom: 1rem;
+            }
+
+            .consent-content ul {
+                margin: 1rem 0 1rem 2rem;
+            }
+
+            .consent-content li {
+                margin-bottom: 0.5rem;
+            }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+            border: 2px solid #fc8181;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+            .highlight-box h4 {
+                color: #c53030;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+        .checkbox-group {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+            .checkbox-item:last-child {
+                margin-bottom: 0;
+            }
+
+            .checkbox-item input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+                accent-color: #667eea;
+                margin-top: 2px;
+            }
+
+            .checkbox-item label {
+                flex: 1;
+                color: #4a5568;
+                font-weight: 500;
+                cursor: pointer;
+            }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 180px;
+            justify-content: center;
+        }
+
+        .btn-accept {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .btn-decline {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .date-info {
+            text-align: center;
+            color: #718096;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        @@media (max-width: 768px) {
+            .consent-card
+
+        {
+            padding: 2rem 1.5rem;
+            margin: 1rem;
+        }
+
+        .consent-title {
+            font-size: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-heart"></i> Sistema TEA</h1>
+            <p>Consentimiento Informado</p>
+        </div>
+
+        <div class="consent-card">
+            <div class="consent-header">
+                <div class="consent-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div>
+                    <h2 class="consent-title">Consentimiento Informado</h2>
+                    <div class="date-info">
+                        Fecha: <span id="currentDate"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="consent-content">
+                <p><strong>Estimado padre/madre de familia:</strong></p>
+
+                <p>Antes de proceder con el registro de su hijo/a en nuestro Sistema de Evaluación para Trastornos del Espectro Autista (TEA), es importante que comprenda y acepte los siguientes términos:</p>
+
+                <h3><i class="fas fa-info-circle"></i> Propósito del Sistema</h3>
+                <p>Este sistema está diseñado para facilitar la aplicación y seguimiento de evaluaciones diagnósticas para TEA, incluyendo:</p>
+                <ul>
+                    <li>M-CHAT (Modified Checklist for Autism in Toddlers)</li>
+                    <li>ADOS-2 (Autism Diagnostic Observation Schedule)</li>
+                    <li>ADI-R (Autism Diagnostic Interview-Revised)</li>
+                </ul>
+
+                <h3><i class="fas fa-database"></i> Recopilación y Uso de Datos</h3>
+                <p>Los datos personales de su hijo/a serán utilizados exclusivamente para:</p>
+                <ul>
+                    <li>Realizar evaluaciones diagnósticas profesionales</li>
+                    <li>Generar reportes de seguimiento</li>
+                    <li>Facilitar la comunicación entre padres y profesionales</li>
+                    <li>Mantener un historial médico seguro</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Importante</h4>
+                    <p>Los resultados de las evaluaciones NO constituyen un diagnóstico definitivo y deben ser interpretados por un profesional de la salud mental calificado.</p>
+                </div>
+
+                <h3><i class="fas fa-lock"></i> Protección de Datos</h3>
+                <p>Nos comprometemos a:</p>
+                <ul>
+                    <li>Mantener la confidencialidad de toda la información</li>
+                    <li>No compartir datos con terceros sin autorización</li>
+                    <li>Utilizar medidas de seguridad apropiadas</li>
+                    <li>Permitir el acceso y corrección de datos cuando sea solicitado</li>
+                </ul>
+
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="consent1" required>
+                        <label for="consent1">
+                            Confirmo que he leído y comprendido la información sobre el propósito del sistema y el uso de los datos de mi hijo/a.
+                        </label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="consent2" required>
+                        <label for="consent2">
+                            Entiendo que las evaluaciones son herramientas de apoyo y que cualquier interpretación debe ser realizada por un profesional calificado.
+                        </label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="consent3" required>
+                        <label for="consent3">
+                            Autorizo el registro y almacenamiento de los datos de mi hijo/a en el sistema con fines diagnósticos y de seguimiento.
+                        </label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="consent4" required>
+                        <label for="consent4">
+                            Comprendo que puedo solicitar la eliminación de los datos en cualquier momento contactando al administrador del sistema.
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <form method="post">
+                <input type="hidden" name="consentimiento" id="consentimientoValue" value="false">
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-decline" onclick="declinarConsentimiento()">
+                        <i class="fas fa-times"></i>
+                        No Acepto
+                    </button>
+                    <button type="button" class="btn btn-accept" id="acceptBtn" onclick="aceptarConsentimiento()" disabled>
+                        <i class="fas fa-check"></i>
+                        Acepto y Continuar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mostrar fecha actual
+            const currentDate = new Date().toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('currentDate').textContent = currentDate;
+
+            // Manejar checkboxes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const acceptBtn = document.getElementById('acceptBtn');
+
+            function updateAcceptButton() {
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                acceptBtn.disabled = !allChecked;
+            }
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateAcceptButton);
+            });
+        });
+
+        function aceptarConsentimiento() {
+            document.getElementById('consentimientoValue').value = 'true';
+            document.querySelector('form').submit();
+        }
+
+        function declinarConsentimiento() {
+            if (confirm('¿Está seguro que no desea continuar con el registro? Será redirigido al panel principal.')) {
+                document.getElementById('consentimientoValue').value = 'false';
+                document.querySelector('form').submit();
+            }
+        }
+    </script>
+</body>
+</html>

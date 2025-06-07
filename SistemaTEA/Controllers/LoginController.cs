@@ -30,81 +30,11 @@ namespace SistemaTEA.Controllers
             return View();
         }
 
-        //[HttpPost]
-        //public IActionResult Registro(Usuario usuario, string confirmarContrasena, bool esPadre = false)
-        //{
-
-        //    usuario.RolID = esPadre ? 2 : 4; 
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        var regex = new Regex(@"^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$");
-
-
-        //        if (usuario.Contraseña != confirmarContrasena)
-        //        {
-        //            ViewBag.Error = "Las contraseñas no coinciden.";
-        //            return View(usuario);
-        //        }
-
-
-        //        if (!regex.IsMatch(usuario.Contraseña))
-        //        {
-        //            TempData["Error_Contrasena"] = "La contraseña debe tener al menos una letra mayúscula, un número y un carácter especial.";
-        //            ViewBag.Error = "La contraseña no cumple con los requisitos de seguridad.";
-        //            return View(usuario);
-        //        }
-
-        //        var existe = _testContext.Usuarios.FirstOrDefault(u => u.Email == usuario.Email);
-        //        if (existe != null)
-        //        {
-        //            ViewBag.Error = "El correo ya está registrado.";
-        //            return View(usuario);
-        //        }
-
-        //        var ContraseñaSinHash = usuario.Contraseña;
-
-
-        //        usuario.Contraseña = SeguridadHelper.HashPassword(usuario.Contraseña);
-        //        usuario.EsActivo = false;
-
-        //        try
-        //        {
-        //            _testContext.Usuarios.Add(usuario);
-        //            _testContext.SaveChanges();
-
-        //            HttpContext.Session.SetInt32("UsuarioID", usuario.UsuarioID);
-        //            HttpContext.Session.SetString("nombre", usuario.Nombre);
-        //            HttpContext.Session.SetInt32("rol", usuario.RolID);
-        //            HttpContext.Session.SetString("telefono", usuario.Telefono ?? "");
-
-
-        //            string mensajeExito = esPadre
-        //                ? "Registro exitoso como padre/madre. En un periodo de 24 horas un agente se comunicará contigo para brindarte detalles del estado de tu cuenta y el proceso de evaluación para tu hijo/a."
-        //                : "Registro exitoso. En un periodo de 24 horas un agente se comunicará contigo para brindarte detalles del estado de tu cuenta.";
-
-        //            TempData["RegistroExitoso"] = mensajeExito;
-
-
-        //            var emailService = new EmailService();
-        //            emailService.EnviarCorreoBienvenida(usuario.Email, ContraseñaSinHash);
-
-        //            return RedirectToAction("Login", "Login");
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            ViewBag.Error = "Ocurrió un error al registrar el usuario: " + ex.Message;
-        //            return View(usuario);
-        //        }
-        //    }
-
-        //    return View(usuario);
-        //}
-
+        
         [HttpPost]
         public IActionResult Registro(Usuario usuario, string confirmarContrasena, DateTime? fechaNacimiento, string genero, bool esPadre = false)
         {
-            // Asignar rol: si es padre = 2, si no es padre (paciente) = 4
+
             usuario.RolID = esPadre ? 2 : 4;
 
             if (ModelState.IsValid)
@@ -124,7 +54,7 @@ namespace SistemaTEA.Controllers
                     return View(usuario);
                 }
 
-                // Validar campos adicionales si NO es padre (es paciente)
+
                 if (!esPadre)
                 {
                     if (!fechaNacimiento.HasValue)
@@ -157,7 +87,7 @@ namespace SistemaTEA.Controllers
                     _testContext.Usuarios.Add(usuario);
                     _testContext.SaveChanges();
 
-                    // Si NO es padre, también crear registro en tabla Pacientes
+
                     if (!esPadre)
                     {
                         var paciente = new Paciente
@@ -283,7 +213,7 @@ namespace SistemaTEA.Controllers
             return RedirectToAction("Login", "Login");
         }
 
-        // ✅ CAMBIO REALIZADO: Se usa "UsuarioID"
+
         private bool ValidarSesion()
         {
             return HttpContext.Session.GetInt32("UsuarioID") != null;

@@ -16,7 +16,6 @@ namespace SistemaTEA.Controllers
         }
 
 
-        // GET: Cargar preguntas en la vista
         public IActionResult ModuloT(int moduloId)
         {
             var preguntas = _context.PreguntasADOS2
@@ -33,18 +32,17 @@ namespace SistemaTEA.Controllers
             return View(viewModel);
         }
 
-        // POST: Recibir respuestas y guardarlas
+
         [HttpPost]
         public IActionResult GuardarEvaluacion(int moduloId, [FromForm] Dictionary<int, string> Respuestas)
         {
-            // Aquí asumo que tienes una entidad RespuestaADOS2 con al menos PreguntaID y TextoRespuesta
+
             foreach (var item in Respuestas)
             {
                 var nuevaRespuesta = new RespuestaADOS2
                 {
                     PreguntaID = item.Key,
-                    
-                    // Agrega otros campos necesarios (Ejemplo: Fecha, UsuarioID, etc.)
+
                 };
 
                 _context.RespuestasADOS2.Add(nuevaRespuesta);
@@ -52,7 +50,7 @@ namespace SistemaTEA.Controllers
 
             _context.SaveChanges();
 
-            // Redirige a una vista de confirmación o donde quieras
+
             return RedirectToAction("Confirmacion");
         }
 
@@ -82,7 +80,7 @@ namespace SistemaTEA.Controllers
                 return View("~/Views/ADOS/BuscarPaciente.cshtml");
             }
 
-            // Verificar si tiene una evaluación en proceso
+
             var evaluacionEnProceso = _context.Evaluaciones
                 .FirstOrDefault(e =>
                     e.PacienteID == paciente.PacienteID &&
@@ -99,7 +97,7 @@ namespace SistemaTEA.Controllers
                 ViewBag.EvaluacionEnProceso = false;
             }
 
-            // Calcular edad
+
             int edadEnMeses = ((DateTime.Now.Year - paciente.FechaNacimiento.Year) * 12) +
                               (DateTime.Now.Month - paciente.FechaNacimiento.Month);
 
@@ -107,7 +105,7 @@ namespace SistemaTEA.Controllers
             if (DateTime.Now.Date < paciente.FechaNacimiento.Date.AddYears(edadEnAnios))
                 edadEnAnios--;
 
-            // Sugerir módulo
+
             string moduloSugerido = "";
             if (edadEnMeses >= 12 && edadEnMeses <= 30)
                 moduloSugerido = "Módulo T";
@@ -123,62 +121,10 @@ namespace SistemaTEA.Controllers
             return View("~/Views/ADOS/BuscarPaciente.cshtml", paciente);
         }
 
-
-        /* [HttpPost]
-         public IActionResult BuscarPaciente(string nombrePaciente)
-         {
-             int psicologoId = ObtenerUsuarioActual();
-
-             var paciente = _context.Pacientes
-                 .FirstOrDefault(p =>
-                     (p.Nombre + " " + p.Apellido).Contains(nombrePaciente) &&
-                     p.PsicologoAsignadoID == psicologoId);
-
-             if (paciente == null)
-             {
-                 ViewBag.Mensaje = "Paciente no encontrado o no está asignado a usted.";
-                 TempData["Error"] = "No se encontró ningún paciente con ese nombre.";
-                 return View("~/Views/ADOS/BuscarPaciente.cshtml");
-             }
-
-             // Calcular edad en años y meses
-             int edadEnMeses = ((DateTime.Now.Year - paciente.FechaNacimiento.Year) * 12) +
-                               (DateTime.Now.Month - paciente.FechaNacimiento.Month);
-
-             int edadEnAnios = DateTime.Now.Year - paciente.FechaNacimiento.Year;
-             if (DateTime.Now.Date < paciente.FechaNacimiento.Date.AddYears(edadEnAnios))
-                 edadEnAnios--;
-
-             // Sugerir módulo únicamente por edad
-             string moduloSugerido = "";
-
-             if (edadEnMeses >= 12 && edadEnMeses <= 30)
-             {
-                 moduloSugerido = "Módulo T";
-             }
-             else if (edadEnMeses >= 31 && edadEnAnios < 16)
-             {
-                 moduloSugerido = "Módulo 1, 2 o 3 (según lenguaje)";
-             }
-             else if (edadEnAnios >= 16)
-             {
-                 moduloSugerido = "Módulo 4";
-             }
-             else
-             {
-                 moduloSugerido = "No hay módulo sugerido para esta edad.";
-             }
-
-             ViewBag.ModuloSugerido = moduloSugerido;
-
-             return View("~/Views/ADOS/BuscarPaciente.cshtml", paciente);
-         }*/
-
         [HttpGet]
         public IActionResult IniciarEvaluacion(int pacienteId)
         {
-            // Aquí mostrar vista o redirigir
-            // Puedes mostrar un formulario para seleccionar módulo o directamente crear la evaluación
+
             return View();
         }
 
@@ -187,7 +133,7 @@ namespace SistemaTEA.Controllers
         [HttpPost]
         public IActionResult IniciarEvaluacion(int pacienteId, string moduloSeleccionado)
         {
-            // Determinar el ID del módulo según el valor seleccionado
+
             int? moduloId = moduloSeleccionado switch
             {
                 "T" => 1,
@@ -204,7 +150,6 @@ namespace SistemaTEA.Controllers
                 return RedirectToAction("BuscarPaciente");
             }
 
-            // Verificar si ya hay una evaluación "En Proceso" para este paciente, tipo ADOS
             var evaluacionExistente = _context.Evaluaciones
      .       FirstOrDefault(e => e.PacienteID == pacienteId
                        && e.TipoTestID == 2 // ADOS
@@ -212,14 +157,14 @@ namespace SistemaTEA.Controllers
 
             if (evaluacionExistente != null)
             {
-                // Ya tiene una evaluación en proceso, redirigir a esa
+
                 return RedirectToAction("Modulo" + moduloSeleccionado, "ADOS", new { evaluacionId = evaluacionExistente.EvaluacionID });
             }
 
 
             if (evaluacionExistente != null)
             {
-                // Redirigir a la evaluación existente
+
                 switch (moduloSeleccionado)
                 {
                     case "T":
@@ -238,7 +183,7 @@ namespace SistemaTEA.Controllers
                 }
             }
 
-            // Si no hay evaluación en proceso, crear una nueva
+
             var nuevaEvaluacion = new Evaluacion
             {
                 PacienteID = pacienteId,
@@ -252,7 +197,7 @@ namespace SistemaTEA.Controllers
             _context.Evaluaciones.Add(nuevaEvaluacion);
             _context.SaveChanges();
 
-            // Redirige al módulo correspondiente
+
             switch (moduloSeleccionado)
             {
                 case "T":
@@ -270,44 +215,6 @@ namespace SistemaTEA.Controllers
                     return RedirectToAction("BuscarPaciente");
             }
         }
-
-
-
-
-
-        /*[HttpPost]
-        public IActionResult IniciarEvaluacion(int pacienteId, string moduloSeleccionado)
-        {
-            var nuevaEvaluacion = new Evaluacion
-            {
-                PacienteID = pacienteId,
-                FechaEvaluacion = DateTime.Now,
-                TipoTestID = 1,
-                UsuarioEvaluadorID = ObtenerUsuarioActual(),
-            };
-
-            _context.Evaluaciones.Add(nuevaEvaluacion);
-            _context.SaveChanges();
-
-            // Redirige según el módulo seleccionado
-            switch (moduloSeleccionado)
-            {
-                case "T":
-                    return RedirectToAction("ModuloT", "ADOS", new { evaluacionId = nuevaEvaluacion.EvaluacionID });
-                case "1":
-                    return RedirectToAction("Modulo1", "ADOS", new { evaluacionId = nuevaEvaluacion.EvaluacionID });
-                case "2":
-                    return RedirectToAction("Modulo2", "ADOS", new { evaluacionId = nuevaEvaluacion.EvaluacionID });
-                case "3":
-                    return RedirectToAction("Modulo3", "ADOS", new { evaluacionId = nuevaEvaluacion.EvaluacionID });
-                case "4":
-                    return RedirectToAction("Modulo4", "ADOS", new { evaluacionId = nuevaEvaluacion.EvaluacionID });
-                default:
-                    TempData["Error"] = "Debe seleccionar un módulo válido.";
-                    return RedirectToAction("BuscarPaciente");
-            }
-        }
-        */
 
 
         private int ObtenerUsuarioActual()
@@ -325,25 +232,23 @@ namespace SistemaTEA.Controllers
 
 
 
-        // GET: EvaluacionController
+
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: EvaluacionController/Details/5
+
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: EvaluacionController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: EvaluacionController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -358,13 +263,12 @@ namespace SistemaTEA.Controllers
             }
         }
 
-        // GET: EvaluacionController/Edit/5
+
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: EvaluacionController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -379,13 +283,12 @@ namespace SistemaTEA.Controllers
             }
         }
 
-        // GET: EvaluacionController/Delete/5
+
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: EvaluacionController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
@@ -412,7 +315,7 @@ namespace SistemaTEA.Controllers
                 return RedirectToAction("BuscarPaciente", "ADOS");
             }
 
-            // Mapear moduloId a su código de módulo para la redirección
+
             string moduloSeleccionado = evaluacion.ModuloADOS2ID switch
             {
                 1 => "T",
@@ -429,13 +332,13 @@ namespace SistemaTEA.Controllers
                 return RedirectToAction("BuscarPaciente", "ADOS");
             }
 
-            // Redirigir a la acción del módulo con evaluacionId
+
             return RedirectToAction("Modulo" + moduloSeleccionado, "ADOS", new { evaluacionId = evaluacion.EvaluacionID });
         }
 
         public IActionResult ResultadoFinal(int evaluacionId)
         {
-            // Consultar la nota segura desde la BD
+
             var notaTotal = _context.RespuestasADOS2
                 .Where(r => r.EvaluacionID == evaluacionId)
                 .Sum(r => (int?)r.Puntuacion) ?? 0;
@@ -454,25 +357,25 @@ namespace SistemaTEA.Controllers
         {
             try
             {
-                // Calcular la nota total de esta evaluación
+
                 var notaTotal = _context.RespuestasADOS2
                     .Where(r => r.EvaluacionID == EvaluacionID)
                     .Sum(r => (int?)r.Puntuacion) ?? 0;
 
-                // Buscar la evaluación en la base de datos
+
                 var evaluacion = _context.Evaluaciones.FirstOrDefault(e => e.EvaluacionID == EvaluacionID);
                 if (evaluacion == null)
                 {
                     return NotFound("Evaluación no encontrada.");
                 }
 
-                // Actualizar los campos: EstadoEvaluacion y PuntajeTotal
+
                 evaluacion.EstadoEvaluacion = "Completado";
                 evaluacion.PuntajeTotal = notaTotal;
 
                 _context.SaveChanges();
 
-                // Redirigir a una vista con el resultado
+
                 return RedirectToAction("ResultadoFinal", new { evaluacionId = EvaluacionID, nota = notaTotal });
             }
             catch (Exception ex)

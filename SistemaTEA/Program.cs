@@ -37,6 +37,11 @@ var app = builder.Build();
 
 app.UseSession();
 
+app.MapControllerRoute(
+    name: "consentimiento",
+    pattern: "Pacientes/Consentimiento",
+    defaults: new { controller = "Pacientes", action = "Consentimiento" });
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
